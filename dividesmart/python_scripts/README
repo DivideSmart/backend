@@ -1,0 +1,8 @@
+Dependency:
+OpenCV
+tesserocr
+
+To run:
+from preprocess import choose_best_preprocess
+IMAGE_PATH = './img/example1.jpg'
+result, confidence = choose_best_preprocess(IMAGE_PATH)
