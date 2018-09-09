@@ -1,5 +1,6 @@
+import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank} from 'antd-mobile';
+
 import React from 'react'
-import {List, Badge, WhiteSpace, Button, WingBlank, Checkbox} from 'antd-mobile';
 
 const Item = List.Item;
 const Brief = Item.Brief;

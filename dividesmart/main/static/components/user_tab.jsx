@@ -1,5 +1,6 @@
+import { Badge, Button, List, WhiteSpace, WingBlank } from 'antd-mobile';
+
 import React from 'react'
-import { List, Badge, WhiteSpace, Button, WingBlank } from 'antd-mobile';
 
 class UserTab extends React.Component {
   constructor() {
@@ -67,10 +68,8 @@ class UserTab extends React.Component {
               }}
             />
           </List.Item> */}
-
-
-
         </List>
+
 
         <WhiteSpace />
         <WhiteSpace />
@@ -78,7 +77,6 @@ class UserTab extends React.Component {
         <WingBlank>
           <Button type="primary">Add Friend</Button>
         </WingBlank>
-
         {/* <WhiteSpace />
         <WhiteSpace />
         <WingBlank>

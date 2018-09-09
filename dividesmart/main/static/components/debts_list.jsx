@@ -1,7 +1,8 @@
 import 'regenerator-runtime/runtime'
 
+import { Badge, List } from 'antd-mobile';
+
 import React from 'react'
-import { List, Badge } from 'antd-mobile';
 
 const Item = List.Item;
 const Brief = Item.Brief;

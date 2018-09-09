@@ -1,13 +1,13 @@
 import 'regenerator-runtime/runtime'
 import './css/index.css'
 import 'typeface-roboto'
+import 'antd-mobile/dist/antd-mobile.css'
 
 import React, { Component } from 'react'
+
+import { LocaleProvider } from 'antd-mobile';
 import QrReader from 'react-qr-reader'
 import ReactDOM from 'react-dom'
-
-import 'antd-mobile/dist/antd-mobile.css'
-import { LocaleProvider } from 'antd-mobile';
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 
 class App extends Component {

@@ -1,6 +1,8 @@
 import 'regenerator-runtime/runtime'
+
+import { Icon, NavBar, Popover } from 'antd-mobile'
+
 import React from 'react'
-import { Popover, NavBar, Icon } from 'antd-mobile'
 const Item = Popover.Item
 
 const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" alt="" />;

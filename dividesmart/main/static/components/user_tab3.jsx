@@ -1,5 +1,6 @@
+import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
+
 import React from 'react'
-import { List, Badge, WhiteSpace, Button, WingBlank } from 'antd-mobile';
 
 class UserTab extends React.Component {
   constructor() {

@@ -1,16 +1,13 @@
-
-import Button from '@material-ui/core/Button';
 import 'regenerator-runtime/runtime'
 
-import React from 'react'
-
-import classNames from 'classnames';
-import SwipeableViews from 'react-swipeable-views';
-import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
+import React from 'react'
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
