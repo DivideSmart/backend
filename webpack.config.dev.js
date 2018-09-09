@@ -19,7 +19,7 @@ devConfig.output.path = path.resolve('./dividesmart/bundled_static/dev/bundle')
 devConfig.watch = true
 devConfig.watchOptions = {
   ignored: /node_modules/,
-  poll: 1800  // every 1.8 seconds, webpack checks file update
+  poll: 800  // every 1.8 seconds, webpack checks file update
 }
 
 devConfig.plugins = [
