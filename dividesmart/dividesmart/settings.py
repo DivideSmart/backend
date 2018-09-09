@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'main',
 ]
 
@@ -117,3 +116,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "bundled_static", 'dev'),
     os.path.join(BASE_DIR, "bundled_static", 'prod'),
 ]
+
+AUTH_USER_MODEL = 'main.User'
