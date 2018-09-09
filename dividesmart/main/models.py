@@ -18,7 +18,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
-    balance = models.DecimalField(decimal_places=2)
+    balance = models.DecimalField(max_digits=20, decimal_places=2)
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
