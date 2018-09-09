@@ -55,7 +55,7 @@ def preprocess(img, clahe, noise_level):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # get the grayscale image
 
         # Let use Clahe or Histogram equalization for color constrast
-        # This will better the result of Edge Detection when the background have similar 
+        # This will better the result of Edge Detection when the background have similar
         # color to the Receipt
         if(clahe == 1):
             clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
@@ -91,9 +91,9 @@ def preprocess(img, clahe, noise_level):
             # if the approximated contour has 4 points, then assumer it is a receipt
             # a book is a receipt and thus it has 4 vertices
             if len(approx) == 4:
-              cv2.drawContours(image, [approx], -1, (0, 255, 0), 4)
-              approx_all.append(approx)
-              total += 1
+                cv2.drawContours(image, [approx], -1, (0, 255, 0), 4)
+                approx_all.append(approx)
+                total += 1
 
         print ('Found %d receipts in the image.' % total)
 
@@ -104,8 +104,7 @@ def preprocess(img, clahe, noise_level):
             show(top_row)
             show(bot_row)
 
-            """ Step 3: Apply a Perspective 
-    and Threshold """
+            """ Step 3: Apply a Perspective and Threshold """
             total = 0
             for approx in approx_all:
                 total += 1
@@ -135,7 +134,7 @@ def preprocess(img, clahe, noise_level):
                 # the return result of pytesseract is empty.
 
         # The "else" case is when cannot detect any receipt, now used for debugging only
-        else:   
+        else:
                 print("ELSE CASE")
                 top_row = combine(300, original, gray)
                 bot_row = combine(300, closed, image)
@@ -165,7 +164,7 @@ def choose_best_preprocess(img):
         for j in [1, 3, 5, 7, 9]:
             content, conf = preprocess(img, i, j)
 
-            # Have to check whether the content is empty or not, because 
+            # Have to check whether the content is empty or not, because
             # it may not be able to detect anything but still return a very high confidence level.
             if(conf > final_confidence and len(content) > 0.8 * len(final_content)):
                 print("BEST")
