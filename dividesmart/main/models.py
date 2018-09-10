@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.utils import timezone
+from polymorphic.models import PolymorphicModel
 
 
 class UserManager(BaseUserManager):
@@ -50,18 +51,20 @@ class Participating(models.Model):
     balance = models.DecimalField(max_digits=20, decimal_places=2)
 
 
-class Exchange(models.Model):
+class Exchange(PolymorphicModel):
     class Meta:
         abstract = True
 
 
-# class PrivateExchange(Exchange):
-#     pass
-#
-#
-# class GroupExchange(Exchange):
-#     name = models.CharField(max_length=50)
-#     date_created = models.DateField()
+class PrivateExchange(Exchange):
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE)
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class GroupExchange(Exchange):
+    name = models.CharField(max_length=50)
+    date_created = models.DateTimeField(default=timezone.now)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Entry(models.Model):
@@ -72,6 +75,9 @@ class Entry(models.Model):
     amount = models.DecimalField(max_digits=20, decimal_places=2)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ["-date_created", "name"]
 
 
 class Payment(models.Model):
