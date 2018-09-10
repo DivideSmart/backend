@@ -1,8 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponseNotFound, HttpResponse
 
 
 def users(request):
-    return HttpResponse(request.path)
+    if request.method == 'POST':
+        return HttpResponse(request.path)
+    return HttpResponseNotFound()
 
 
 def user(request, id):

@@ -45,15 +45,26 @@ class User(AbstractBaseUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
-class Participating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Debt(models.Model):
+    OWE = 'OWE'
+    LENT = 'LENT'
+    DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent')]
+
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=20, decimal_places=2)
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE)
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=4, choices=DEBT_TYPES)
 
 
 class Exchange(PolymorphicModel):
     class Meta:
         abstract = True
+
+
+class Participating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=20, decimal_places=2)
 
 
 class PrivateExchange(Exchange):
