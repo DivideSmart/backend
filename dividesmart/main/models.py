@@ -44,11 +44,17 @@ class User(AbstractBaseUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
-# class Exchange(models.Model):
-#     class Meta:
-#         abstract = True
-#
-#
+class Participating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=20, decimal_places=2)
+
+
+class Exchange(models.Model):
+    class Meta:
+        abstract = True
+
+
 # class PrivateExchange(Exchange):
 #     pass
 #
@@ -56,3 +62,24 @@ class User(AbstractBaseUser):
 # class GroupExchange(Exchange):
 #     name = models.CharField(max_length=50)
 #     date_created = models.DateField()
+
+
+class Entry(models.Model):
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    initiator = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    date_created = models.DateTimeField(default=timezone.now)
+    last_updated = models.DateTimeField(default=timezone.now)
+
+
+class Payment(models.Model):
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Loan(models.Model):
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
