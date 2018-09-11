@@ -2,6 +2,8 @@ import { Badge, Button, List, WhiteSpace, WingBlank } from 'antd-mobile';
 
 import React from 'react'
 
+import axios from 'axios'
+
 class UserTab extends React.Component {
   constructor() {
     super()

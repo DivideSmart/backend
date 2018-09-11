@@ -20,7 +20,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('/api/get_debts_list').then((response) => {
+    axios.get('/').then(response => {
       console.log(response.data)
     })
   }

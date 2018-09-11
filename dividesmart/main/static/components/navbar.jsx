@@ -1,6 +1,8 @@
 import 'regenerator-runtime/runtime'
 
 import { Icon, NavBar, Popover } from 'antd-mobile'
+import Home from '@material-ui/icons/Home'
+import PersonAdd from '@material-ui/icons/PersonAdd';
 
 import React from 'react'
 const Item = Popover.Item
@@ -34,10 +36,8 @@ class CustomNavBar extends React.Component {
       <div>
         <NavBar
           icon={
-            <div style={{
-              width: '28px',
-              height: '28px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/RfxDFanyfhEhOkynbPXizskAQqkPmPkR.png) center center /  21px 21px no-repeat' }}
+            <Home
+              style={{width: '28px', height: '28px',}}
               onClick={() => window.location = '/'}
             />
           }
@@ -56,7 +56,7 @@ class CustomNavBar extends React.Component {
                   My Qrcode
                 </Item>),
 
-                (<Item key="help" value="button ct" icon={myImg('uQIYTFeRrjPELImDRrPt')}>
+                (<Item key="help" value="button ct" icon={<PersonAdd style={{ width: 18, height: 18 }} />}>
                   <span style={{ marginRight: 5 }}>Add Friend</span>
                 </Item>),
               ]}
