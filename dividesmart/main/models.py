@@ -7,7 +7,6 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.utils import timezone
-from polymorphic.models import PolymorphicModel
 
 
 class UserManager(BaseUserManager):
@@ -48,55 +47,54 @@ class User(AbstractBaseUser):
 class Debt(models.Model):
     OWE = 'OWE'
     LENT = 'LENT'
-    DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent')]
+    SETTLED = 'SETTLED'
+    DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent'), (SETTLED, 'settled')]
 
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     user1 = models.ForeignKey(User, on_delete=models.CASCADE)
     user2 = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=4, choices=DEBT_TYPES)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
 
 
-class Exchange(PolymorphicModel):
-    class Meta:
-        abstract = True
-
-
-class Participating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=20, decimal_places=2)
-
-
-class PrivateExchange(Exchange):
-    user1 = models.ForeignKey(User, on_delete=models.CASCADE)
-    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class GroupExchange(Exchange):
+class Group(models.Model):
     name = models.CharField(max_length=50)
     date_created = models.DateTimeField(default=timezone.now)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(
+        User, related_name='groups_created', on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, on_delete=models.CASCADE)
 
 
-class Entry(models.Model):
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+class Bill(models.Model):
+    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    creator = models.ForeignKey(
+        User, related_name='bills_created', on_delete=models.CASCADE)
+    initiator = models.ForeignKey(
+        User, related_name='bills_initiated', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        ordering = ["-date_created", "name"]
+
+class Loan(models.Model):
+    bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
+    initiator = models.ForeignKey(
+        User, related_name='loans_initiated', on_delete=models.CASCADE
+    )
+    receiver = models.ForeignKey(
+        User, related_name='loans_received', on_delete=models.CASCADE
+    )
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
 
 
 class Payment(models.Model):
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class Loan(models.Model):
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
+    initiator = models.ForeignKey(
+        User, related_name='payments_initiated', on_delete=models.CASCADE
+    )
+    receiver = models.ForeignKey(
+        User, related_name='payments_received', on_delete=models.CASCADE
+    )
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    date_created = models.DateTimeField(default=timezone.now)
