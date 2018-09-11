@@ -1,7 +1,14 @@
-from django.conf.urls import url, include
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
+    path('users/', include('main.api.users.urls')),
+
+    path('groups/', include('main.api.groups.urls')),
+
+    path('login/', views.login),
+
+    path('logout/', views.logout)
     # url(r'user$', views.get_current_user),
 
     # url(r'users/(?P<pk>\d+)', views.UserAPIView.as_view()),
