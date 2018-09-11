@@ -44,6 +44,14 @@ class User(AbstractBaseUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
+class Group(models.Model):
+    name = models.CharField(max_length=50)
+    date_created = models.DateTimeField(default=timezone.now)
+    creator = models.ForeignKey(
+        User, related_name='groups_created', on_delete=models.CASCADE)
+    users = models.ManyToManyField(User)
+
+
 class Debt(models.Model):
     OWE = 'OWE'
     LENT = 'LENT'
@@ -51,18 +59,12 @@ class Debt(models.Model):
     DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent'), (SETTLED, 'settled')]
 
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
-    user1 = models.ForeignKey(User, on_delete=models.CASCADE)
-    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
+    user1 = models.ForeignKey(
+        User, related_name='debt_source', on_delete=models.CASCADE)
+    user2 = models.ForeignKey(
+        User, related_name='debt_dest', on_delete=models.CASCADE)
     type = models.CharField(max_length=4, choices=DEBT_TYPES)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
-
-
-class Group(models.Model):
-    name = models.CharField(max_length=50)
-    date_created = models.DateTimeField(default=timezone.now)
-    creator = models.ForeignKey(
-        User, related_name='groups_created', on_delete=models.CASCADE)
-    users = models.ManyToManyField(User, on_delete=models.CASCADE)
 
 
 class Bill(models.Model):
