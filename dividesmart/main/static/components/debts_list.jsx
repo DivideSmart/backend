@@ -8,9 +8,42 @@ const Item = List.Item;
 const Brief = Item.Brief;
 
 
-var sampleData = [
+var sampleData = {
+  friendsOweYou: [
+    {
+      key: '1',
+      name: 'Harry',
+      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
+      acc: 10.28,
+    }, {
+      key: '2',
+      name: 'Oscar',
+      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
+      acc: 8.6,
+    },
+  ],
+  friendsYouOwe: [
+    {
+      key: '1',
+      name: 'Harry',
+      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
+      acc: 10.28,
+    }, {
+      key: '2',
+      name: 'Charlie',
+      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
+      acc: 20.66,
+    }, {
+      key: '3',
+      name: 'Oscar',
+      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
+      acc: 8.6,
+    },
+  ],
+  friendsSettledUp: [
 
-]
+  ],
+}
 
 class DebtList extends React.Component {
   constructor() {
@@ -22,75 +55,37 @@ class DebtList extends React.Component {
 
   render() {
     return (<div>
-      <List renderHeader={() => 'Other people owe you'} className="my-list">
-      <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#00b894' }}>$10</span>}
-        >
-          {/* <Badge>
-            <span
-              style={{
-                width: '48px',
-                height: '48px',
-                background: 'url(https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg) center center /  48px 48px no-repeat',
-                display: 'inline-block' }}
-            />
-          </Badge> */}
-          Harry <Brief>8/31/18</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#00b894' }}>$10</span>}
-        >
-          Charlie <Brief>8/31/18</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#00b894' }}>$10</span>}
-        >
-          Oscar <Brief>8/31/18</Brief>
-        </Item>
+      <List renderHeader={() => 'Friends owe you'} className="my-list">
+      {
+        sampleData.friendsOweYou.map(friend => {
+          return (
+            <Item
+              key={friend.key}
+              arrow="horizontal"
+              thumb={
+                <Badge>
+                  <span
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                      display: 'inline-block' }}
+                  />
+                </Badge>
+              }
+              multipleLine
+              onClick={() => { window.location.href = '/u/1'}}
+              extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
+            >
+              {friend.name} <Brief>8/31/18</Brief>
+            </Item>
+          )
+        })
+      }
       </List>
-      <List renderHeader={() => 'You owe other people'} className="my-list">
+
+
+      <List renderHeader={() => 'Friends you owe'} className="my-list">
         {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
           Title <Brief>subtitle</Brief>
         </Item>
@@ -102,64 +97,75 @@ class DebtList extends React.Component {
         >
           ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
         </Item> */}
-        <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#e67e22' }}>$10</span>}
-        >
-          Harry <Brief>8/31/18</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#e67e22' }}>$10</span>}
-        >
-          Charlie <Brief>8/31/18</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          thumb={
-            <Badge>
-              <span
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'url(https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg) center center /  48px 48px no-repeat',
-                  display: 'inline-block' }}
-              />
-            </Badge>
-          }
-          multipleLine
-          onClick={() => { window.location.href = '/u/1'}}
-          extra={<span style={{ color: '#e67e22' }}>$10</span>}
-        >
-          Oscar <Brief>8/31/18</Brief>
-        </Item>
+        {
+          sampleData.friendsYouOwe.map(friend => {
+            return (
+              <Item
+                key={friend.key}
+                arrow="horizontal"
+                thumb={
+                  <Badge>
+                    <span
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                        display: 'inline-block' }}
+                    />
+                  </Badge>
+                }
+                multipleLine
+                onClick={() => { window.location.href = '/u/1'}}
+                extra={<span style={{ color: '#e67e22' }}>${ friend.acc }</span>}
+              >
+                {friend.name} <Brief>8/31/18</Brief>
+              </Item>
+            )
+          })
+        }
       </List>
+
+
+      <List renderHeader={() => 'Friends settled up'} className="my-list">
+        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
+          Title <Brief>subtitle</Brief>
+        </Item>
+        <Item
+          arrow="horizontal"
+          multipleLine
+          onClick={() => {}}
+          platform="android"
+        >
+          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
+        </Item> */}
+        {
+          sampleData.friendsYouOwe.map(friend => {
+            return (
+              <Item
+                key={friend.key}
+                arrow="horizontal"
+                thumb={
+                  <Badge>
+                    <span
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                        display: 'inline-block' }}
+                    />
+                  </Badge>
+                }
+                multipleLine
+                onClick={() => { window.location.href = '/u/1'}}
+                extra={<span>settled up</span>}
+              >
+                {friend.name} <Brief>8/31/18</Brief>
+              </Item>
+            )
+          })
+        }
+      </List>
+
       <List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
         <Item>Title</Item>
         <Item arrow="horizontal" onClick={() => {}}>Title</Item>
