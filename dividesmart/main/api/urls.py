@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('users/', include('main.api.users.urls')),
 
-    path('exchanges/', include('main.api.exchanges.urls')),
+    path('groups/', include('main.api.groups.urls')),
 
     path('login/', views.login),
 

@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 
 
-def exchanges(request):
+def groups(request):
     return HttpResponse(request.path)
 
 
-def exchange(request, id):
+def group(request, id):
     return HttpResponse(request.path)
