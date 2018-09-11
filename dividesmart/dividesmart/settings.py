@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from private_settings import DEBUG, SECRET_KEY, DATABASES
+from .private_settings import DEBUG, SECRET_KEY, DATABASES
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -106,6 +106,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+AUTH_USER_MODEL = 'main.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/

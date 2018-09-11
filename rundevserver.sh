@@ -4,7 +4,7 @@ python dividesmart/manage.py makemigrations
 # apply above migrations
 python dividesmart/manage.py migrate
 
-python dividesmart/manage.py showtasks
+# python dividesmart/manage.py showtasks
 
 # remove the obsolete bundle
 rm -r ./dividesmart/bundled_static/dev/*
