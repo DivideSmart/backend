@@ -1,6 +1,8 @@
 from django import forms
 from django.db import models
-from main.models import Group, User
+from main.models import (
+    Group, User
+)
 
 
 # class GroupForm(forms.ModelForm):
