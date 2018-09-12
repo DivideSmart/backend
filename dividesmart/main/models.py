@@ -8,7 +8,6 @@ from django.contrib.auth.models import (
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
-from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -49,6 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=128)
     balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     date_joined = models.DateTimeField(default=timezone.now)
+    friends = models.ManyToManyField('self')
     is_active = models.BooleanField(
         default=True,
     )
