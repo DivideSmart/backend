@@ -1,11 +1,9 @@
+import { ListView, TabBar } from 'antd-mobile';
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { TabBar, ListView } from 'antd-mobile';
 import { DebtList } from './debts_list.jsx'
-import { UserTab } from './user_tab3.jsx'
 import { GroupTab } from './group_tab.jsx'
-
+import React from 'react'
+import { UserTab } from './user_tab3.jsx'
 
 class Tabs extends React.Component {
   constructor(props) {
@@ -14,24 +12,6 @@ class Tabs extends React.Component {
       selectedTab: 'blueTab',
       hidden: false,
     };
-  }
-
-  renderContent(pageText) {
-    return (
-      <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
-        <div style={{ paddingTop: 60 }}>Clicked “{pageText}” tab， show “{pageText}” information</div>
-        <a style={{ display: 'block', marginTop: 40, marginBottom: 20, color: '#108ee9' }}
-          onClick={(e) => {
-            e.preventDefault();
-            this.setState({
-              hidden: !this.state.hidden,
-            });
-          }}
-        >
-          Click to show/hide tab-bar
-        </a>
-      </div>
-    );
   }
 
   render() {
@@ -46,8 +26,8 @@ class Tabs extends React.Component {
           prerenderingSiblingsNumber={0}
         >
           <TabBar.Item
-            title="Life"
-            key="Life"
+            title="Home"
+            key="Home"
             icon={<div style={{
               width: '28px',
               height: '28px',
@@ -87,8 +67,8 @@ class Tabs extends React.Component {
                 background: 'url(https://gw.alipayobjects.com/zos/rmsportal/ekLecvKBnRazVLXbWOnE.svg) center center /  21px 21px no-repeat' }}
               />
             }
-            title="Koubei"
-            key="Koubei"
+            title="Groups"
+            key="Groups"
             // badge={'new'}
             selected={this.state.selectedTab === 'redTab'}
             onPress={() => {
@@ -116,8 +96,8 @@ class Tabs extends React.Component {
                 background: 'url(https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg) center center /  21px 21px no-repeat' }}
               />
             }
-            title="My"
-            key="my"
+            title="Me"
+            key="Me"
             selected={this.state.selectedTab === 'yellowTab'}
             onPress={() => {
               this.setState({
