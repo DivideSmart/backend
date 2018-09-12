@@ -1,13 +1,11 @@
 import 'regenerator-runtime/runtime'
 
+import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, WhiteSpace, WingBlank } from 'antd-mobile';
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-
-import { Tabs, Result, List, Radio, InputItem, Icon, Card, WingBlank, WhiteSpace, Button, Checkbox, Flex } from 'antd-mobile';
-import { createForm } from 'rc-form';
-import ReceiptButton from './material/receipt_float_btn.jsx'
 import ListItem from 'antd-mobile/lib/list/ListItem';
+import React from 'react'
+import ReceiptButton from './material/receipt_float_btn.jsx'
+import { createForm } from 'rc-form';
 
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;

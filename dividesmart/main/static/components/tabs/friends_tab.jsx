@@ -2,6 +2,9 @@ import 'regenerator-runtime/runtime'
 
 import { Badge, List } from 'antd-mobile'
 
+import {
+  Link,
+} from 'react-router-dom'
 import React from 'react'
 
 const Item = List.Item
@@ -59,8 +62,9 @@ class FriendsTab extends React.Component {
       {
         sampleData.friendsOweYou.map(friend => {
           return (
+            <Link key={friend.key} to="/u/123">
             <Item
-              key={friend.key}
+
               arrow="horizontal"
               thumb={
                 <Badge>
@@ -74,11 +78,12 @@ class FriendsTab extends React.Component {
                 </Badge>
               }
               multipleLine
-              onClick={() => { window.location.href = '/u/1'}}
+              // onClick={() => { window.location.href = '/u/1'}}
               extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
             >
               {friend.name} <Brief>8/31/18</Brief>
             </Item>
+            </Link>
           )
         })
       }

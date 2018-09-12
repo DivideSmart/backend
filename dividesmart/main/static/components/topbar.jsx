@@ -1,10 +1,14 @@
 import 'regenerator-runtime/runtime'
 
 import { Icon, NavBar, Popover } from 'antd-mobile'
-import Home from '@material-ui/icons/Home'
-import PersonAdd from '@material-ui/icons/PersonAdd';
 
+import Home from '@material-ui/icons/Home'
+import {
+  Link,
+} from 'react-router-dom'
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
+
 const Item = Popover.Item
 
 const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" alt="" />;
@@ -78,10 +82,11 @@ class TopBar extends React.Component {
       <div>
         <NavBar
           icon={
-            <Home
-              style={{width: '28px', height: '28px',}}
-              onClick={() => window.location = '/'}
-            />
+            <Link style={{color: '#108ee9'}} to='/'>
+              <Home
+                style={{width: '28px', height: '28px',}}
+              />
+            </Link>
           }
           mode="light"
           rightContent={

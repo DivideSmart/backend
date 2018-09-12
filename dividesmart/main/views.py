@@ -20,10 +20,6 @@ def display_qr_scanner(request):
     return render(request, 'main/qr_scanner.html')
 
 
-def display_user(request, pk):
-    return render(request, 'main/user2.html')
-
-
 def display_new_user(request, pk):
     return render(request, 'main/user.html')
 

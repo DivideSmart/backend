@@ -16,6 +16,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Tabs } from './components/tabs.jsx'
 import { TopBar } from './components/topbar.jsx'
+import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 
@@ -34,11 +35,31 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router basename={'/'}>
+      <Router basename={''}>
         <div>
           <TopBar />
-          <Tabs />
-          <FlaoatingButton />
+
+          <Switch>
+            <Route
+              path={'/u/:userPk'}
+              render={ ({match, location}) =>
+                <UserTab
+                  match={match}
+                  location={location}
+                />
+              }
+            />
+
+            <Route
+              path={'/'}
+              render={ ({match, location}) =>
+                <div>
+                  <Tabs />
+                  <FlaoatingButton />
+                </div>
+              }
+            />
+          </Switch>
         </div>
       </Router>
     )
