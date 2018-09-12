@@ -6,7 +6,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 import { Badge, List, LocaleProvider } from 'antd-mobile';
 import React, { Component } from 'react'
 
-import { CustomNavBar } from './components/navbar.jsx'
+import { TopBar } from './components/topbar.jsx'
 import QrReader from 'react-qr-reader'
 import ReactDOM from 'react-dom'
 import { UserTab } from './components/user_tab2.jsx'
@@ -23,7 +23,7 @@ class App extends Component {
   render(){
     return(
       <div>
-        <CustomNavBar />
+        <TopBar />
         <UserTab />
       </div>
     )

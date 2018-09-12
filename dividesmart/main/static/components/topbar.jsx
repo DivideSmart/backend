@@ -51,7 +51,7 @@ function PopOver(props) {
 }
 
 
-class CustomNavBar extends React.Component {
+class TopBar extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -99,4 +99,4 @@ class CustomNavBar extends React.Component {
   }
 }
 
-export { CustomNavBar }
+export { TopBar }

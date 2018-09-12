@@ -5,7 +5,7 @@ import 'typeface-roboto'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { CustomNavBar } from './components/navbar.jsx'
+import { TopBar } from './components/topbar.jsx'
 import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { Tabs } from './components/tabs.jsx'
 import { CreateForm } from './components/create_form.jsx'
@@ -27,7 +27,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <CustomNavBar />
+        <TopBar />
         <CreateForm />
       </div>
     )

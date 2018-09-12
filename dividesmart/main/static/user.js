@@ -5,7 +5,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 
 import React, { Component } from 'react'
 
-import { CustomNavBar } from './components/navbar.jsx'
+import { TopBar } from './components/topbar.jsx'
 import { LocaleProvider } from 'antd-mobile';
 import ReactDOM from 'react-dom'
 import { UserTab } from './components/user_tab.jsx'
@@ -22,7 +22,7 @@ class App extends Component {
   render(){
     return(
       <div>
-        <CustomNavBar />
+        <TopBar />
         <UserTab />
       </div>
     )

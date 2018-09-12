@@ -3,7 +3,7 @@ import './css/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
-import { CustomNavBar } from './components/navbar.jsx'
+import { TopBar } from './components/topbar.jsx'
 import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { LocaleProvider } from 'antd-mobile';
 import React from 'react'
@@ -28,7 +28,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <CustomNavBar />
+        <TopBar />
         <Tabs />
         <FlaoatingButton />
       </div>
