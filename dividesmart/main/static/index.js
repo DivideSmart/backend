@@ -3,12 +3,19 @@ import './css/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
-import { TopBar } from './components/topbar.jsx'
+import {
+  Link,
+  Route,
+  BrowserRouter as Router,
+  Switch
+} from 'react-router-dom'
+
 import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { LocaleProvider } from 'antd-mobile';
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Tabs } from './components/tabs.jsx'
+import { TopBar } from './components/topbar.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 
@@ -27,11 +34,13 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <TopBar />
-        <Tabs />
-        <FlaoatingButton />
-      </div>
+      <Router basename={'/'}>
+        <div>
+          <TopBar />
+          <Tabs />
+          <FlaoatingButton />
+        </div>
+      </Router>
     )
   }
 }

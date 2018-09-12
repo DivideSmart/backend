@@ -1,11 +1,11 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List } from 'antd-mobile';
+import { Badge, List } from 'antd-mobile'
 
 import React from 'react'
 
-const Item = List.Item;
-const Brief = Item.Brief;
+const Item = List.Item
+const Brief = Item.Brief
 
 
 var sampleData = {
@@ -166,7 +166,7 @@ class FriendsTab extends React.Component {
         }
       </List>
 
-      <List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
+      {/* <List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
         <Item>Title</Item>
         <Item arrow="horizontal" onClick={() => {}}>Title</Item>
         <Item extra="extra content" arrow="horizontal" onClick={() => {}}>Title</Item>
@@ -192,7 +192,7 @@ class FriendsTab extends React.Component {
         >
           My Cost Ratio
         </Item>
-      </List>
+      </List> */}
       {/* <List renderHeader={() => 'Text Wrapping'} className="my-list">
         <Item data-seed="logId">Single line，long text will be hidden with ellipsis；</Item>
         <Item wrap>Multiple line，long text will wrap；Long Text Long Text Long Text Long Text Long Text Long Text</Item>
