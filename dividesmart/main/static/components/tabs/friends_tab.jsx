@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List } from 'antd-mobile'
+import { Badge, List, Button, WhiteSpace } from 'antd-mobile'
 
 import {
   Link,
@@ -57,56 +57,15 @@ class FriendsTab extends React.Component {
   }
 
   render() {
-    return (<div>
-      <List renderHeader={() => 'Friends owe you'} className="my-list">
-      {
-        sampleData.friendsOweYou.map(friend => {
-          return (
-            <Link key={friend.key} to="/u/123">
-            <Item
-
-              arrow="horizontal"
-              thumb={
-                <Badge>
-                  <span
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                      display: 'inline-block' }}
-                  />
-                </Badge>
-              }
-              multipleLine
-              // onClick={() => { window.location.href = '/u/1'}}
-              extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
-            >
-              {friend.name} <Brief>8/31/18</Brief>
-            </Item>
-            </Link>
-          )
-        })
-      }
-      </List>
-
-
-      <List renderHeader={() => 'Friends you owe'} className="my-list">
-        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-          Title <Brief>subtitle</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          multipleLine
-          onClick={() => {}}
-          platform="android"
-        >
-          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-        </Item> */}
+    return (
+      <div>
+        <List renderHeader={() => 'Friends owe you'} className="my-list">
         {
-          sampleData.friendsYouOwe.map(friend => {
+          sampleData.friendsOweYou.map(friend => {
             return (
+              <Link key={friend.key} to="/u/123">
               <Item
-                key={friend.key}
+
                 arrow="horizontal"
                 thumb={
                   <Badge>
@@ -120,56 +79,101 @@ class FriendsTab extends React.Component {
                   </Badge>
                 }
                 multipleLine
-                onClick={() => { window.location.href = '/u/1'}}
-                extra={<span style={{ color: '#e67e22' }}>${ friend.acc }</span>}
+                // onClick={() => { window.location.href = '/u/1'}}
+                extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
               >
                 {friend.name} <Brief>8/31/18</Brief>
               </Item>
+              </Link>
             )
           })
         }
-      </List>
+        </List>
 
 
-      <List renderHeader={() => 'Friends settled up'} className="my-list">
-        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-          Title <Brief>subtitle</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          multipleLine
-          onClick={() => {}}
-          platform="android"
-        >
-          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-        </Item> */}
-        {
-          sampleData.friendsYouOwe.map(friend => {
-            return (
-              <Item
-                key={friend.key}
-                arrow="horizontal"
-                thumb={
-                  <Badge>
-                    <span
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                        display: 'inline-block' }}
-                    />
-                  </Badge>
-                }
-                multipleLine
-                onClick={() => { window.location.href = '/u/1'}}
-                extra={<span>settled up</span>}
-              >
-                {friend.name} <Brief>8/31/18</Brief>
-              </Item>
-            )
-          })
-        }
-      </List>
+        <List renderHeader={() => 'Friends you owe'} className="my-list">
+          {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
+            Title <Brief>subtitle</Brief>
+          </Item>
+          <Item
+            arrow="horizontal"
+            multipleLine
+            onClick={() => {}}
+            platform="android"
+          >
+            ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
+          </Item> */}
+          {
+            sampleData.friendsYouOwe.map(friend => {
+              return (
+                <Item
+                  key={friend.key}
+                  arrow="horizontal"
+                  thumb={
+                    <Badge>
+                      <span
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          display: 'inline-block' }}
+                      />
+                    </Badge>
+                  }
+                  multipleLine
+                  onClick={() => { window.location.href = '/u/1'}}
+                  extra={<span style={{ color: '#e67e22' }}>${ friend.acc }</span>}
+                >
+                  {friend.name} <Brief>8/31/18</Brief>
+                </Item>
+              )
+            })
+          }
+        </List>
+
+
+        <List renderHeader={() => 'Friends settled up'} className="my-list">
+          {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
+            Title <Brief>subtitle</Brief>
+          </Item>
+          <Item
+            arrow="horizontal"
+            multipleLine
+            onClick={() => {}}
+            platform="android"
+          >
+            ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
+          </Item> */}
+          {
+            sampleData.friendsYouOwe.map(friend => {
+              return (
+                <Item
+                  key={friend.key}
+                  arrow="horizontal"
+                  thumb={
+                    <Badge>
+                      <span
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          display: 'inline-block' }}
+                      />
+                    </Badge>
+                  }
+                  multipleLine
+                  onClick={() => { window.location.href = '/u/1'}}
+                  extra={<span>settled up</span>}
+                >
+                  {friend.name} <Brief>8/31/18</Brief>
+                </Item>
+              )
+            })
+          }
+        </List>
+
+        <WhiteSpace />
+        <WhiteSpace />
 
       {/* <List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
         <Item>Title</Item>
