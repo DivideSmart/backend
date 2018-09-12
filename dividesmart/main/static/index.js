@@ -8,7 +8,7 @@ import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { LocaleProvider } from 'antd-mobile';
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { TabBarExample } from './components/tabs.jsx'
+import { Tabs } from './components/tabs.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 
@@ -29,7 +29,7 @@ class App extends React.Component {
     return (
       <div>
         <CustomNavBar />
-        <TabBarExample />
+        <Tabs />
         <FlaoatingButton />
       </div>
     )

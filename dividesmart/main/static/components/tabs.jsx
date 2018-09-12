@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom'
 import { TabBar, ListView } from 'antd-mobile';
 import { DebtList } from './debts_list.jsx'
 import { UserTab } from './user_tab3.jsx'
+import { GroupTab } from './group_tab.jsx'
 
 
-class TabBarExample extends React.Component {
+class Tabs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -97,35 +98,7 @@ class TabBarExample extends React.Component {
             }}
             data-seed="logId1"
           >
-            <DebtList />
-          </TabBar.Item>
-
-          <TabBar.Item
-            icon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/psUFoAMjkCcjqtUCNPxB.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            selectedIcon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/IIRLrXXrFAhXVdhMWgUI.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            title="Friend"
-            key="Friend"
-            // dot
-            selected={this.state.selectedTab === 'greenTab'}
-            onPress={() => {
-              this.setState({
-                selectedTab: 'greenTab',
-              });
-            }}
-          >
-            <DebtList />
+            <GroupTab />
           </TabBar.Item>
 
           <TabBar.Item
@@ -160,6 +133,6 @@ class TabBarExample extends React.Component {
   }
 }
 
-export { TabBarExample }
+export { Tabs }
 
 

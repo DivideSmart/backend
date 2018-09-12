@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 import { CustomNavBar } from './components/navbar.jsx'
 import FlaoatingButton from './components/material/material_float_btn.jsx'
-import { TabBarExample } from './components/tabs.jsx'
+import { Tabs } from './components/tabs.jsx'
 import { CreateForm } from './components/create_form.jsx'
 import 'antd-mobile/dist/antd-mobile.css'
 import { LocaleProvider } from 'antd-mobile';
