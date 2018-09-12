@@ -1,4 +1,4 @@
-import os, sys
+import os
 import django
 
 from collections import namedtuple
@@ -8,7 +8,7 @@ os.environ.setdefault(
 )
 django.setup()
 
-from main.models import *
+from main.models import *  # noqa
 
 UserT = namedtuple('UserT', ['username', 'email_address', 'password'])
 
