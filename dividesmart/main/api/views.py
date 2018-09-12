@@ -13,8 +13,8 @@ def handle_login(request):
     if not form.is_valid():
         return HttpResponseNotFound('Invalid request')
     user = authenticate(
-        email_address=request.POST['email_address'],
-        password=request.POST['password']
+        email_address=form.cleaned_data['email_address'],
+        password=form.cleaned_data['password']
     )
     if not user:
         return HttpResponse('Invalid email or password', status=401)
