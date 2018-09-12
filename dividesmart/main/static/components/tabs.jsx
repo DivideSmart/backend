@@ -1,9 +1,9 @@
 import { ListView, TabBar } from 'antd-mobile';
 
-import { DebtList } from './debts_list.jsx'
-import { GroupTab } from './group_tab.jsx'
+import { FriendsTab } from './tabs/friends_tab.jsx'
+import { GroupTab } from './tabs/group_tab.jsx'
 import React from 'react'
-import { UserTab } from './user_tab3.jsx'
+import { UserTab } from './tabs/user_tab3.jsx'
 
 class Tabs extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class Tabs extends React.Component {
             }}
             data-seed="logId"
           >
-            <DebtList />
+            <FriendsTab />
           </TabBar.Item>
 
           <TabBar.Item

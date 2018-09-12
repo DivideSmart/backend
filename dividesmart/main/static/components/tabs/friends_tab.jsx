@@ -45,7 +45,7 @@ var sampleData = {
   ],
 }
 
-class DebtList extends React.Component {
+class FriendsTab extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -217,4 +217,4 @@ class DebtList extends React.Component {
   }
 }
 
-export { DebtList }
+export { FriendsTab }
