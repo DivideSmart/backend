@@ -7,19 +7,8 @@ from main.models import (
     User, Payment, Loan, Group
 )
 from django.forms.models import model_to_dict
-from functools import wraps
 from django.db.models import Q
-
-
-def ensure_authenticated(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        current_user = get_user(request)
-        if not current_user.is_authenticated:
-            return HttpResponseForbidden('Not logged in')
-        return f(*args, **kwargs)
-    return wrapper
+from main.utils import ensure_authenticated
 
 
 def other_users_to_dict(users):
@@ -113,6 +102,25 @@ def friend(request, user_id, friend_id):
         friend_user.save()
         return HttpResponse('Friend removed')
     return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def groups(request, user_id):
+    current_user = get_user(request)
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot view this user\'s groups')
+    if request.method == 'GET':
+        # get all groups for this user
+        return HttpResponse('nice GET')
+    if request.method == 'POST':
+        # join a group
+        return HttpResponse('nice POST')
+    return HttpResponseNotFound('Invalid request')
+
+
+def group(request, user_id, group_id):
+    pass
 
 
 @csrf_exempt
