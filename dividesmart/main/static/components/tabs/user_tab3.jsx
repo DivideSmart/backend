@@ -2,9 +2,7 @@ import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
 
 import React from 'react'
 
-var QRCode = require('qrcode.react');
-
-//import QRCode from 'qrcode.react'
+import QRCode from 'qrcode.react'
 
 class UserTab extends React.Component {
   constructor() {
