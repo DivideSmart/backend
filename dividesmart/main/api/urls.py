@@ -8,9 +8,10 @@ urlpatterns = [
 
     path('groups/', include('main.api.groups.urls')),
 
-    path('login', views.handle_login),
+    path('login/', views.handle_login),
 
-    path('logout', views.handle_logout)
+    path('logout/', views.handle_logout),
+
     # url(r'user$', views.get_current_user),
 
     # url(r'users/(?P<pk>\d+)', views.UserAPIView.as_view()),

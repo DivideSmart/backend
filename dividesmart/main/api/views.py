@@ -1,11 +1,14 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound
-from django.contrib.auth import authenticate, login, logout
+from django.http import (
+    HttpResponse, HttpResponseNotFound
+)
+from django.contrib.auth import (
+    authenticate, login, logout
+)
+from main.forms import (
+    LoginForm
+)
 
-from main.forms import LoginForm
 
-
-@csrf_exempt
 def handle_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')
