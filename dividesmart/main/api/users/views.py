@@ -24,15 +24,13 @@ def other_user_to_dict(user):
 
 
 @csrf_exempt
-def friends(request, id):
+def friends(request, user_id):
     current_user = get_user(request)
     if not current_user.is_authenticated:
         return HttpResponseForbidden('Not logged in')
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot view this user\'s friends')
     if request.method == 'GET':
-        # GET all friends for this user id
-        # user must be this user id
-        if current_user.pk != id:
-            return HttpResponseForbidden('Cannot view this user\'s friends')
         return JsonResponse({
             'friends': other_users_to_dict(current_user.friends.all()),
             'invites': {
@@ -45,16 +43,15 @@ def friends(request, id):
             }
         })
 
-    if current_user.pk == id:
-        return HttpResponseNotFound('Cannot modify friendship with yourself')
-    other_user = User.objects.filter(pk=id).first()
-    if not other_user:
-        return HttpResponseNotFound('No such user')
     if request.method == 'POST':
         # Request friendship with this user id
         # Or accept friendship with this user id
+        friend_id = request.POST.get('friend_id', None)
+        other_user = User.objects.filter(pk=friend_id).first()
+        if not other_user:
+            return HttpResponseNotFound('No such user')
         received_fr = (
-            current_user.received_friend_requests.filter(pk=id).first()
+            current_user.received_friend_requests.filter(pk=user_id).first()
         )
         if received_fr:
             current_user.received_friend_requests.remove(other_user)
@@ -67,9 +64,25 @@ def friends(request, id):
             current_user.save()
             other_user.save()
             return HttpResponse('Friend request sent')
+    return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+def friend(request, user_id, friend_id):
+    current_user = get_user(request)
+    if not current_user.is_authenticated:
+        return HttpResponseForbidden('Not logged in')
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot modify this user\'s friends')
     if request.method == 'DELETE':
+        other_user = User.objects.filter(pk=friend_id).first()
+        if not other_user:
+            return HttpResponseNotFound('No such friend')
         # Delete friendship / request with this user id
-        pass
-    current_user.save()
-    other_user.save()
-    return HttpResponse(request.path)
+        current_user.received_friend_requests.remove(other_user)
+        current_user.requested_friends.remove(other_user)
+        current_user.friends.remove(other_user)
+        current_user.save()
+        other_user.save()
+        return HttpResponse('Friend removed')
+    return HttpResponseNotFound('Invalid request')
