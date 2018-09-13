@@ -17,4 +17,5 @@ urlpatterns = [
 
     url(r'^$', views.display_index),
     url(r'^u', views.display_index),
+    url(r'^g', views.display_index),
 ]

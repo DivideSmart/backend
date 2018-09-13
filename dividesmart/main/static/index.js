@@ -20,6 +20,8 @@ import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { TransitionGroup, CSSTransition } from "react-transition-group"
+import { FriendsTab } from './components/tabs/friends_tab.jsx'
+import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 
 class App extends React.Component {
   constructor() {
@@ -55,6 +57,16 @@ class App extends React.Component {
                   />
 
                   <Route
+                    path={'/g/:gPk'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <GroupInfoTab name = "Buddy Group CS3216" count_users = "12"/>
+                        <FriendsTab />
+                      </div>
+                    }
+                  />
+
+                  <Route
                     path={'/'}
                     render={ ({match, location}) =>
                       <div>
@@ -63,6 +75,8 @@ class App extends React.Component {
                       </div>
                     }
                   />
+
+
                 </Switch>
               </CSSTransition>
             </TransitionGroup>
