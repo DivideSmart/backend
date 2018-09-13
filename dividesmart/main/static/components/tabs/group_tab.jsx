@@ -2,6 +2,10 @@ import 'regenerator-runtime/runtime'
 
 import { Badge, List, SearchBar } from 'antd-mobile';
 
+import {
+  Link,
+} from 'react-router-dom'
+
 import React from 'react'
 import Close from '@material-ui/icons/Close';
 import Group from '@material-ui/icons/Group';
@@ -63,25 +67,27 @@ class GroupTab extends React.Component {
       {
         sampleData.groupsOweYou.map(group => {
           return (
-            <Item
-              key={group.key}
-              arrow="horizontal"
-              thumb={
-                <Badge>
-                  <Group
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      display: 'inline-block' }}
-                  />
-                </Badge>
-              }
-              multipleLine
-              onClick={() => { window.location.href = '/u/1'}}
-              extra={<span style={{ color: '#00b894' }}>${ group.acc }</span>}
-            >
-              {group.name} <Brief>{group.lastActivityDate}</Brief>
-            </Item>
+            <Link key={group.key} to="g/1" onClick={e => e.preventDefault()}>
+              <Item
+                key={group.key}
+                arrow="horizontal"
+                thumb={
+                  <Badge>
+                    <Group
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        display: 'inline-block' }}
+                    />
+                  </Badge>
+                }
+                multipleLine
+                onClick={() => { window.location.href = '/u/1'}}
+                extra={<span style={{ color: '#00b894' }}>${ group.acc }</span>}
+              >
+                {group.name} <Brief>{group.lastActivityDate}</Brief>
+              </Item>
+            </Link>
           )
         })
       }
@@ -103,7 +109,8 @@ class GroupTab extends React.Component {
         {
           sampleData.groupsYouOwe.map(group => {
           return (
-            <Item
+            <Link key={group.key} to="/g/1">
+              <Item
               key={group.key}
               arrow="horizontal"
               thumb={
@@ -121,7 +128,8 @@ class GroupTab extends React.Component {
               extra={<span style={{ color: '#e67e22' }}>${ group.acc }</span>}
             >
               {group.name} <Brief>{group.lastActivityDate}</Brief>
-              </Item>
+              </Item>  
+            </Link>
             )
           })
         }
@@ -143,25 +151,27 @@ class GroupTab extends React.Component {
         {
           sampleData.groupsSettledUp.map(group => {
           return (
-            <Item
-              key={group.key}
-              arrow="horizontal"
-              thumb={
-                <Badge>
-                  <Group
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      display: 'inline-block' }}
-                  />
-                </Badge>
-              }
-              multipleLine
-              onClick={() => { window.location.href = '/u/1'}}
-              extra={<span>settled up</span>}
-            >
-              {group.name} <Brief>{group.lastActivityDate}</Brief>
-              </Item>
+            <Link key={group.key} to="/g/1">
+              <Item
+                key={group.key}
+                arrow="horizontal"
+                thumb={
+                  <Badge>
+                    <Group
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        display: 'inline-block' }}
+                    />
+                  </Badge>
+                }
+                multipleLine
+                onClick={() => { window.location.href = '/u/1'}}
+                extra={<span>settled up</span>}
+              >
+                {group.name} <Brief>{group.lastActivityDate}</Brief>
+                </Item>
+            </Link>
             )
           })
         }
