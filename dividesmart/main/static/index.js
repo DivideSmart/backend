@@ -3,6 +3,7 @@ import './css/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
+import { CSSTransition, TransitionGroup } from "react-transition-group"
 import {
   Link,
   Route,
@@ -19,7 +20,6 @@ import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-import { TransitionGroup, CSSTransition } from "react-transition-group"
 
 class App extends React.Component {
   constructor() {
