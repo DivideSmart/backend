@@ -3,7 +3,9 @@ from django.http import (
 )
 from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
-from main.models import User
+from main.models import (
+    User, Payment, Loan
+)
 from django.forms.models import model_to_dict
 from functools import wraps
 
@@ -85,22 +87,36 @@ def friend(request, user_id, friend_id):
     if current_user.pk != user_id:
         return HttpResponseForbidden('Cannot modify this user\'s friends')
     if request.method == 'DELETE':
-        other_user = User.objects.filter(pk=friend_id).first()
-        if not other_user:
+        friend_user = User.objects.filter(pk=friend_id).first()
+        if not friend_user:
             return HttpResponseNotFound('No such friend')
         # Delete friendship / request with this user id
-        current_user.received_friend_requests.remove(other_user)
-        current_user.requested_friends.remove(other_user)
-        current_user.friends.remove(other_user)
+        current_user.received_friend_requests.remove(friend_user)
+        current_user.requested_friends.remove(friend_user)
+        current_user.friends.remove(friend_user)
         current_user.save()
-        other_user.save()
+        friend_user.save()
         return HttpResponse('Friend removed')
     return HttpResponseNotFound('Invalid request')
 
 
 @csrf_exempt
 @ensure_authenticated
-def friend_loans(request, user_id, friend_id):
+def friend_entries(request, user_id, friend_id):
+    current_user = get_user(request)
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    if request.method == 'GET':
+        # TODO: Add pagination
+        friend_user = User.objects.filter(pk=friend_id).first()
+        if not friend_user:
+            return HttpResponseNotFound('No such friend')
+    return HttpResponse()
+
+
+@csrf_exempt
+@ensure_authenticated
+def friend_bills(request, user_id, friend_id):
     # TODO: Remember to extract this functionality so
     # that it can be reused in groups
     return HttpResponse()
