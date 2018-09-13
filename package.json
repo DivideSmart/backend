@@ -32,7 +32,7 @@
     "email-validator": "^2.0.4",
     "file-loader": "^1.1.11",
     "glob": "^7.1.2",
-    "less": "^2.7.3",
+    "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "less-vars-to-js": "^1.2.1",
     "moment-timezone": "^0.5.14",
@@ -54,5 +54,8 @@
     "style-loader": "^0.19.1",
     "typeface-roboto": "^0.0.54",
     "webpack": "^4.16.1"
+  },
+  "dependencies": {
+    "qrcode.react": "^0.8.0"
   }
 }

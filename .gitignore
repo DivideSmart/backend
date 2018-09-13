@@ -176,3 +176,4 @@ db.sqlite3
 **/media/pdf/*
 **/media/portrait/*/*
 **/media/document_thumbnails/*
+.DS_Store
