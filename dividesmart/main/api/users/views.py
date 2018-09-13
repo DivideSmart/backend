@@ -4,10 +4,11 @@ from django.http import (
 from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
 from main.models import (
-    User, Payment, Loan
+    User, Payment, Loan, Group
 )
 from django.forms.models import model_to_dict
 from functools import wraps
+from django.db.models import Q
 
 
 def ensure_authenticated(f):
@@ -21,12 +22,6 @@ def ensure_authenticated(f):
     return wrapper
 
 
-def user(request):
-    # Can only look at this user if you are a friend of this user
-    # or you are this user
-    return HttpResponseNotFound()
-
-
 def other_users_to_dict(users):
     return [other_user_to_dict(u) for u in users]
 
@@ -35,6 +30,26 @@ def other_user_to_dict(user):
     user_json = model_to_dict(user, fields=['email_address', 'username'])
     user_json['pk'] = user.pk
     return user_json
+
+
+@ensure_authenticated
+def user(request, user_id):
+    # Can only look at this user if you are a friend of this user
+    # or you are this user, or you are in the same group as this user
+    if request.method != 'GET':
+        # TODO: Unless you are this user?
+        return HttpResponseForbidden('Cannot modify this user')
+    current_user = get_user(request)
+    is_related = (current_user.pk == user_id) \
+                 or (current_user.friends.filter(pk=user_id).first() is not None) \
+                 or (
+                     Group.objects.filter(
+                         Q(users=current_user) & Q(users=user_id)
+                     ).first() is not None)
+    if not is_related:
+        return HttpResponseForbidden('Cannot view this user')
+    other_user = User.objects.filter(pk=user_id).first()
+    return JsonResponse(other_user_to_dict(other_user))
 
 
 @csrf_exempt
@@ -64,7 +79,7 @@ def friends(request, user_id):
         if not other_user:
             return HttpResponseNotFound('No such user')
         received_fr = (
-            current_user.received_friend_requests.filter(pk=user_id).first()
+            current_user.received_friend_requests.filter(pk=friend_id).first()
         )
         if received_fr:
             current_user.received_friend_requests.remove(other_user)
