@@ -2,6 +2,10 @@ import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
 
 import React from 'react'
 
+var QRCode = require('qrcode.react');
+
+//import QRCode from 'qrcode.react'
+
 class UserTab extends React.Component {
   constructor() {
     super()
@@ -68,12 +72,15 @@ class UserTab extends React.Component {
               }}
             />
           </List.Item> */}
-
-
-
         </List>
 
-
+        <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: 'auto', marginRight: 'auto'}}
+          value={"http://picturesofpeoplescanningqrcodes.tumblr.com/"} //API request --> something like api/addnewfriend?userId=xxxx
+          size={256}
+          bgColor={"#ffffff"}
+          fgColor={"#000000"}
+          level={"L"}
+        />
         {/* <WhiteSpace />
         <WhiteSpace />
         <WingBlank>
