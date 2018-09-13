@@ -7,7 +7,7 @@ urlpatterns = [
 
     path('register/', views.register),
 
-    url('login/', views.display_login),
+    path('login/', views.display_login),
 
     url(r'^form/$', views.display_form),
 

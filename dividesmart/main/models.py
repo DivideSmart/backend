@@ -49,6 +49,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     date_joined = models.DateTimeField(default=timezone.now)
     friends = models.ManyToManyField('self')
+    requested_friends = models.ManyToManyField(
+        'self', related_name='received_friend_requests', symmetrical=False)
+
     is_active = models.BooleanField(
         default=True,
     )

@@ -13,4 +13,5 @@ def user(request):
         current_user,
         fields=('email_address', 'username', 'date_joined', 'balance')
     )
+    user_json['pk'] = current_user.pk
     return JsonResponse(user_json, status=200)
