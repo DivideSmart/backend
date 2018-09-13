@@ -20,13 +20,9 @@ import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-<<<<<<< HEAD
-import { TransitionGroup, CSSTransition } from "react-transition-group"
 import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
-=======
->>>>>>> 59dfe94a304a40ab2529f39e07fe8bf17c4707e5
-
+import { FriendList } from './components/tabs/friend_list.jsx'
 class App extends React.Component {
   constructor() {
     super()
@@ -50,6 +46,14 @@ class App extends React.Component {
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
+                  
+                  <Route
+                    path={'/u/friend_list'}
+                    render={ ({match, location}) =>
+                      <FriendList/>
+                    }
+                  />
+
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>

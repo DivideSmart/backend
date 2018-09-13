@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^u', views.display_index),
     url(r'^g', views.display_index),
     url(r'^create', views.display_index),
+    url(r'u/friend_list', views.display_index)
 ]
