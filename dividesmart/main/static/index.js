@@ -3,6 +3,7 @@ import './css/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
+import { CSSTransition, TransitionGroup } from "react-transition-group"
 import {
   Link,
   Route,
@@ -36,31 +37,37 @@ class App extends React.Component {
   render() {
     return (
       <Router basename={''}>
-        <div>
-          <TopBar />
+        <Route render={({ location }) => (
+          <div>
+            <TopBar />
 
-          <Switch>
-            <Route
-              path={'/u/:userPk'}
-              render={ ({match, location}) =>
-                <UserTab
-                  match={match}
-                  location={location}
-                />
-              }
-            />
+            <TransitionGroup>
+              <CSSTransition key={location.key} classNames="fade" timeout={380}>
+                <Switch>
+                  <Route
+                    path={'/u/:userPk'}
+                    render={ ({match, location}) =>
+                      <UserTab
+                        match={match}
+                        location={location}
+                      />
+                    }
+                  />
 
-            <Route
-              path={'/'}
-              render={ ({match, location}) =>
-                <div>
-                  <Tabs />
-                  <FlaoatingButton />
-                </div>
-              }
-            />
-          </Switch>
-        </div>
+                  <Route
+                    path={'/'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <Tabs />
+                        <FlaoatingButton />
+                      </div>
+                    }
+                  />
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          </div>
+        )} />
       </Router>
     )
   }
