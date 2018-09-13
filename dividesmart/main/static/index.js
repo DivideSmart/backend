@@ -19,6 +19,7 @@ import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
+import { TransitionGroup, CSSTransition } from "react-transition-group"
 
 class App extends React.Component {
   constructor() {
@@ -36,31 +37,37 @@ class App extends React.Component {
   render() {
     return (
       <Router basename={''}>
-        <div>
-          <TopBar />
+        <Route render={({ location }) => (
+          <div>
+            <TopBar />
 
-          <Switch>
-            <Route
-              path={'/u/:userPk'}
-              render={ ({match, location}) =>
-                <UserTab
-                  match={match}
-                  location={location}
-                />
-              }
-            />
+            <TransitionGroup>
+              <CSSTransition key={location.key} classNames="fade" timeout={380}>
+                <Switch>
+                  <Route
+                    path={'/u/:userPk'}
+                    render={ ({match, location}) =>
+                      <UserTab
+                        match={match}
+                        location={location}
+                      />
+                    }
+                  />
 
-            <Route
-              path={'/'}
-              render={ ({match, location}) =>
-                <div>
-                  <Tabs />
-                  <FlaoatingButton />
-                </div>
-              }
-            />
-          </Switch>
-        </div>
+                  <Route
+                    path={'/'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <Tabs />
+                        <FlaoatingButton />
+                      </div>
+                    }
+                  />
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          </div>
+        )} />
       </Router>
     )
   }
