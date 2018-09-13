@@ -1,11 +1,12 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List, Button, WhiteSpace } from 'antd-mobile'
+import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
 import {
   Link,
 } from 'react-router-dom'
 import React from 'react'
+import Close from '@material-ui/icons/Close';
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -59,31 +60,31 @@ class FriendsTab extends React.Component {
   render() {
     return (
       <div>
+        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
         <List renderHeader={() => 'Friends owe you'} className="my-list">
         {
           sampleData.friendsOweYou.map(friend => {
             return (
               <Link key={friend.key} to="/u/123">
-              <Item
-
-                arrow="horizontal"
-                thumb={
-                  <Badge>
-                    <span
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                        display: 'inline-block' }}
-                    />
-                  </Badge>
-                }
-                multipleLine
-                // onClick={() => { window.location.href = '/u/1'}}
-                extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
-              >
-                {friend.name} <Brief>8/31/18</Brief>
-              </Item>
+                <Item
+                  arrow="horizontal"
+                  thumb={
+                    <Badge>
+                      <span
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          display: 'inline-block' }}
+                      />
+                    </Badge>
+                  }
+                  multipleLine
+                  // onClick={() => { window.location.href = '/u/1'}}
+                  extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
+                >
+                  {friend.name} <Brief>8/31/18</Brief>
+                </Item>
               </Link>
             )
           })
