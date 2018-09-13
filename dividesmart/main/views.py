@@ -6,6 +6,29 @@ from django.core.mail import EmailMessage  # for sending verification using e-ma
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from main.forms import RegistrationForm, LoginForm
+from main.models import User
+
+
+def register(request):
+    # TODO: Add email confirmation later
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email_address=form.cleaned_data['email_address'],
+                password=form.cleaned_data['password']
+            )
+            return HttpResponse('user created')
+    else:
+        form = RegistrationForm()
+    return render(request, 'main/register.html', {'form': form})
+
+
+def display_login(request):
+    form = LoginForm()
+    return render(request, 'main/login.html', {'form': form})
 
 
 def display_index(request):
