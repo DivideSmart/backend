@@ -5,6 +5,18 @@ from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
 from main.models import User
 from django.forms.models import model_to_dict
+from functools import wraps
+
+
+def ensure_authenticated(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        request = args[0]
+        current_user = get_user(request)
+        if not current_user.is_authenticated:
+            return HttpResponseForbidden('Not logged in')
+        return f(*args, **kwargs)
+    return wrapper
 
 
 def user(request):
@@ -24,10 +36,9 @@ def other_user_to_dict(user):
 
 
 @csrf_exempt
+@ensure_authenticated
 def friends(request, user_id):
     current_user = get_user(request)
-    if not current_user.is_authenticated:
-        return HttpResponseForbidden('Not logged in')
     if current_user.pk != user_id:
         return HttpResponseForbidden('Cannot view this user\'s friends')
     if request.method == 'GET':
@@ -68,10 +79,9 @@ def friends(request, user_id):
 
 
 @csrf_exempt
+@ensure_authenticated
 def friend(request, user_id, friend_id):
     current_user = get_user(request)
-    if not current_user.is_authenticated:
-        return HttpResponseForbidden('Not logged in')
     if current_user.pk != user_id:
         return HttpResponseForbidden('Cannot modify this user\'s friends')
     if request.method == 'DELETE':
@@ -86,3 +96,17 @@ def friend(request, user_id, friend_id):
         other_user.save()
         return HttpResponse('Friend removed')
     return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def friend_loans(request, user_id, friend_id):
+    # TODO: Remember to extract this functionality so
+    # that it can be reused in groups
+    return HttpResponse()
+
+
+@csrf_exempt
+@ensure_authenticated
+def friend_payments(request, user_id, friend_id):
+    return HttpResponse()
