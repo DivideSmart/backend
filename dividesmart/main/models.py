@@ -89,12 +89,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email_address], **kwargs)
 
 
+class GroupManager(models.Manager):
+    use_in_migrations = True
+
+    def create_group(self, name, user):
+        group = self.model(name=name)
+        group.creator = user
+        group.save(using=self._db)
+        group = Group.objects.get(id=group.id)
+        group.users.add(user)
+        group.save(using=self._db)
+        return group
+
+
 class Group(models.Model):
     name = models.CharField(max_length=50)
     date_created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(
         User, related_name='groups_created', on_delete=models.CASCADE)
     users = models.ManyToManyField(User)
+
+    objects = GroupManager()
 
 
 class Debt(models.Model):

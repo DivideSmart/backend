@@ -1,6 +1,6 @@
 from django import forms
 from main.models import (
-    User
+    User, Group
 )
 
 
@@ -17,3 +17,9 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email_address', 'username', 'password']
+
+
+class CreateGroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']

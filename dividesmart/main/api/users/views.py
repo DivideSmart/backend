@@ -21,6 +21,16 @@ def other_user_to_dict(user):
     return user_json
 
 
+def groups_to_dict(groups):
+    return [group_to_dict(g) for g in groups]
+
+
+def group_to_dict(group):
+    group_json = model_to_dict(group, fields=['name', 'date_created', 'creator'])
+    group_json['pk'] = group.pk
+    return group_json
+
+
 @ensure_authenticated
 def user(request, user_id):
     # Can only look at this user if you are a friend of this user
@@ -112,7 +122,10 @@ def groups(request, user_id):
         return HttpResponseForbidden('Cannot view this user\'s groups')
     if request.method == 'GET':
         # get all groups for this user
-        return HttpResponse('nice GET')
+        groups = current_user.group_set.all()
+        return JsonResponse({
+            'groups': groups_to_dict(groups)
+        })
     if request.method == 'POST':
         # join a group
         return HttpResponse('nice POST')
