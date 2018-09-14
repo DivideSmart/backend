@@ -1,47 +1,53 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List } from 'antd-mobile';
+import { Badge, List, SearchBar } from 'antd-mobile';
+
+import {
+  Link,
+} from 'react-router-dom'
 
 import React from 'react'
+import Close from '@material-ui/icons/Close';
+import Group from '@material-ui/icons/Group';
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
 
 var sampleData = {
-  friendsOweYou: [
+  groupsOweYou: [
     {
       key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
+      name: 'Farewell Dinner',
       acc: 10.28,
+      lastActivityDate: '8/31/18',
     }, {
       key: '2',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
+      name: 'Housemates',
       acc: 8.6,
+      lastActivityDate: '8/30/18',
     },
   ],
-  friendsYouOwe: [
+  groupsYouOwe: [
     {
       key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
+      name: 'Movie',
       acc: 10.28,
+      lastActivityDate: '8/31/18',
     }, {
       key: '2',
-      name: 'Charlie',
-      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
+      name: 'Birthday Party',
       acc: 20.66,
-    }, {
-      key: '3',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
+      lastActivityDate: '8/31/18',
     },
   ],
-  friendsSettledUp: [
-
+  groupsSettledUp: [
+    {
+      key: '1',
+      name: 'Road Trip',
+      acc: 100.28,
+      lastActivityDate: '8/31/18',
+    },
   ],
 }
 
@@ -56,79 +62,39 @@ class GroupTab extends React.Component {
   render() {
     return (
     <div>
-      <h1> Should be group </h1>
-      <List renderHeader={() => 'Friends owe you'} className="my-list">
+      <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+      <List renderHeader={() => 'Groups owe you'} className="my-list">
       {
-        sampleData.friendsOweYou.map(friend => {
+        sampleData.groupsOweYou.map(group => {
           return (
-            <Item
-              key={friend.key}
-              arrow="horizontal"
-              thumb={
-                <Badge>
-                  <span
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                      display: 'inline-block' }}
-                  />
-                </Badge>
-              }
-              multipleLine
-              onClick={() => { window.location.href = '/u/1'}}
-              extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
-            >
-              {friend.name} <Brief>8/31/18</Brief>
-            </Item>
-          )
-        })
-      }
-      </List>
-
-
-      <List renderHeader={() => 'Friends you owe'} className="my-list">
-        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-          Title <Brief>subtitle</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          multipleLine
-          onClick={() => {}}
-          platform="android"
-        >
-          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-        </Item> */}
-        {
-          sampleData.friendsYouOwe.map(friend => {
-            return (
+            <Link key={group.key} to="g/1" onClick={e => e.preventDefault()}>
               <Item
-                key={friend.key}
+                key={group.key}
                 arrow="horizontal"
                 thumb={
                   <Badge>
-                    <span
+                    <Group
                       style={{
                         width: '48px',
                         height: '48px',
-                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
                         display: 'inline-block' }}
                     />
                   </Badge>
                 }
                 multipleLine
                 onClick={() => { window.location.href = '/u/1'}}
-                extra={<span style={{ color: '#e67e22' }}>${ friend.acc }</span>}
+                extra={<span style={{ color: '#00b894' }}>${ group.acc }</span>}
               >
-                {friend.name} <Brief>8/31/18</Brief>
+                {group.name} <Brief>{group.lastActivityDate}</Brief>
               </Item>
-            )
-          })
-        }
+            </Link>
+          )
+        })
+      }
       </List>
 
 
-      <List renderHeader={() => 'Friends settled up'} className="my-list">
+      <List renderHeader={() => 'Groups you owe'} className="my-list">
         {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
           Title <Brief>subtitle</Brief>
         </Item>
@@ -141,18 +107,60 @@ class GroupTab extends React.Component {
           ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
         </Item> */}
         {
-          sampleData.friendsYouOwe.map(friend => {
-            return (
+          sampleData.groupsYouOwe.map(group => {
+          return (
+            <Link key={group.key} to="/g/1">
               <Item
-                key={friend.key}
+              key={group.key}
+              arrow="horizontal"
+              thumb={
+                <Badge>
+                  <Group
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      display: 'inline-block' }}
+                  />
+                </Badge>
+              }
+              multipleLine
+              onClick={() => { window.location.href = '/u/1'}}
+              extra={<span style={{ color: '#e67e22' }}>${ group.acc }</span>}
+            >
+              {group.name} <Brief>{group.lastActivityDate}</Brief>
+              </Item>  
+            </Link>
+            )
+          })
+        }
+      </List>
+
+
+      <List renderHeader={() => 'Groups settled up'} className="my-list">
+        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
+          Title <Brief>subtitle</Brief>
+        </Item>
+        <Item
+          arrow="horizontal"
+          multipleLine
+          onClick={() => {}}
+          platform="android"
+        >
+          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
+        </Item> */}
+        {
+          sampleData.groupsSettledUp.map(group => {
+          return (
+            <Link key={group.key} to="/g/1">
+              <Item
+                key={group.key}
                 arrow="horizontal"
                 thumb={
                   <Badge>
-                    <span
+                    <Group
                       style={{
                         width: '48px',
                         height: '48px',
-                        background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
                         display: 'inline-block' }}
                     />
                   </Badge>
@@ -161,14 +169,15 @@ class GroupTab extends React.Component {
                 onClick={() => { window.location.href = '/u/1'}}
                 extra={<span>settled up</span>}
               >
-                {friend.name} <Brief>8/31/18</Brief>
-              </Item>
+                {group.name} <Brief>{group.lastActivityDate}</Brief>
+                </Item>
+            </Link>
             )
           })
         }
       </List>
 
-      <List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
+      {/*<List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
         <Item>Title</Item>
         <Item arrow="horizontal" onClick={() => {}}>Title</Item>
         <Item extra="extra content" arrow="horizontal" onClick={() => {}}>Title</Item>
@@ -195,7 +204,7 @@ class GroupTab extends React.Component {
           My Cost Ratio
         </Item>
       </List>
-      {/* <List renderHeader={() => 'Text Wrapping'} className="my-list">
+       <List renderHeader={() => 'Text Wrapping'} className="my-list">
         <Item data-seed="logId">Single line，long text will be hidden with ellipsis；</Item>
         <Item wrap>Multiple line，long text will wrap；Long Text Long Text Long Text Long Text Long Text Long Text</Item>
         <Item extra="extra content" multipleLine align="top" wrap>

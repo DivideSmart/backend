@@ -3,6 +3,7 @@ import './css/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
+import { CSSTransition, TransitionGroup } from "react-transition-group"
 import {
   Link,
   Route,
@@ -19,6 +20,12 @@ import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
+<<<<<<< HEAD
+import { TransitionGroup, CSSTransition } from "react-transition-group"
+import { FriendsTab } from './components/tabs/friends_tab.jsx'
+import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
+=======
+>>>>>>> 59dfe94a304a40ab2529f39e07fe8bf17c4707e5
 
 class App extends React.Component {
   constructor() {
@@ -36,31 +43,49 @@ class App extends React.Component {
   render() {
     return (
       <Router basename={''}>
-        <div>
-          <TopBar />
+        <Route render={({ location }) => (
+          <div>
+            <TopBar />
 
-          <Switch>
-            <Route
-              path={'/u/:userPk'}
-              render={ ({match, location}) =>
-                <UserTab
-                  match={match}
-                  location={location}
-                />
-              }
-            />
+            <TransitionGroup>
+              <CSSTransition key={location.key} classNames="fade" timeout={380}>
+                <Switch>
+                  <Route
+                    path={'/u/:userPk'}
+                    render={ ({match, location}) =>
+                      <UserTab
+                        match={match}
+                        location={location}
+                      />
+                    }
+                  />
 
-            <Route
-              path={'/'}
-              render={ ({match, location}) =>
-                <div>
-                  <Tabs />
-                  <FlaoatingButton />
-                </div>
-              }
-            />
-          </Switch>
-        </div>
+                  <Route
+                    path={'/g/:gPk'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <GroupInfoTab name = "Buddy Group CS3216" count_users = "12"/>
+                        <FriendsTab />
+                      </div>
+                    }
+                  />
+
+                  <Route
+                    path={'/'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <Tabs />
+                        <FlaoatingButton />
+                      </div>
+                    }
+                  />
+
+
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          </div>
+        )} />
       </Router>
     )
   }

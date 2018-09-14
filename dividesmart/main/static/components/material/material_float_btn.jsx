@@ -3,6 +3,9 @@ import 'regenerator-runtime/runtime'
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
+import {
+  Link,
+} from 'react-router-dom'
 import React from 'react'
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import classNames from 'classnames';
@@ -80,14 +83,15 @@ class FlaoatingButton extends React.Component {
       //   }}
       //   unmountOnExit
       // >
-        <Button
-          variant="fab"
-          className={classes.fab}
-          style={{bottom: 66, backgroundColor: 'dodgerblue', zIndex: 1000}}
-          onClick={() => window.location.href = '/form'}
-        >
-          <AddIcon style={{ color: 'white' }} />
-        </Button>
+        <Link to={'/create'}>
+          <Button
+            variant="fab"
+            className={classes.fab}
+            style={{bottom: 66, backgroundColor: 'dodgerblue', zIndex: 1000}}
+          >
+            <AddIcon style={{ color: 'white' }} />
+          </Button>
+        </Link>
       // </Zoom>
     );
   }
