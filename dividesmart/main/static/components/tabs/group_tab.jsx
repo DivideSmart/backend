@@ -82,7 +82,7 @@ class GroupTab extends React.Component {
                   </Badge>
                 }
                 multipleLine
-                onClick={() => { window.location.href = '/u/1'}}
+                // onClick={() => { window.location.href = '/u/1'}}
                 extra={<span style={{ color: '#00b894' }}>${ group.acc }</span>}
               >
                 {group.name} <Brief>{group.lastActivityDate}</Brief>
@@ -124,7 +124,7 @@ class GroupTab extends React.Component {
                 </Badge>
               }
               multipleLine
-              onClick={() => { window.location.href = '/u/1'}}
+              // onClick={() => { window.location.href = '/u/1'}}
               extra={<span style={{ color: '#e67e22' }}>${ group.acc }</span>}
             >
               {group.name} <Brief>{group.lastActivityDate}</Brief>
