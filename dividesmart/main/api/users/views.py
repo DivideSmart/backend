@@ -7,19 +7,8 @@ from main.models import (
     User, Payment, Loan, Group
 )
 from django.forms.models import model_to_dict
-from functools import wraps
 from django.db.models import Q
-
-
-def ensure_authenticated(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        current_user = get_user(request)
-        if not current_user.is_authenticated:
-            return HttpResponseForbidden('Not logged in')
-        return f(*args, **kwargs)
-    return wrapper
+from main.utils import ensure_authenticated
 
 
 def other_users_to_dict(users):
@@ -30,6 +19,16 @@ def other_user_to_dict(user):
     user_json = model_to_dict(user, fields=['email_address', 'username'])
     user_json['pk'] = user.pk
     return user_json
+
+
+def groups_to_dict(groups):
+    return [group_to_dict(g) for g in groups]
+
+
+def group_to_dict(group):
+    group_json = model_to_dict(group, fields=['name', 'date_created', 'creator'])
+    group_json['pk'] = group.pk
+    return group_json
 
 
 @ensure_authenticated
@@ -113,6 +112,28 @@ def friend(request, user_id, friend_id):
         friend_user.save()
         return HttpResponse('Friend removed')
     return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def groups(request, user_id):
+    current_user = get_user(request)
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot view this user\'s groups')
+    if request.method == 'GET':
+        # get all groups for this user
+        groups = current_user.group_set.all()
+        return JsonResponse({
+            'groups': groups_to_dict(groups)
+        })
+    if request.method == 'POST':
+        # join a group
+        return HttpResponse('nice POST')
+    return HttpResponseNotFound('Invalid request')
+
+
+def group(request, user_id, group_id):
+    pass
 
 
 @csrf_exempt
