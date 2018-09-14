@@ -6,5 +6,7 @@ urlpatterns = [
     path('<int:id>', views.group),
     path('<int:group_id>/members/', views.group_members),
     path('<int:group_id>/invites/', views.group_invites),
-    path('<int:group_id>/invites/<int:invite_id>/', views.group_invite)
+    path('<int:group_id>/invites/<int:invite_id>/', views.group_invite),
+    path('<int:group_id>/invites/accept/', views.group_accept),
+    path('<int:group_id>/invites/decline/', views.group_decline)
 ]

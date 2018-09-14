@@ -114,9 +114,9 @@ def groups(request, user_id):
         return HttpResponseForbidden('Cannot view this user\'s groups')
     if request.method == 'GET':
         # get all groups for this user
-        groups = current_user.joined_groups.all()
         return JsonResponse({
-            'groups': groups_to_dict(groups)
+            'groups': groups_to_dict(current_user.joined_groups.all()),
+            'invites': groups_to_dict(current_user.group_invites.all())
         })
     if request.method == 'POST':
         return HttpResponse('nice POST')
