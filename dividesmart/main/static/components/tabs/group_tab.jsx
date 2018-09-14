@@ -67,7 +67,7 @@ class GroupTab extends React.Component {
       {
         sampleData.groupsOweYou.map(group => {
           return (
-            <Link key={group.key} to="g/1" onClick={e => e.preventDefault()}>
+            <Link key={group.key} to="g/1" onClick={e => e.stopPropagation()}>
               <Item
                 key={group.key}
                 arrow="horizontal"

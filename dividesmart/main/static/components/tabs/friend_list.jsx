@@ -50,6 +50,8 @@ class FriendList extends React.Component {
     this.state = {
       disabled: false,
     }
+    console.log(this.props);
+    console.log("HERE");
   }
 
   render() {
@@ -59,7 +61,10 @@ class FriendList extends React.Component {
         <List renderHeader={() => 'Friends'} className="my-list">
         {
           sampleData.friends.map(friend => {
-            return (
+            console.log("AAAAA");
+            // console.log(this.props.isCreateGroup);
+            if(this.props.isCreateGroup) {
+              return (
                 <Item
                   thumb={
                     <Badge>
@@ -78,11 +83,36 @@ class FriendList extends React.Component {
                 >
                   {friend.name} <Brief>8/31/18</Brief>
                 </Item>
+              )
+              
+            }
+
+            
+            return (
+                <Link to='u/1'>
+                  <Item
+                    thumb={
+                      <Badge>
+                        <span
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                            display: 'inline-block' }}
+                        />
+                      </Badge>
+                    }
+                    multipleLine
+                    // onClick={() => { window.location.href = '/u/1'}}
+                  >
+                    {friend.name} <Brief>8/31/18</Brief>
+                  </Item>
+                </Link>
             )
           })
         }
         </List>
-
+        
         <WhiteSpace />
         <WhiteSpace />
 

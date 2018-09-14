@@ -23,6 +23,8 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { FriendList } from './components/tabs/friend_list.jsx'
+import {GroupCreate} from './components/group_create.jsx'
+
 class App extends React.Component {
   constructor() {
     super()
@@ -48,7 +50,7 @@ class App extends React.Component {
                 <Switch>
                   
                   <Route
-                    path={'/u/friend_list'}
+                    path={'/u/:userPk/friend_list'}
                     render={ ({match, location}) =>
                       <FriendList/>
                     }
@@ -63,7 +65,16 @@ class App extends React.Component {
                       />
                     }
                   />
-
+                  
+                  <Route
+                    path={'/g/create'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <GroupCreate />
+                      </div>
+                    }
+                  />
+                  
                   <Route
                     path={'/g/:gPk'}
                     render={ ({match, location}) =>
