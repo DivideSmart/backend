@@ -8,17 +8,9 @@ from main.models import (
 )
 from django.forms.models import model_to_dict
 from django.db.models import Q
-from main.utils import ensure_authenticated
-
-
-def other_users_to_dict(users):
-    return [other_user_to_dict(u) for u in users]
-
-
-def other_user_to_dict(user):
-    user_json = model_to_dict(user, fields=['email_address', 'username'])
-    user_json['pk'] = user.pk
-    return user_json
+from main.utils import (
+    ensure_authenticated, other_users_to_dict, other_user_to_dict
+)
 
 
 def groups_to_dict(groups):
@@ -122,12 +114,11 @@ def groups(request, user_id):
         return HttpResponseForbidden('Cannot view this user\'s groups')
     if request.method == 'GET':
         # get all groups for this user
-        groups = current_user.group_set.all()
+        groups = current_user.joined_groups.all()
         return JsonResponse({
             'groups': groups_to_dict(groups)
         })
     if request.method == 'POST':
-        # join a group
         return HttpResponse('nice POST')
     return HttpResponseNotFound('Invalid request')
 

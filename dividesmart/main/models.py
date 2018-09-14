@@ -107,9 +107,13 @@ class Group(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(
         User, related_name='groups_created', on_delete=models.CASCADE)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User, related_name='joined_groups')
+    invited_users = models.ManyToManyField(User, related_name='group_invites')
 
     objects = GroupManager()
+
+    def has_member(self, user):
+        return bool(self.users.filter(pk=user.pk).first())
 
 
 class Debt(models.Model):
