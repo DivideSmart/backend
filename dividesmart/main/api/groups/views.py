@@ -7,7 +7,9 @@ from main.utils import (
     ensure_authenticated, other_users_to_dict
 )
 from main.forms import CreateGroupForm
-from main.models import Group
+from main.models import (
+    Group, User
+)
 from django.contrib.auth import get_user
 
 
@@ -43,5 +45,45 @@ def group_members(request, group_id):
     })
 
 
+@csrf_exempt
+@ensure_authenticated
 def group_invites(request, group_id):
-    pass
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+
+    if request.method == 'GET':
+        # Get all invited users
+        return JsonResponse({
+            'invites': other_users_to_dict(group.invited_users.all())
+        })
+
+    if request.method == 'POST':
+        # Invite a new user
+        invite_user = User.objects.filter(
+            pk=request.POST.get('user_id', None)).first()
+        if not invite_user:
+            return HttpResponseNotFound('Invalid user id')
+        group.invited_users.add(invite_user)
+        group.save()
+        return HttpResponseNotFound('user invited')
+
+    return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def group_invite(request, group_id, invite_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'DELETE':
+        # Delete an invited user
+        invited_user = group.invited_users.filter(pk=invite_id).first()
+        if not invited_user:
+            return HttpResponseNotFound('No such invited user')
+        group.invited_users.remove(invited_user)
+        return HttpResponse('Invite deleted')
+    return HttpResponseNotFound('Invalid request')
