@@ -33,7 +33,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('/').then(response => {
+    axios.get('/api/user').then(response => {
       console.log(response.data)
     })
   }
