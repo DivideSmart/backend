@@ -10,29 +10,30 @@ django.setup()
 
 from main.models import *  # noqa
 
-UserT = namedtuple('UserT', ['username', 'email_address', 'password'])
+JOHN = User.objects.create_user(
+    username='John Smith',
+    email_address='johnsmith@gmail.com',
+    password='johnsmith123'
+)
 
-USERS = [
-    UserT(
-        username='John Smith',
-        email_address='johnsmith@gmail.com',
-        password='johnsmith123'
-    ),
-    UserT(
-        username='Jane Doe',
-        email_address='janedoe@gmail.com',
-        password='janedoe94'
-    ),
-    UserT(
-        username='Bill Gates',
-        email_address='billgates@outlook.com',
-        password='bgates'
-    )
-]
+JANE = User.objects.create_user(
+    username='Jane Doe',
+    email_address='janedoe@gmail.com',
+    password='janedoe94'
+)
 
-for user in USERS:
-    User.objects.create_user(
-        username=user.username,
-        email_address=user.email_address,
-        password=user.password
-    )
+BILL = User.objects.create_user(
+    username='Bill Gates',
+    email_address='billgates@outlook.com',
+    password='bgates'
+)
+
+TEST_GROUP = Group.objects.create_group(
+    name='Test Group',
+    user=JOHN
+)
+
+JOHN.friends.add(JANE)
+JOHN.requested_friends.add(BILL)
+TEST_GROUP.users.add(JOHN)
+TEST_GROUP.invited_users.add(JANE)
