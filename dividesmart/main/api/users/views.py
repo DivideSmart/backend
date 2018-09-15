@@ -7,7 +7,7 @@ from django.http import (
 from django.views.decorators.csrf import csrf_exempt
 
 from main.models import (
-    User, Group, Entry
+    User, Group, Entry, Debt
 )
 from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
@@ -42,7 +42,9 @@ def user(request, user_id):
     if not is_related:
         return HttpResponseForbidden('Cannot view this user')
     other_user = User.objects.filter(pk=user_id).first()
-    return JsonResponse(other_user_to_dict(other_user))
+    return JsonResponse(
+        other_user_to_dict(other_user, current_user, True)
+    )
 
 
 @csrf_exempt
@@ -53,13 +55,16 @@ def friends(request, user_id):
         return HttpResponseForbidden('Cannot view this user\'s friends')
     if request.method == 'GET':
         return JsonResponse({
-            'friends': other_users_to_dict(current_user.friends.all()),
+            'friends': other_users_to_dict(
+                current_user.friends.all(), current_user, True, None),
             'invites': {
                 'sent': other_users_to_dict(
-                    current_user.requested_friends.all()
+                    current_user.requested_friends.all(),
+                    current_user, False, None
                 ),
                 'received': other_users_to_dict(
-                    current_user.received_friend_requests.all()
+                    current_user.received_friend_requests.all(),
+                    current_user, False, None
                 )
             }
         })
@@ -77,6 +82,8 @@ def friends(request, user_id):
         if received_fr:
             current_user.received_friend_requests.remove(other_user)
             current_user.friends.add(other_user)
+            Debt.objects.create(user=current_user, other_user=other_user)
+            Debt.objects.create(user=other_user, other_user=current_user)
             current_user.save()
             other_user.save()
             return HttpResponse('Friend request accepted')

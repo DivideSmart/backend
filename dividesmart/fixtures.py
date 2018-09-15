@@ -28,15 +28,20 @@ BILL = User.objects.create_user(
     password='bgates'
 )
 
-TEST_GROUP = Group.objects.create_group(
-    name='Test Group',
-    user=JOHN
-)
-
-# JOHN_JANE_BILL = Bill.objects.
+TEST_GROUP = Group.objects.create_group(name='Test Group', user=JOHN)
 
 JOHN.friends.add(JANE)
+JOHN_JANE_DEBT = Debt.objects.create(user=JOHN, other_user=JANE)
+JANE_JOHN_DEBT = Debt.objects.create(user=JANE, other_user=JOHN)
+
 JOHN.requested_friends.add(BILL)
 TEST_GROUP.users.add(JOHN)
-TEST_GROUP.invited_users.add(JANE)
+
 TEST_GROUP.users.add(BILL)
+TEST_GROUP_JOHN_BILL_DEBT = Debt.objects.create(
+    group=TEST_GROUP, user=JOHN, other_user=BILL
+)
+TEST_GROUP_BILL_JOHN_DEBT = Debt.objects.create(
+    group=TEST_GROUP, user=BILL, other_user=JOHN
+)
+TEST_GROUP.invited_users.add(JANE)

@@ -8,7 +8,7 @@ from main.utils import (
 )
 from main.forms import CreateGroupForm
 from main.models import (
-    Group, User
+    Group, User, Debt
 )
 from django.contrib.auth import get_user
 
@@ -41,7 +41,8 @@ def group_members(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     return JsonResponse({
-        'members': other_users_to_dict(group.users.all())
+        'members': other_users_to_dict(
+            group.users.all(), current_user, True, group)
     })
 
 
@@ -56,7 +57,8 @@ def group_invites(request, group_id):
     if request.method == 'GET':
         # Get all invited users
         return JsonResponse({
-            'invites': other_users_to_dict(group.invited_users.all())
+            'invites': other_users_to_dict(
+                group.invited_users.all(), current_user, False, group)
         })
 
     if request.method == 'POST':
@@ -99,9 +101,13 @@ def group_accept(request, group_id):
     if not group or not group.has_invited_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
+        current_members = group.users.all()
         group.users.add(current_user)
         group.invited_users.remove(current_user)
         group.save()
+        for member in current_members:
+            Debt.objects.create(group=group, user=current_user, other_user=member)
+            Debt.objects.create(group=group, user=member, other_user=current_user)
         return HttpResponse('Joined group')
     return HttpResponseNotFound('Invalid request')
 

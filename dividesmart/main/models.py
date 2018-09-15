@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from polymorphic.models import PolymorphicModel
+from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 
 class UserManager(BaseUserManager):
@@ -130,18 +130,18 @@ class Group(models.Model):
 
 
 class Debt(models.Model):
-    OWE = 'OWE'
-    LENT = 'LENT'
-    SETTLED = 'SETTLED'
-    DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent'), (SETTLED, 'settled')]
+    """
+    amount > 0: `user` is owed `amount` by `other_user`.
+    amount = 0: `user` and `other_user` are settled up.
+    amount < 0: `user` owes `amount` to `other_user`.
+    """
 
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
-    user1 = models.ForeignKey(
+    user = models.ForeignKey(
         User, related_name='debt_source', on_delete=models.CASCADE)
-    user2 = models.ForeignKey(
+    other_user = models.ForeignKey(
         User, related_name='debt_dest', on_delete=models.CASCADE)
-    type = models.CharField(max_length=4, choices=DEBT_TYPES)
-    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
 
 class Entry(PolymorphicModel):
@@ -170,16 +170,14 @@ class EntryParticipation(models.Model):
     """
     This model provides data for each person's participation in an
     entry. So different participation type and amount for different people.
+
+    amount > 0: `user` is owed `amount`
+    amount = 0: `user` and `other_user`
+    amount < 0: `user` owes `amount`
     """
-
-    OWE = 'OWE'
-    LENT = 'LENT'
-    PARTICIPATION_TYPES = [(OWE, 'owe'), (LENT, 'lent')]
-
     participant = models.ForeignKey(User, on_delete=models.CASCADE)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=18, decimal_places=2)
-    type = models.CharField(max_length=4, choices=PARTICIPATION_TYPES)
 
 
 class Payment(Entry):
@@ -188,7 +186,7 @@ class Payment(Entry):
     )
 
 
-class BillManager(models.Manager):
+class BillManager(PolymorphicManager):
     use_in_migrations = True
 
     def create_bill(self, name, group, creator, initiator, amount, loans):
