@@ -11,7 +11,7 @@ import {
   BrowserRouter as Router,
   Switch
 } from 'react-router-dom'
-import { faChevronLeft, faHome, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faReceipt, faDollarSign, faHome, faChevronLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { FriendList } from './components/tabs/friend_list.jsx'
@@ -28,7 +28,7 @@ import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-library.add([faHome, faChevronLeft, faUsers, faUserCircle])
+library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
 
 class App extends React.Component {
