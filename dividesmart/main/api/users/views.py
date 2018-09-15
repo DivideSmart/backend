@@ -154,7 +154,9 @@ def friend_entries(request, user_id, friend_id):
             .filter(participants__id=friend_id)
             .all()
         )
-        print(entries)
+        return JsonResponse({
+            'entries': [e.to_dict_for_user(current_user) for e in entries]
+        })
     return HttpResponse()
 
 

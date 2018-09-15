@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from decimal import Decimal
+
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.core.mail import send_mail
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from polymorphic.models import PolymorphicModel, PolymorphicManager
@@ -165,6 +168,12 @@ class Entry(PolymorphicModel):
         through='EntryParticipation')
     amount = models.DecimalField(max_digits=18, decimal_places=2)
 
+    def to_dict(self):
+        raise RuntimeError('Implement me')
+
+    def to_dict_for_user(self):
+        raise RuntimeError('Implement me')
+
 
 class EntryParticipation(models.Model):
     """
@@ -193,36 +202,57 @@ class BillManager(PolymorphicManager):
         # loans is a list of tuples [(loan_user, loan_amount), ...]
         # Assumes that this data is sane
         # (e.g. creator is in group, loaner in group)
-
-        bill = Bill.objects.create(
+        bill = Bill(
             group=group,
             name=name,
             creator=creator,
             initiator=initiator,
             amount=amount
         )
+        bill.save()
+
+        if not group:
+            assert(len(loans) == 1)
 
         # Handle loanees
         for loan_user, loan_amt in loans:
             bill_participation = EntryParticipation(
                 participant=loan_user,
                 entry=bill,
-                amount=loan_amt,
-                type=EntryParticipation.OWE
+                amount=Decimal(-loan_amt),
             )
             bill_participation.save()
+
+            # Update debts
+            loaner_debt = (
+                Debt.objects
+                .filter(group=group, user=initiator, other_user=loan_user)
+                .first()
+            )
+            receiver_debt = (
+                Debt.objects
+                .filter(group=group, user=loan_user, other_user=initiator)
+                .first()
+            )
+            loaner_debt.amount += Decimal(loan_amt)
+            receiver_debt.amount -= Decimal(loan_amt)
+            loaner_debt.save()
+            receiver_debt.save()
+
+            # create loan objects attached to bill
+            Loan.objects.create(
+                bill=bill,
+                receiver=loan_user,
+                amount=loan_amt
+            )
 
         # Handle loaner
         bill_loan_participation = EntryParticipation(
             participant=initiator,
             entry=bill,
             amount=amount,
-            type=EntryParticipation.LENT
         )
         bill_loan_participation.save()
-
-        # Update debts
-
 
         return bill
 
@@ -231,9 +261,23 @@ class Bill(Entry):
 
     objects = BillManager()
 
+    def to_dict(self):
+        return model_to_dict(
+            self,
+            fields=['name', 'creator', 'initiator', 'date_created']
+        )
+
+    def to_dict_for_user(self, user):
+        assert(self.participants.filter(pk=user.pk).first())
+        bill = self.to_dict()
+        bill['amount'] = EntryParticipation.objects.get(
+            participant=user, entry=self
+        ).amount
+        return bill
+
 
 class Loan(models.Model):
-    bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
+    bill = models.ForeignKey(Bill, related_name='loans', on_delete=models.CASCADE)
     receiver = models.ForeignKey(
         User, related_name='loans_received', on_delete=models.CASCADE
     )

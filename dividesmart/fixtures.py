@@ -51,3 +51,12 @@ TEST_GROUP_BILL_JOHN_DEBT = Debt.objects.create(
     group=TEST_GROUP, user=BILL, other_user=JOHN
 )
 TEST_GROUP.invited_users.add(JANE)
+
+Bill.objects.create_bill(
+    name='Test bill',
+    group=None,
+    creator=JOHN,
+    initiator=JOHN,
+    amount=12.34,
+    loans=[(JANE, 12.34)]
+)
