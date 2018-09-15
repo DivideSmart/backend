@@ -213,6 +213,7 @@ def friend_bills(request, user_id, friend_id):
         return JsonResponse(bill.to_dict_for_user(current_user))
     return HttpResponse()
 
+
 @csrf_exempt
 @ensure_authenticated
 def friend_payments(request, user_id, friend_id):

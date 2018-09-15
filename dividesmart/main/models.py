@@ -214,8 +214,10 @@ class BillManager(PolymorphicManager):
         if not group:
             assert(len(loans) == 1)
 
+        loaner_gets_back = 0
         # Handle loanees
         for loan_user, loan_amt in loans.items():
+            loaner_gets_back += loan_amt
             bill_participation = EntryParticipation(
                 participant=loan_user,
                 entry=bill,
@@ -250,7 +252,7 @@ class BillManager(PolymorphicManager):
         bill_loan_participation = EntryParticipation(
             participant=initiator,
             entry=bill,
-            amount=amount,
+            amount=Decimal(loaner_gets_back),
         )
         bill_loan_participation.save()
 
