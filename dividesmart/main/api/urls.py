@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('login/', views.handle_login),
 
+    path('register/', views.handle_register),
+
     path('logout/', views.handle_logout),
 
     # url(r'user$', views.get_current_user),
