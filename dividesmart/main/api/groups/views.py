@@ -85,5 +85,37 @@ def group_invite(request, group_id, invite_id):
         if not invited_user:
             return HttpResponseNotFound('No such invited user')
         group.invited_users.remove(invited_user)
+        group.save()
         return HttpResponse('Invite deleted')
+    return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def group_accept(request, group_id):
+    # Accept group invite
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_invited_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'POST':
+        group.users.add(current_user)
+        group.invited_users.remove(current_user)
+        group.save()
+        return HttpResponse('Joined group')
+    return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def group_decline(request, group_id):
+    # Decline group invite
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_invited_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'POST':
+        group.invited_users.remove(current_user)
+        group.save()
+        return HttpResponse('Declined group invite')
     return HttpResponseNotFound('Invalid request')

@@ -115,6 +115,9 @@ class Group(models.Model):
     def has_member(self, user):
         return bool(self.users.filter(pk=user.pk).first())
 
+    def has_invited_member(self, user):
+        return bool(self.invited_users.filter(pk=user.pk).first())
+
 
 class Debt(models.Model):
     OWE = 'OWE'
