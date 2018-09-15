@@ -11,6 +11,11 @@ import {
   BrowserRouter as Router,
   Switch
 } from 'react-router-dom'
+import { setCurrentUser, logoutUser } from './actions/authActions.js';
+
+import { Provider } from 'react-redux';
+import store from './store.js';
+
 import { faReceipt, faDollarSign, faHome, faChevronLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import FlaoatingButton from './components/material/material_float_btn.jsx'
@@ -30,6 +35,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
+// store.dispatch(setCurrentUser({CU: '1'}));
 
 class App extends React.Component {
   constructor() {
@@ -43,7 +49,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log("ABOUT TO DISPATCH");
     axios.get('/api/user').then(response => {
+      console.log("DISPATCH");
+      console.log(response.data);
+      store.dispatch(setCurrentUser(response.data));
       this.setState({
         user: response.data
       })
@@ -62,82 +72,82 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router basename={''}>
-        <Route render={({ location }) => (
-          <div>
-            <TopBar />
-            {
-              console.log("HEHE")
-            }
-            {
-              console.log(this.props)
-            }
-            <TransitionGroup>
-              <CSSTransition key={location.key} classNames="fade" timeout={380}>
-                <Switch>
-                  <Route
-                    path={'/u/:userPk/friend_list/:isCreateGroup'}
-                    render={ ({match, location}) =>
-                      <FriendList updateUsers = {this.updateUsers}/>
-                    }
-                  />
+      <Provider locale={enUS} store={store}>
+        <Router basename={''}>
+          <Route render={({ location }) => (
+            <div>
+              <TopBar />
+              {
+                console.log("HEHE")
+              }
+              {
+                console.log(this.props)
+              }
+              <TransitionGroup>
+                <CSSTransition key={location.key} classNames="fade" timeout={380}>
+                  <Switch>
+                    <Route
+                      path={'/u/:userPk/friend_list/:isCreateGroup'}
+                      render={ ({match, location}) =>
+                        <FriendList updateUsers = {this.updateUsers}/>
+                      }
+                    />
 
-                  <Route
-                    path={'/u/:userPk'}
-                    render={ ({match, location}) =>
-                      <div>
-                        <UserTab
-                          match={match}
-                          location={location}
-                        />
-                        <FlaoatingButton />
-                      </div>
-                    }
-                  />
+                    <Route
+                      path={'/u/:userPk'}
+                      render={ ({match, location}) =>
+                        <div>
+                          <UserTab
+                            match={match}
+                            location={location}
+                          />
+                          <FlaoatingButton />
+                        </div>
+                      }
+                    />
 
-                  <Route
-                    path={'/g/create'}
-                    render={ ({match, location}) =>
-                      <div>
-                        <GroupCreate users = {this.state.users} />
-                      </div>
-                    }
-                  />
+                    <Route
+                      path={'/g/create'}
+                      render={ ({match, location}) =>
+                        <div>
+                          <GroupCreate users = {this.state.users} />
+                        </div>
+                      }
+                    />
 
-                  <Route
-                    path={'/g/:gPk'}
-                    render={ ({match, location}) =>
-                      <div>
-                        <GroupInfoTab name = "Buddy Group CS3216" count_users = "12"/>
-                        <FriendsTab />
-                      </div>
-                    }
-                  />
+                    <Route
+                      path={'/g/:gPk'}
+                      render={ ({match, location}) =>
+                        <div>
+                          <GroupInfoTab name = "Buddy Group CS3216" count_users = "12"/>
+                          <FriendsTab />
+                        </div>
+                      }
+                    />
 
-                  <Route
-                    path={'/'}
-                    render={ ({match, location}) =>
-                      <div>
-                        <Tabs />
-                        <FlaoatingButton />
-                      </div>
-                    }
-                  />
+                    <Route
+                      path={'/'}
+                      render={ ({match, location}) =>
+                        <div>
+                          <Tabs />
+                          <FlaoatingButton />
+                        </div>
+                      }
+                    />
 
 
-                </Switch>
-              </CSSTransition>
-            </TransitionGroup>
-          </div>
-        )} />
-      </Router>
+                  </Switch>
+                </CSSTransition>
+              </TransitionGroup>
+            </div>
+          )} />
+        </Router>
+      </Provider>
     )
   }
 }
 
 ReactDOM.render(
-  <LocaleProvider locale={enUS}>
-    <App />
-  </LocaleProvider>,
+  <App />,
   document.getElementById('main')
 )
