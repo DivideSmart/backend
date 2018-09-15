@@ -1,10 +1,10 @@
 import { ListView, TabBar } from 'antd-mobile';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FriendsTab } from './tabs/friends_tab.jsx'
 import { GroupTab } from './tabs/group_tab.jsx'
 import React from 'react'
 import { UserTab } from './tabs/user_tab3.jsx'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Tabs extends React.Component {
   constructor(props) {

@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime'
 import './style/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
+import 'util.js'
 
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import {
@@ -10,8 +11,13 @@ import {
   BrowserRouter as Router,
   Switch
 } from 'react-router-dom'
+import { faChevronLeft, faHome, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import FlaoatingButton from './components/material/material_float_btn.jsx'
+import { FriendList } from './components/tabs/friend_list.jsx'
+import { FriendsTab } from './components/tabs/friends_tab.jsx'
+import {GroupCreate} from './components/group_create.jsx'
+import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { LocaleProvider } from 'antd-mobile';
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -20,13 +26,7 @@ import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-import { FriendsTab } from './components/tabs/friends_tab.jsx'
-import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
-import { FriendList } from './components/tabs/friend_list.jsx'
-import {GroupCreate} from './components/group_create.jsx'
-import 'util.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHome, faUsers, faChevronLeft, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 
 library.add([faHome, faChevronLeft, faUsers, faUserCircle])
 
