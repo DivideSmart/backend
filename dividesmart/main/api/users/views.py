@@ -1,12 +1,14 @@
+from django.contrib.auth import get_user
+from django.db.models import Count
+from django.forms.models import model_to_dict
 from django.http import (
     HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse
 )
-from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
+
 from main.models import (
     User, Group, Entry
 )
-from django.forms.models import model_to_dict
 from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
 )
@@ -138,8 +140,14 @@ def friend_entries(request, user_id, friend_id):
         friend_user = User.objects.filter(pk=friend_id).first()
         if not friend_user:
             return HttpResponseNotFound('No such friend')
-        # entries = Entry.objects.
-
+        entries = (
+            Entry.objects
+            .filter(group=None)
+            .filter(participants__id=user_id)
+            .filter(participants__id=friend_id)
+            .all()
+        )
+        print(entries)
     return HttpResponse()
 
 

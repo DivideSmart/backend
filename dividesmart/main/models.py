@@ -188,8 +188,50 @@ class Payment(Entry):
     )
 
 
+class BillManager(models.Manager):
+    use_in_migrations = True
+
+    def create_bill(self, name, group, creator, initiator, amount, loans):
+        # loans is a list of tuples [(loan_user, loan_amount), ...]
+        # Assumes that this data is sane
+        # (e.g. creator is in group, loaner in group)
+
+        bill = Bill.objects.create(
+            group=group,
+            name=name,
+            creator=creator,
+            initiator=initiator,
+            amount=amount
+        )
+
+        # Handle loanees
+        for loan_user, loan_amt in loans:
+            bill_participation = EntryParticipation(
+                participant=loan_user,
+                entry=bill,
+                amount=loan_amt,
+                type=EntryParticipation.OWE
+            )
+            bill_participation.save()
+
+        # Handle loaner
+        bill_loan_participation = EntryParticipation(
+            participant=initiator,
+            entry=bill,
+            amount=amount,
+            type=EntryParticipation.LENT
+        )
+        bill_loan_participation.save()
+
+        # Update debts
+
+
+        return bill
+
+
 class Bill(Entry):
-    pass
+
+    objects = BillManager()
 
 
 class Loan(models.Model):

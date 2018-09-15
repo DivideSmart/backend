@@ -33,6 +33,8 @@ TEST_GROUP = Group.objects.create_group(
     user=JOHN
 )
 
+# JOHN_JANE_BILL = Bill.objects.
+
 JOHN.friends.add(JANE)
 JOHN.requested_friends.add(BILL)
 TEST_GROUP.users.add(JOHN)
