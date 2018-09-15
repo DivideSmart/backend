@@ -4,6 +4,7 @@ import { FriendsTab } from './tabs/friends_tab.jsx'
 import { GroupTab } from './tabs/group_tab.jsx'
 import React from 'react'
 import { UserTab } from './tabs/user_tab3.jsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Tabs extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class Tabs extends React.Component {
       <div style={{ position: 'fixed', height: '92%', width: '100%', top: '8%' }}>
         <TabBar
           unselectedTintColor="#949494"
-          tintColor="#33A3F4"
+          tintColor="#0060c0"
           barTintColor="white"
           tabBarPosition="bottom"
           hidden={this.state.hidden}
@@ -28,17 +29,11 @@ class Tabs extends React.Component {
           <TabBar.Item
             title="Home"
             key="Home"
-            icon={<div style={{
-              width: '28px',
-              height: '28px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/sifuoDUQdAFKAVcFGROC.svg) center center /  21px 21px no-repeat' }}
-            />
+            icon={
+              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
-            selectedIcon={<div style={{
-              width: '28px',
-              height: '28px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/iSrlOTqrKddqbOmlvUfq.svg) center center /  21px 21px no-repeat' }}
-            />
+            selectedIcon={
+              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             selected={this.state.selectedTab === 'blueTab'}
             // badge={1}
@@ -54,18 +49,10 @@ class Tabs extends React.Component {
 
           <TabBar.Item
             icon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/BTSsmHkPsQSPTktcXyTV.svg) center center /  21px 21px no-repeat' }}
-              />
+              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             selectedIcon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/ekLecvKBnRazVLXbWOnE.svg) center center /  21px 21px no-repeat' }}
-              />
+              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             title="Groups"
             key="Groups"
@@ -83,18 +70,10 @@ class Tabs extends React.Component {
 
           <TabBar.Item
             icon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/asJMfBrNqpMMlVpeInPQ.svg) center center /  21px 21px no-repeat' }}
-              />
+              <FontAwesomeIcon icon='user-circle' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             selectedIcon={
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg) center center /  21px 21px no-repeat' }}
-              />
+              <FontAwesomeIcon icon='user-circle' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             title="Me"
             key="Me"

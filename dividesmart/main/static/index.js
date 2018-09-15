@@ -24,6 +24,12 @@ import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { FriendList } from './components/tabs/friend_list.jsx'
 import {GroupCreate} from './components/group_create.jsx'
+import 'util.js'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHome, faUsers, faChevronLeft, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+
+library.add([faHome, faChevronLeft, faUsers, faUserCircle])
+
 
 class App extends React.Component {
   constructor() {
@@ -34,7 +40,15 @@ class App extends React.Component {
 
   componentDidMount() {
     axios.get('/api/user').then(response => {
-      console.log(response.data)
+      this.setState({
+        user: response.data
+      })
+      axios.get('/api/users/{0}/friends'.format(this.state.user.pk)).then(response => {
+        this.setState({
+          friends: response.data
+        })
+        console.log(this.state)
+      })
     })
   }
 
