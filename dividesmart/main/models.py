@@ -256,6 +256,12 @@ class BillManager(PolymorphicManager):
 
         return bill
 
+    def update_bill(self, new_name, new_initiator, new_amount, new_loans):
+        pass
+
+    def delete_bill(self):
+        pass
+
 
 class Bill(Entry):
 

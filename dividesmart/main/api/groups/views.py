@@ -8,7 +8,7 @@ from main.utils import (
 )
 from main.forms import CreateGroupForm
 from main.models import (
-    Group, User, Debt
+    Group, User, Debt, Entry
 )
 from django.contrib.auth import get_user
 
@@ -125,3 +125,24 @@ def group_decline(request, group_id):
         group.save()
         return HttpResponse('Declined group invite')
     return HttpResponseNotFound('Invalid request')
+
+
+@csrf_exempt
+@ensure_authenticated
+def group_entries(request, group_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'GET':
+        entries = (
+            Entry.objects
+            .filter(group=group)
+            .order_by('-date_created')
+            .all()
+        )
+        return JsonResponse({
+            'entries': [e.to_dict_for_user(current_user) for e in entries]
+        })
+
+    return HttpResponse()
