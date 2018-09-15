@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        PermissionsMixin)
 from django.core.mail import send_mail
-from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, BaseUserManager
-)
-from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -43,6 +41,13 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email_address, password, **extra_fields)
 
 
+def user_avatar_upload_to(instance, filename):
+    name_without_extension, extension = filename.split(".")
+    # if a user with sign-in email = user@email.com uploads file name.png
+    # the file will be store at media/portrait/user@email.com/portrait.png
+    return '{0}/{1}/{2}.{3}'.format("avatars", instance.email_address, "avatar", extension)
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     email_address = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=128)
@@ -50,7 +55,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     friends = models.ManyToManyField('self')
     requested_friends = models.ManyToManyField(
-        'self', related_name='received_friend_requests', symmetrical=False)
+        'self',
+        related_name='received_friend_requests',
+        symmetrical=False
+    )
+
+    avatar = models.ImageField(upload_to=user_avatar_upload_to, blank=True, null=True)
+    external_avatar_url = models.TextField(blank=True, null=True)
+
+    @property
+    def portrait_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        elif self.external_avatar_url:
+            return self.external_avatar_url
+        else:
+            return "/media/portrait/default_portrait.png"
 
     is_active = models.BooleanField(
         default=True,
@@ -72,17 +92,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email_address = self.__class__.objects.normalize_email(self.email_address)
-
-    # def get_full_name(self):
-    #     """
-    #     Return the first_name plus the last_name, with a space in between.
-    #     """
-    #     full_name = '%s %s' % (self.first_name, self.last_name)
-    #     return full_name.strip()
-
-    # def get_short_name(self):
-    #     """Return the short name for the user."""
-    #     return self.first_name
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
