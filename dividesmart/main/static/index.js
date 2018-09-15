@@ -35,7 +35,11 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
+      users: []
     }
+    console.log("ACTUAL HERE");
+    this.updateUsers = this.updateUsers.bind(this);
+
   }
 
   componentDidMount() {
@@ -52,21 +56,29 @@ class App extends React.Component {
     })
   }
 
+  updateUsers(added_users) {
+    this.setState({ users: added_users})
+  }
+
   render() {
     return (
       <Router basename={''}>
         <Route render={({ location }) => (
           <div>
             <TopBar />
-
+            {
+              console.log("HEHE")
+            }
+            {
+              console.log(this.props)
+            }
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
-
                   <Route
-                    path={'/u/:userPk/friend_list'}
+                    path={'/u/:userPk/friend_list/:isCreateGroup'}
                     render={ ({match, location}) =>
-                      <FriendList/>
+                      <FriendList updateUsers = {this.updateUsers}/>
                     }
                   />
 
@@ -87,7 +99,7 @@ class App extends React.Component {
                     path={'/g/create'}
                     render={ ({match, location}) =>
                       <div>
-                        <GroupCreate />
+                        <GroupCreate users = {this.state.users} />
                       </div>
                     }
                   />

@@ -14,6 +14,7 @@ import '../style/index.less'
 
 const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" alt="" />;
 
+const myImgA = () => <img src={`http://i68.tinypic.com/dwie8.png`} className="am-icon am-icon-xs" alt="" />;
 
 function PopOver(props) {
   return (
@@ -33,6 +34,11 @@ function PopOver(props) {
         (<Item key="help" value="button ct" icon={<PersonAdd style={{ width: 18, height: 18 }} />}>
           <span style={{ marginRight: 5 }}>Add Friend</span>
         </Item>),
+        <Link to='/g/create'>
+          <Item key="add_group" value="button ct" icon={myImgA()}>
+            <span style={{ marginRight: 5 }}>Add Group</span>
+          </Item>,
+        </Link>
       ]}
       align={{
         overflow: { adjustY: 0, adjustX: 0 },
@@ -65,11 +71,11 @@ class TopBar extends React.Component {
     };
     this.onSelect = (opt) => {
       if (opt.key == 'scan')
-        window.location.href = '/qr'
+        window.location.href = '/qr'  
       this.setState({
         visible: false,
         selected: opt.props.value,
-      });
+      });      
     };
     this.handleVisibleChange = (visible) => {
       this.setState({

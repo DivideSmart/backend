@@ -1,16 +1,26 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
+import { Badge, List, SearchBar, WhiteSpace, Button } from 'antd-mobile'
 
 import {
   Link,
 } from 'react-router-dom'
+
 import React from 'react'
 import Close from '@material-ui/icons/Close';
 import Checkbox from '@material-ui/core/Checkbox';
 const Item = List.Item
 const Brief = Item.Brief
 
+function copy(o) {
+  var output, v, key;
+  output = Array.isArray(o) ? [] : {};
+  for (key in o) {
+      v = o[key];
+      output[key] = (typeof v === "object") ? copy(v) : v;
+  }
+  return output;
+}
 
 var sampleData = {
   friends: [
@@ -49,20 +59,63 @@ class FriendList extends React.Component {
     super()
     this.state = {
       disabled: false,
+      added_users: []
     }
-    console.log(this.props);
-    console.log("HERE");
+    this.added_keys = [];
+    this.onChange2 = (value) => {
+      console.log(value);
+      // this.setState({
+      //   value2: value,
+      // });
+    };
+    this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
+    this.renderButton = this.renderButton.bind(this);
+  }
+
+  renderButton(isCreateGroup, updateUsers) {
+    if(isCreateGroup) {
+      return (
+        <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
+      )
+    }
+  }
+
+  onChangeCheckBox(e, checked) {
+    if(checked && !(e.target.name in this.added_keys)) {
+      this.added_keys.push(e.target.name);
+      const new_user = this.props.users.friends.filter(user => user.key == e.target.name)[0];
+      const newArray = this.state.added_users;
+      newArray.push(new_user);
+      this.setState({
+        added_users: newArray
+      });
+    } else if(!checked) {
+      const newArrayB = this.state.added_users.filter(user => user.key != e.target.name);
+      this.setState({
+        added_users: newArrayB
+      })
+    }
+  }
+
+  componentDidCatch(error) {
+    if(!this.state.error) { // set error only once per update
+       this.setState({
+         error,
+       })
+   }
   }
 
   render() {
     return (
       <div>
-        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        <div style={{display: this.props.hideSearch ? 'none' : 'block'}}>
+          <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        </div>
         <List renderHeader={() => 'Friends'} className="my-list">
         {
-          sampleData.friends.map(friend => {
-            console.log("AAAAA");
-            // console.log(this.props.isCreateGroup);
+          this.props.users.friends.map(friend => {
+            // console.log(this.props.updateUsers);
+            console.log("HIEU AAA HERE");
             if(this.props.isCreateGroup) {
               return (
                 <Item
@@ -79,7 +132,7 @@ class FriendList extends React.Component {
                   }
                   multipleLine
                   // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#00b894' }}> <Checkbox/> </span>}
+                  extra={<span style={{ color: '#00b894' }}> <Checkbox name={friend.key} onChange={ this.onChangeCheckBox} /> </span>}
                 >
                   {friend.name} <Brief>8/31/18</Brief>
                 </Item>
@@ -111,6 +164,10 @@ class FriendList extends React.Component {
             )
           })
         }
+
+        {/* {console.log(this.props.updateUsers)} */}
+        { this.renderButton(this.props.isCreateGroup, this.props.updateUsers) }
+
         </List>
         
         <WhiteSpace />
