@@ -4,7 +4,7 @@ from django.http import (
 from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
 from main.models import (
-    User, Payment, Loan, Group
+    User, Group
 )
 from django.forms.models import model_to_dict
 from django.db.models import Q

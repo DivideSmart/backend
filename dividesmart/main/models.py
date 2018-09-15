@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from polymorphic.models import PolymorphicModel
 
 
 class UserManager(BaseUserManager):
@@ -143,36 +144,57 @@ class Debt(models.Model):
     amount = models.DecimalField(max_digits=20, decimal_places=2)
 
 
-class Bill(models.Model):
-    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
+class Entry(PolymorphicModel):
+    """
+    This PolymorphicModel simplifies multi-table inheritance.
+    I need this so that it is easier to get all entries (bills + payments)
+    in a sorted order by date created
+    """
+    group = models.ForeignKey(
+        Group, null=True, related_name='entries', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     creator = models.ForeignKey(
-        User, related_name='bills_created', on_delete=models.CASCADE)
+        User, related_name='entries_created', on_delete=models.CASCADE)
     initiator = models.ForeignKey(
-        User, related_name='bills_initiated', on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=18, decimal_places=2)
+        User, related_name='entries_initiated', on_delete=models.CASCADE
+    )
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(default=timezone.now)
+    participants = models.ManyToManyField(
+        User, related_name='participating_entries',
+        through='EntryParticipation')
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
+
+
+class EntryParticipation(models.Model):
+    """
+    This model provides data for each person's participation in an
+    entry. So different participation type and amount for different people.
+    """
+
+    OWE = 'OWE'
+    LENT = 'LENT'
+    PARTICIPATION_TYPES = [(OWE, 'owe'), (LENT, 'lent')]
+
+    participant = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
+    type = models.CharField(max_length=4, choices=PARTICIPATION_TYPES)
+
+
+class Payment(Entry):
+    receiver = models.ForeignKey(
+        User, related_name='payments_received', on_delete=models.CASCADE
+    )
+
+
+class Bill(Entry):
+    pass
 
 
 class Loan(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(
-        User, related_name='loans_initiated', on_delete=models.CASCADE
-    )
     receiver = models.ForeignKey(
         User, related_name='loans_received', on_delete=models.CASCADE
     )
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-
-
-class Payment(models.Model):
-    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(
-        User, related_name='payments_initiated', on_delete=models.CASCADE
-    )
-    receiver = models.ForeignKey(
-        User, related_name='payments_received', on_delete=models.CASCADE
-    )
-    amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date_created = models.DateTimeField(default=timezone.now)
