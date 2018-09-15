@@ -29,14 +29,21 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
+      users: []
     }
     console.log("ACTUAL HERE");
+    this.updateUsers = this.updateUsers.bind(this);
+
   }
 
   componentDidMount() {
     axios.get('/').then(response => {
       console.log(response.data)
     })
+  }
+
+  updateUsers(added_users) {
+    this.setState({ users: added_users})
   }
 
   render() {
@@ -57,7 +64,7 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk/friend_list/:isCreateGroup'}
                     render={ ({match, location}) =>
-                      <FriendList/>
+                      <FriendList updateUsers = {this.updateUsers}/>
                     }
                   />
 
@@ -75,7 +82,7 @@ class App extends React.Component {
                     path={'/g/create'}
                     render={ ({match, location}) =>
                       <div>
-                        <GroupCreate />
+                        <GroupCreate users = {this.state.users} />
                       </div>
                     }
                   />
