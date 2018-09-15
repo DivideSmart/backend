@@ -159,6 +159,18 @@ def friend_entries(request, user_id, friend_id):
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
         })
+    return HttpResponse()
+
+
+@csrf_exempt
+@ensure_authenticated
+def friend_bills(request, user_id, friend_id):
+    current_user = get_user(request)
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(pk=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
         initiator_id = int(request.POST.get('initiator', None))
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
@@ -200,15 +212,6 @@ def friend_entries(request, user_id, friend_id):
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
     return HttpResponse()
-
-
-@csrf_exempt
-@ensure_authenticated
-def friend_bills(request, user_id, friend_id):
-    # TODO: Remember to extract this functionality so
-    # that it can be reused in groups
-    return HttpResponse()
-
 
 @csrf_exempt
 @ensure_authenticated

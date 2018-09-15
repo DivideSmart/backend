@@ -146,6 +146,14 @@ def group_entries(request, group_id):
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
         })
+    return HttpResponse()
+
+
+def group_bills(request, group_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
         group_member_ids = set(m.pk for m in group.users.all())
         initiator_id = int(request.POST.get('initiator', None))
@@ -185,5 +193,8 @@ def group_entries(request, group_id):
             name, group, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
-
     return HttpResponse()
+
+
+def group_payments(request, group_id):
+    pass
