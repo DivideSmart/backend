@@ -215,7 +215,7 @@ class BillManager(PolymorphicManager):
             assert(len(loans) == 1)
 
         # Handle loanees
-        for loan_user, loan_amt in loans:
+        for loan_user, loan_amt in loans.items():
             bill_participation = EntryParticipation(
                 participant=loan_user,
                 entry=bill,

@@ -79,7 +79,7 @@ Bill.objects.create_bill(
     creator=JOHN,
     initiator=JOHN,
     amount=12.34,
-    loans=[(JANE, 12.34)]
+    loans=dict([(JANE, 12.34)])
 )
 
 Bill.objects.create_bill(
@@ -88,5 +88,5 @@ Bill.objects.create_bill(
     creator=BILL,
     initiator=BILL,
     amount=34.56,
-    loans=[(JOHN, 12.34), (TRUMP, 22.22)]
+    loans=dict([(JOHN, 12.34), (TRUMP, 22.22)])
 )

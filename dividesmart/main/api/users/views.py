@@ -2,17 +2,18 @@ from django.contrib.auth import get_user
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.http import (
-    HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse
+    HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse,
+    HttpResponseBadRequest
 )
 from django.views.decorators.csrf import csrf_exempt
 
 from main.models import (
-    User, Group, Entry, Debt
+    User, Group, Entry, Debt, Bill
 )
 from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
 )
-
+import ujson as json
 
 def groups_to_dict(groups):
     return [group_to_dict(g) for g in groups]
@@ -101,10 +102,10 @@ def friend(request, user_id, friend_id):
     current_user = get_user(request)
     if current_user.pk != user_id:
         return HttpResponseForbidden('Cannot modify this user\'s friends')
+    friend_user = current_user.friends.filter(pk=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
     if request.method == 'DELETE':
-        friend_user = User.objects.filter(pk=friend_id).first()
-        if not friend_user:
-            return HttpResponseNotFound('No such friend')
         # Delete friendship / request with this user id
         current_user.received_friend_requests.remove(friend_user)
         current_user.requested_friends.remove(friend_user)
@@ -142,11 +143,11 @@ def friend_entries(request, user_id, friend_id):
     current_user = get_user(request)
     if current_user.pk != user_id:
         return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(pk=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
     if request.method == 'GET':
         # TODO: Add pagination
-        friend_user = User.objects.filter(pk=friend_id).first()
-        if not friend_user:
-            return HttpResponseNotFound('No such friend')
         entries = (
             Entry.objects
             .filter(group=None)
@@ -158,6 +159,42 @@ def friend_entries(request, user_id, friend_id):
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
         })
+    if request.method == 'POST':
+        initiator_id = int(request.POST.get('initiator', None))
+        if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
+            return HttpResponseBadRequest('Invalid initiator')
+        initiator = User.objects.filter(pk=initiator_id).first()
+        creator = current_user
+        amount = float(request.POST.get('amount', None))
+        loans = json.loads(request.POST.get('loans', None))
+        print(loans)
+
+        if not amount or amount <= 0:
+            return HttpResponseBadRequest('Invalid amount')
+        if not loans:
+            return HttpResponseBadRequest('Invalid loans')
+        if len(loans) != 1:
+            return HttpResponseBadRequest('Invalid number of loans')
+
+        actual_loans = {}
+        total_loan_amt = 0
+        for loan_user_id, loan_amt in loans.items():
+            total_loan_amt += loan_amt
+            if loan_user_id == initiator.pk:
+                return HttpResponseBadRequest(
+                    'Initiator cannot receive own loan')
+            loan_user = User.objects.filter(pk=loan_user_id).first()
+            actual_loans[loan_user] = loan_amt
+
+        if total_loan_amt > amount:
+            return HttpResponseBadRequest(
+                'Loan sums do not make sense with total amount')
+
+        bill = Bill.objects.create_bill(
+            request.POST.get('name', 'Bill from %s' % initiator.username),
+            None, creator, initiator, amount, actual_loans
+        )
+        return JsonResponse(bill.to_dict_for_user(current_user))
     return HttpResponse()
 
 
