@@ -89,6 +89,11 @@ class FriendList extends React.Component {
       this.setState({
         added_users: newArray
       });
+    } else if(!checked) {
+      const newArrayB = this.state.added_users.filter(user => user.key != e.target.name);
+      this.setState({
+        added_users: newArrayB
+      })
     }
   }
 
