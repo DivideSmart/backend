@@ -6,6 +6,7 @@ import ListItem from 'antd-mobile/lib/list/ListItem';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import { createForm } from 'rc-form';
+import TextField from '@material-ui/core/TextField';
 
 import {
   Link,
@@ -76,7 +77,7 @@ class GroupCreateForm extends React.Component {
         <WhiteSpace size="lg" />
 
         <List>
-          <Link to={{ pathname: '../u/1/friend_list', query: {isCreateGroup: true }}}>
+          <Link to={`../u/1/friend_list/true`} >
             <Button> Choose Friends </Button>
           </Link>
         </List>

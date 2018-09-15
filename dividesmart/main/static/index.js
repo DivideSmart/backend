@@ -30,6 +30,7 @@ class App extends React.Component {
     super()
     this.state = {
     }
+    console.log("ACTUAL HERE");
   }
 
   componentDidMount() {
@@ -44,13 +45,17 @@ class App extends React.Component {
         <Route render={({ location }) => (
           <div>
             <TopBar />
-
+            {
+              console.log("HEHE")
+            }
+            {
+              console.log(this.props)
+            }
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
-                  
                   <Route
-                    path={'/u/:userPk/friend_list'}
+                    path={'/u/:userPk/friend_list/:isCreateGroup'}
                     render={ ({match, location}) =>
                       <FriendList/>
                     }

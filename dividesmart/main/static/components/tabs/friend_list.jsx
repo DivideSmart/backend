@@ -50,8 +50,6 @@ class FriendList extends React.Component {
     this.state = {
       disabled: false,
     }
-    console.log(this.props);
-    console.log("HERE");
   }
 
   render() {
@@ -61,9 +59,8 @@ class FriendList extends React.Component {
         <List renderHeader={() => 'Friends'} className="my-list">
         {
           sampleData.friends.map(friend => {
-            console.log("AAAAA");
-            // console.log(this.props.isCreateGroup);
-            if(this.props.isCreateGroup) {
+            console.log(this.props);
+            if(this.props.match.params.isCreateGroup) {
               return (
                 <Item
                   thumb={
