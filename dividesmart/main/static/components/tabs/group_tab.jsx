@@ -84,7 +84,7 @@ class GroupTab extends React.Component {
           // This check is not correct in some sense, need to discuss
 
           var newArray = [];
-          group_entry.acc = acc;
+          group_entry.acc = parseFloat(acc).toString();
           if(acc > 0) {
             newArray = copy(this.state.groupsOweYou);
             newArray.push(group_entry);
