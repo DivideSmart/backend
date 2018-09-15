@@ -4,10 +4,9 @@ from django.http import (
 from django.contrib.auth import get_user
 from django.views.decorators.csrf import csrf_exempt
 from main.models import (
-    User, Group
+    User, Group, Entry
 )
 from django.forms.models import model_to_dict
-from django.db.models import Q
 from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
 )
@@ -34,9 +33,10 @@ def user(request, user_id):
     is_related = (current_user.pk == user_id) \
                  or (current_user.friends.filter(pk=user_id).first() is not None) \
                  or (
-                     Group.objects.filter(
-                         Q(users=current_user) & Q(users=user_id)
-                     ).first() is not None)
+                     Group.objects
+                        .filter(users__id=user_id)
+                        .filter(users__id=current_user.id).first() is not None
+                 )
     if not is_related:
         return HttpResponseForbidden('Cannot view this user')
     other_user = User.objects.filter(pk=user_id).first()
@@ -138,6 +138,8 @@ def friend_entries(request, user_id, friend_id):
         friend_user = User.objects.filter(pk=friend_id).first()
         if not friend_user:
             return HttpResponseNotFound('No such friend')
+        # entries = Entry.objects.
+
     return HttpResponse()
 
 
