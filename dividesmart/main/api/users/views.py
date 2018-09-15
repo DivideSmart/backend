@@ -152,6 +152,7 @@ def friend_entries(request, user_id, friend_id):
             .filter(group=None)
             .filter(participants__id=user_id)
             .filter(participants__id=friend_id)
+            .order_by('-date_created', 'name')
             .all()
         )
         return JsonResponse({
