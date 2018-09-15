@@ -137,7 +137,7 @@ class GroupCreateForm extends React.Component {
               {...getFieldProps('inputtitle2')}
               placeholder="Enter group names"
             >
-              <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
+              <div style={{ backgroundImage: 'url(http://i64.tinypic.com/314wh1l.jpg)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
             </InputItem>
           </List>
           
@@ -147,12 +147,16 @@ class GroupCreateForm extends React.Component {
           
           <WhiteSpace size="lg" />
 
-          <List>
-            {/* <Link to={`../u/1/friend_list/true`} > */}
-              <Button onClick={this.handleChooseFriends}> Add Friends </Button>
-            {/* </Link> */}
-          </List>
-          <div style={{display: this.state.addFriendAlready ? 'block' : 'none'}}>
+          <div style={{marginLeft: '80px', marginRight: '80px'}}>
+            <List>
+              {/* <Link to={`../u/1/friend_list/true`} > */}
+                <Button onClick={this.handleChooseFriends} style={{color: 'green'}}> Add Friends </Button>
+              {/* </Link> */}
+            </List>
+          </div>
+
+          <div style={{display: this.state.addFriendAlready ? 'block' : 'none',
+                       marginLeft: '20px', marginRight: '20px'}}>
             <FriendList isCreateGroup={false} users={this.state.users} hideSearch={true} />
           </div>
           <WhiteSpace size="lg" />
