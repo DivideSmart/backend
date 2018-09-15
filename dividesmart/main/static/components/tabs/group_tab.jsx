@@ -9,10 +9,20 @@ import {
 import React from 'react'
 import Close from '@material-ui/icons/Close';
 import Group from '@material-ui/icons/Group';
+import axios from 'axios'
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
+function copy(o) {
+  var output, v, key;
+  output = Array.isArray(o) ? [] : {};
+  for (key in o) {
+      v = o[key];
+      output[key] = (typeof v === "object") ? copy(v) : v;
+  }
+  return output;
+}
 
 var sampleData = {
   groupsOweYou: [
@@ -56,7 +66,48 @@ class GroupTab extends React.Component {
     super()
     this.state = {
       disabled: false,
+      groupsOweYou: [],
+      groupsYouOwe: [],
+      groupsSettledUp: []
     }
+  }
+
+  // Need to discuss about definition of owe, owed and settled up.
+  componentWillMount() {
+    axios.get('/api/users/' + localStorage.userPk + "/groups").then(response => {
+      // console.log(response);
+
+      response.data.groups.map(group_entry => {
+        var group_pk = group_entry.pk;
+        axios.get('/api/groups/' + group_pk.toString() + "/entries").then(responseA => {
+          var acc = responseA.data.entries.reduce((x, y) => x.user_amount +    y.user_amount, {user_amount: 0});
+          // This check is not correct in some sense, need to discuss
+
+          var newArray = [];
+          group_entry.acc = acc;
+          if(acc > 0) {
+            newArray = copy(this.state.groupsOweYou);
+            newArray.push(group_entry);
+            this.setState({
+              groupsOweYou: newArray
+            })
+          } else if (acc < 0) {
+            newArray = copy(this.state.groupsYouOwe);
+            newArray.push(group_entry);
+            this.setState({
+              groupsYouOwe: newArray
+            })
+          } else{
+            newArray = copy(this.state.groupsSettledUp);
+            newArray.push(group_entry);
+            this.setState({
+              groupsSettledUp: newArray
+            })
+          }
+        })
+      } );
+
+    })
   }
 
   render() {
@@ -65,9 +116,9 @@ class GroupTab extends React.Component {
       <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
       <List renderHeader={() => 'Groups owe you'} className="my-list">
       {
-        sampleData.groupsOweYou.map(group => {
+        this.state.groupsOweYou.map(group => {
           return (
-            <Link key={group.key} to="g/1" onClick={e => e.stopPropagation()}>
+            <Link key={group.key} to={"g/" + (group.pk)} onClick={e => e.stopPropagation()}>
               <Item
                 key={group.key}
                 arrow="horizontal"
@@ -107,9 +158,9 @@ class GroupTab extends React.Component {
           ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
         </Item> */}
         {
-          sampleData.groupsYouOwe.map(group => {
+          this.state.groupsYouOwe.map(group => {
           return (
-            <Link key={group.key} to="/g/1">
+            <Link key={group.key} to={"/g/"+group.pk}>
               <Item
               key={group.key}
               arrow="horizontal"
@@ -149,9 +200,9 @@ class GroupTab extends React.Component {
           ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
         </Item> */}
         {
-          sampleData.groupsSettledUp.map(group => {
+          this.state.groupsSettledUp.map(group => {
           return (
-            <Link key={group.key} to="/g/1">
+            <Link key={group.key} to={"/g/" + group.pk}>
               <Item
                 key={group.key}
                 arrow="horizontal"

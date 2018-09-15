@@ -48,11 +48,9 @@ class App extends React.Component {
 
   }
 
-  componentDidMount() {
-    console.log("ABOUT TO DISPATCH");
+  componentWillMount() {
     axios.get('/api/user').then(response => {
-      console.log("DISPATCH");
-      console.log(response.data);
+      localStorage.setItem('userPk', response.data.pk);
       store.dispatch(setCurrentUser(response.data));
       this.setState({
         user: response.data
