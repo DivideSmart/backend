@@ -6,9 +6,9 @@ from . import models
 
 
 class UserModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'email_address', 'is_superuser', 'is_staff']
+    list_display = ['pk', 'username', 'email_address', 'is_superuser', 'is_staff']
     list_filter = ['is_superuser', 'is_staff']
-    search_fields = ['id', 'username', 'email_address']
+    search_fields = ['pk', 'username', 'email_address']
     filter_horizontal = ['groups', 'user_permissions']
 
 
@@ -18,5 +18,15 @@ class SessionAdmin(admin.ModelAdmin):
     list_display = ['session_key', '_session_data', 'expire_date']
 
 
+class DebtModelAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'amount', 'group', 'user1', 'user2', 'type']
+
+
+class GroupModelAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'name', 'creator', 'date_created']
+
+
 admin.site.register(Session, SessionAdmin)
 admin.site.register(models.User, UserModelAdmin)
+admin.site.register(models.Debt, DebtModelAdmin)
+admin.site.register(models.Group, GroupModelAdmin)

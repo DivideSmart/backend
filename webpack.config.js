@@ -14,7 +14,7 @@ const fs = require('fs')
 const webpack = require('webpack')
 // const CompressionPlugin = require('compression-webpack-plugin')
 
-// const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-theme-vars.less'), 'utf8'))
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-theme-vars.less'), 'utf8'))
 
 /**
  * search for all .js file under [appname]/static/
@@ -54,7 +54,6 @@ module.exports = {
       path.resolve(__dirname, 'dividesmart/comm_assets'),
     ],
     alias: {
-      vue: 'vue/dist/vue.js',
       CommAssets: path.resolve(__dirname, 'dividesmart/comm_assets'),
     },
   },
@@ -68,9 +67,10 @@ module.exports = {
         query: {
           presets: ['babel-preset-env', 'react', 'stage-2'],
           plugins: [
-            'transform-regenerator', [
+            'transform-regenerator',
+            [
               'import', [{
-                'libraryName': 'antd',
+                'libraryName': 'antd-mobile',
                 'style': true,
               }]
             ]
@@ -86,13 +86,11 @@ module.exports = {
           {loader: 'css-loader'},
           {loader: 'less-loader',
             options: {
-              // modifyVars: themeVariables
+              modifyVars: themeVariables,
+              javascriptEnabled: true,
             }
           }
         ]
-      }, {
-        test: /\.vue$/,
-        loader: 'vue-loader'
       }, {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'file-loader',

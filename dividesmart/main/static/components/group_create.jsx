@@ -1,15 +1,14 @@
 import 'regenerator-runtime/runtime'
 
-import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, WhiteSpace, WingBlank, TextareaItem } from 'antd-mobile';
-
-import ListItem from 'antd-mobile/lib/list/ListItem';
-import React from 'react'
-import ReceiptButton from './material/receipt_float_btn.jsx'
-import { createForm } from 'rc-form';
+import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, TextareaItem, WhiteSpace, WingBlank } from 'antd-mobile';
 
 import {
   Link,
 } from 'react-router-dom';
+import ListItem from 'antd-mobile/lib/list/ListItem';
+import React from 'react'
+import ReceiptButton from './material/receipt_float_btn.jsx'
+import { createForm } from 'rc-form';
 
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -68,11 +67,11 @@ class GroupCreateForm extends React.Component {
             <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
           </InputItem>
         </List>
-        
+
         <List>
           <TextareaItem placeholder="Enter your group description" rows="5"/>
         </List>
-        
+
         <WhiteSpace size="lg" />
 
         <List>
