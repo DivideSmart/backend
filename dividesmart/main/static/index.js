@@ -73,10 +73,13 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>
-                      <UserTab
-                        match={match}
-                        location={location}
-                      />
+                      <div>
+                        <UserTab
+                          match={match}
+                          location={location}
+                        />
+                        <FlaoatingButton />
+                      </div>
                     }
                   />
 
