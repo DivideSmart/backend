@@ -1,16 +1,15 @@
 import 'regenerator-runtime/runtime'
 
-import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, WhiteSpace, WingBlank, TextareaItem } from 'antd-mobile';
+import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, TextareaItem, WhiteSpace, WingBlank } from 'antd-mobile';
 
+import {
+  Link,
+} from 'react-router-dom';
 import ListItem from 'antd-mobile/lib/list/ListItem';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import { createForm } from 'rc-form';
 import TextField from '@material-ui/core/TextField';
-
-import {
-  Link,
-} from 'react-router-dom';
 import { FriendList } from './tabs/friend_list.jsx';
 
 const RadioItem = Radio.RadioItem;

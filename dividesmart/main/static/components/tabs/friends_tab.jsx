@@ -81,7 +81,7 @@ class FriendsTab extends React.Component {
                   }
                   multipleLine
                   // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#00b894' }}>${ friend.acc }</span>}
+                  extra={<span className={'other-owe-amount'}>${ friend.acc }</span>}
                 >
                   {friend.name} <Brief>8/31/18</Brief>
                 </Item>
@@ -123,7 +123,7 @@ class FriendsTab extends React.Component {
                   }
                   multipleLine
                   onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#e67e22' }}>${ friend.acc }</span>}
+                  extra={<span className={'owe-other-amount'}>${ friend.acc }</span>}
                 >
                   {friend.name} <Brief>8/31/18</Brief>
                 </Item>

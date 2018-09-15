@@ -2,8 +2,10 @@ import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank} from 'antd-mobile'
 
 import React from 'react'
 
-const Item = List.Item;
-const Brief = Item.Brief;
+const Item = List.Item
+const Brief = Item.Brief
+
+
 class UserTab extends React.Component {
   constructor() {
     super()
@@ -66,7 +68,7 @@ class UserTab extends React.Component {
             thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             multipleLine
             onClick={() => {}}
-            extra={<span style={{ color: '#00b894' }}>$10</span>}
+            extra={<span className={'other-owe-amount'}>$10</span>}
           >
             Lunch @ PGP<Brief>8/29/18</Brief>
           </Item>
@@ -75,7 +77,7 @@ class UserTab extends React.Component {
             thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             multipleLine
             onClick={() => {}}
-            extra={<span style={{ color: '#e67e22' }}>-$5</span>}
+            extra={<span className={'owe-other-amount'}>-$5</span>}
           >
             Movie Night<Brief>8/30/18</Brief>
           </Item>
@@ -84,7 +86,7 @@ class UserTab extends React.Component {
             thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             multipleLine
             onClick={() => {}}
-            extra={<span style={{ color: '#00b894' }}>$15</span>}
+            extra={<span className={'other-owe-amount'}>$15</span>}
           >
             Dinner Date <Brief>8/31/18</Brief>
           </Item>
@@ -93,11 +95,12 @@ class UserTab extends React.Component {
             // thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             multipleLine
             onClick={() => {}}
-            extra={<span style={{ color: '#00b894' }}>$20</span>}
+            extra={<span className={'other-owe-amount'}>$20</span>}
           >
             <Brief>Overall</Brief>
           </Item>
         </List>
+
         <WhiteSpace />
         <WhiteSpace />
         <WhiteSpace />
@@ -105,12 +108,6 @@ class UserTab extends React.Component {
 
         <Button type="primary" icon="check-circle-o">settle up</Button><WhiteSpace />
         <WhiteSpace />
-
-        {/* <WhiteSpace />
-        <WhiteSpace />
-        <WingBlank>
-          <Button>Create Debt</Button>
-        </WingBlank> */}
       </div>
 
     )
