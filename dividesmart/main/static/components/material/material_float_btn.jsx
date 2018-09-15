@@ -11,6 +11,7 @@ import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
 import { withStyles } from '@material-ui/core/styles';
+import '../../style/index.less'
 
 const styles = theme => ({
   root: {
@@ -86,8 +87,8 @@ class FlaoatingButton extends React.Component {
         <Link to={'/create'}>
           <Button
             variant="fab"
-            className={classes.fab}
-            style={{bottom: 66, backgroundColor: 'dodgerblue', zIndex: 1000}}
+            className={classes.fab + ' create-debt-btn'}
+            style={{bottom: 66, zIndex: 1000}}
           >
             <AddIcon style={{ color: 'white' }} />
           </Button>

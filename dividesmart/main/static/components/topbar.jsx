@@ -10,6 +10,7 @@ import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
 
 const Item = Popover.Item
+import '../style/index.less'
 
 const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" alt="" />;
 
@@ -82,7 +83,7 @@ class TopBar extends React.Component {
       <div>
         <NavBar
           icon={
-            <Link style={{color: '#108ee9'}} to='/'>
+            <Link className='topbar-btn' to='/'>
               <Home
                 style={{width: '28px', height: '28px',}}
               />

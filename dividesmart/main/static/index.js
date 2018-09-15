@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'
-import './css/index.css'
+import './style/index.css'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
@@ -48,7 +48,7 @@ class App extends React.Component {
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
-                  
+
                   <Route
                     path={'/u/:userPk/friend_list'}
                     render={ ({match, location}) =>
@@ -65,7 +65,7 @@ class App extends React.Component {
                       />
                     }
                   />
-                  
+
                   <Route
                     path={'/g/create'}
                     render={ ({match, location}) =>
@@ -74,7 +74,7 @@ class App extends React.Component {
                       </div>
                     }
                   />
-                  
+
                   <Route
                     path={'/g/:gPk'}
                     render={ ({match, location}) =>
