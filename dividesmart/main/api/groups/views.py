@@ -8,9 +8,10 @@ from main.utils import (
 )
 from main.forms import CreateGroupForm
 from main.models import (
-    Group, User, Debt, Entry
+    Group, User, Debt, Entry, Bill
 )
 from django.contrib.auth import get_user
+import ujson as json
 
 
 @csrf_exempt
@@ -135,6 +136,7 @@ def group_entries(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'GET':
+        # TODO: Add pagination
         entries = (
             Entry.objects
             .filter(group=group)
@@ -144,5 +146,44 @@ def group_entries(request, group_id):
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
         })
+    if request.method == 'POST':
+        group_member_ids = set(m.pk for m in group.users.all())
+        initiator_id = int(request.POST.get('initiator', None))
+        if not initiator_id or initiator_id not in group_member_ids:
+            return HttpResponseBadRequest('Invalid initiator')
+        initiator = User.objects.get(pk=initiator_id)
+        name = request.POST.get('name', None)
+        creator = current_user
+        amount = float(request.POST.get('amount', None))
+        loans = json.loads(request.POST.get('loans', None))
+
+        if not name:
+            return HttpResponseBadRequest('Invalid name')
+        if not amount or amount <= 0:
+            return HttpResponseBadRequest('Invalid amount')
+        if not loans:
+            return HttpResponseBadRequest('Invalid loans')
+
+        actual_loans = {}
+        total_loan_amt = 0
+        for loan_user_id, loan_amt in loans.items():
+            loan_user_id = int(loan_user_id)
+            if loan_user_id == initiator.pk:
+                return HttpResponseBadRequest(
+                    'Initiator cannot receive own loan')
+            if loan_user_id not in group_member_ids:
+                return HttpResponseBadRequest('Invalid loan user not in group')
+            total_loan_amt += loan_amt
+            loan_user = User.objects.get(pk=loan_user_id)
+            actual_loans[loan_user] = loan_amt
+
+        if total_loan_amt > amount:
+            return HttpResponseBadRequest(
+                'Loan sums do not make sense with total amount')
+
+        bill = Bill.objects.create_bill(
+            name, group, creator, initiator, amount, actual_loans
+        )
+        return JsonResponse(bill.to_dict_for_user(current_user))
 
     return HttpResponse()

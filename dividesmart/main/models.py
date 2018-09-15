@@ -276,7 +276,7 @@ class Bill(Entry):
     def to_dict_for_user(self, user):
         assert(self.participants.filter(pk=user.pk).first())
         bill = self.to_dict()
-        bill['amount'] = EntryParticipation.objects.get(
+        bill['user_amount'] = EntryParticipation.objects.get(
             participant=user, entry=self
         ).amount
         return bill

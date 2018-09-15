@@ -164,11 +164,13 @@ def friend_entries(request, user_id, friend_id):
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.filter(pk=initiator_id).first()
+        name = request.POST.get('name', None)
         creator = current_user
         amount = float(request.POST.get('amount', None))
         loans = json.loads(request.POST.get('loans', None))
-        print(loans)
 
+        if not name:
+            return HttpResponseBadRequest('Invalid name')
         if not amount or amount <= 0:
             return HttpResponseBadRequest('Invalid amount')
         if not loans:
@@ -179,11 +181,14 @@ def friend_entries(request, user_id, friend_id):
         actual_loans = {}
         total_loan_amt = 0
         for loan_user_id, loan_amt in loans.items():
-            total_loan_amt += loan_amt
+            loan_user_id = int(loan_user_id)
             if loan_user_id == initiator.pk:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
-            loan_user = User.objects.filter(pk=loan_user_id).first()
+            if loan_user_id != user_id and loan_user_id != friend_id:
+                return HttpResponseBadRequest('Invalid loan user')
+            total_loan_amt += loan_amt
+            loan_user = User.objects.get(pk=loan_user_id)
             actual_loans[loan_user] = loan_amt
 
         if total_loan_amt > amount:
@@ -191,8 +196,7 @@ def friend_entries(request, user_id, friend_id):
                 'Loan sums do not make sense with total amount')
 
         bill = Bill.objects.create_bill(
-            request.POST.get('name', 'Bill from %s' % initiator.username),
-            None, creator, initiator, amount, actual_loans
+            name, None, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
     return HttpResponse()
