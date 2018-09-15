@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from decimal import Decimal
+
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.core.mail import send_mail
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 
 class UserManager(BaseUserManager):
@@ -129,50 +133,158 @@ class Group(models.Model):
 
 
 class Debt(models.Model):
-    OWE = 'OWE'
-    LENT = 'LENT'
-    SETTLED = 'SETTLED'
-    DEBT_TYPES = [(OWE, 'owes'), (LENT, 'lent'), (SETTLED, 'settled')]
+    """
+    amount > 0: `user` is owed `amount` by `other_user`.
+    amount = 0: `user` and `other_user` are settled up.
+    amount < 0: `user` owes `amount` to `other_user`.
+    """
 
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
-    user1 = models.ForeignKey(
+    user = models.ForeignKey(
         User, related_name='debt_source', on_delete=models.CASCADE)
-    user2 = models.ForeignKey(
+    other_user = models.ForeignKey(
         User, related_name='debt_dest', on_delete=models.CASCADE)
-    type = models.CharField(max_length=4, choices=DEBT_TYPES)
-    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
 
-class Bill(models.Model):
-    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
+class Entry(PolymorphicModel):
+    """
+    This PolymorphicModel simplifies multi-table inheritance.
+    I need this so that it is easier to get all entries (bills + payments)
+    in a sorted order by date created
+    """
+    group = models.ForeignKey(
+        Group, null=True, related_name='entries', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     creator = models.ForeignKey(
-        User, related_name='bills_created', on_delete=models.CASCADE)
+        User, related_name='entries_created', on_delete=models.CASCADE)
     initiator = models.ForeignKey(
-        User, related_name='bills_initiated', on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=18, decimal_places=2)
+        User, related_name='entries_initiated', on_delete=models.CASCADE
+    )
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(default=timezone.now)
+    participants = models.ManyToManyField(
+        User, related_name='participating_entries',
+        through='EntryParticipation')
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
+
+    def to_dict(self):
+        raise RuntimeError('Implement me')
+
+    def to_dict_for_user(self):
+        raise RuntimeError('Implement me')
+
+
+class EntryParticipation(models.Model):
+    """
+    This model provides data for each person's participation in an
+    entry. So different participation type and amount for different people.
+
+    amount > 0: `user` is owed `amount`
+    amount = 0: `user` and `other_user`
+    amount < 0: `user` owes `amount`
+    """
+    participant = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
+
+
+class Payment(Entry):
+    receiver = models.ForeignKey(
+        User, related_name='payments_received', on_delete=models.CASCADE
+    )
+
+
+class BillManager(PolymorphicManager):
+    use_in_migrations = True
+
+    def create_bill(self, name, group, creator, initiator, amount, loans):
+        # loans is a list of tuples [(loan_user, loan_amount), ...]
+        # Assumes that this data is sane
+        # (e.g. creator is in group, loaner in group)
+        bill = Bill(
+            group=group,
+            name=name,
+            creator=creator,
+            initiator=initiator,
+            amount=amount
+        )
+        bill.save()
+
+        if not group:
+            assert(len(loans) == 1)
+
+        # Handle loanees
+        for loan_user, loan_amt in loans.items():
+            bill_participation = EntryParticipation(
+                participant=loan_user,
+                entry=bill,
+                amount=Decimal(-loan_amt),
+            )
+            bill_participation.save()
+
+            # Update debts
+            loaner_debt = (
+                Debt.objects
+                .filter(group=group, user=initiator, other_user=loan_user)
+                .first()
+            )
+            receiver_debt = (
+                Debt.objects
+                .filter(group=group, user=loan_user, other_user=initiator)
+                .first()
+            )
+            loaner_debt.amount += Decimal(loan_amt)
+            receiver_debt.amount -= Decimal(loan_amt)
+            loaner_debt.save()
+            receiver_debt.save()
+
+            # create loan objects attached to bill
+            Loan.objects.create(
+                bill=bill,
+                receiver=loan_user,
+                amount=loan_amt
+            )
+
+        # Handle loaner
+        bill_loan_participation = EntryParticipation(
+            participant=initiator,
+            entry=bill,
+            amount=amount,
+        )
+        bill_loan_participation.save()
+
+        return bill
+
+    def update_bill(self, new_name, new_initiator, new_amount, new_loans):
+        pass
+
+    def delete_bill(self):
+        pass
+
+
+class Bill(Entry):
+
+    objects = BillManager()
+
+    def to_dict(self):
+        return model_to_dict(
+            self,
+            fields=['name', 'creator', 'initiator', 'date_created']
+        )
+
+    def to_dict_for_user(self, user):
+        assert(self.participants.filter(pk=user.pk).first())
+        bill = self.to_dict()
+        bill['user_amount'] = EntryParticipation.objects.get(
+            participant=user, entry=self
+        ).amount
+        return bill
 
 
 class Loan(models.Model):
-    bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(
-        User, related_name='loans_initiated', on_delete=models.CASCADE
-    )
+    bill = models.ForeignKey(Bill, related_name='loans', on_delete=models.CASCADE)
     receiver = models.ForeignKey(
         User, related_name='loans_received', on_delete=models.CASCADE
     )
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-
-
-class Payment(models.Model):
-    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
-    initiator = models.ForeignKey(
-        User, related_name='payments_initiated', on_delete=models.CASCADE
-    )
-    receiver = models.ForeignKey(
-        User, related_name='payments_received', on_delete=models.CASCADE
-    )
-    amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date_created = models.DateTimeField(default=timezone.now)
