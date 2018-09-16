@@ -41,11 +41,15 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      users: []
+      users: [],
+      count_user: 0,
+      name: '',
+      friends: []
     }
     console.log("ACTUAL HERE");
     this.updateUsers = this.updateUsers.bind(this);
-
+    this.updateGroupInfo = this.updateGroupInfo.bind(this);
+    this.findFriendList = this.findFriendList.bind(this);
   }
 
   componentWillMount() {
@@ -68,6 +72,29 @@ class App extends React.Component {
     this.setState({ users: added_users})
   }
 
+  updateGroupInfo(groupID) {
+    axios.get('/api/groups/' + groupID).then(response => {
+      this.setState({
+        name: response.data
+      })
+    })
+
+    axios.get('/api/groups/' + groupID + '/members').then(response => {
+      var count_user = response.data.members.length;
+      this.setState({
+        count_user: count_user
+      })
+    } )
+  }
+
+  findFriendList(groupID) {
+    axios.get('/api/groups/' + groupID + '/members').then(response => {
+      this.setState({
+        friends: response.data.members
+      })
+    })
+  }
+
   render() {
     return (
       <Provider locale={enUS} store={store}>
@@ -75,19 +102,15 @@ class App extends React.Component {
           <Route render={({ location }) => (
             <div>
               <TopBar />
-              {
-                console.log("HEHE")
-              }
-              {
-                console.log(this.props)
-              }
               <TransitionGroup>
                 <CSSTransition key={location.key} classNames="fade" timeout={380}>
                   <Switch>
                     <Route
-                      path={'/u/:userPk/friend_list/:isCreateGroup'}
-                      render={ ({match, location}) =>
-                        <FriendList updateUsers = {this.updateUsers}/>
+                      path={'/u/:group_id/friend_list'}
+                      render={ ({match, location}) => {
+                          this.findFriendList(match.params.group_id);
+                          return (<FriendList users={this.state.friends}/>)
+                        }
                       }
                     />
 
@@ -106,7 +129,7 @@ class App extends React.Component {
 
                     <Route
                       path={'/g/create'}
-                      render={ ({match, location}) =>
+                      render={ ({match, location}) => 
                         <div>
                           <GroupCreate users = {this.state.users} />
                         </div>
@@ -115,11 +138,15 @@ class App extends React.Component {
 
                     <Route
                       path={'/g/:gPk'}
-                      render={ ({match, location}) =>
-                        <div>
-                          <GroupInfoTab name = "Buddy Group CS3216" count_users = "12"/>
-                          <FriendsTab />
-                        </div>
+                      render={ ({match, location}) => {
+                          this.updateGroupInfo(match.params.gPk);
+                          return (
+                            <div>
+                              <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
+                              <FriendsTab />
+                            </div>
+                          )
+                        }
                       }
                     />
 

@@ -80,17 +80,11 @@ class GroupTab extends React.Component {
       response.data.groups.map(group_entry => {
         var group_pk = group_entry.pk;
         axios.get('/api/groups/' + group_pk.toString() + "/members").then(responseA => {
-          console.log(responseA.data);
           var acc = responseA.data.members.reduce((x, y) => {
-                      console.log("A");
-                      console.log(x);
-                      console.log(y);
                       if(!y.debt) y.debt = 0;
                       return x + parseFloat(y.debt)
                      }, 0);
           // This check is not correct in some sense, need to discuss
-          console.log("ACC HERE");
-          console.log(acc);
           var newArray = [];
           group_entry.acc = parseFloat(acc).toString();
           if(acc > 0) {

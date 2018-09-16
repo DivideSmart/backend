@@ -22,38 +22,6 @@ function copy(o) {
   return output;
 }
 
-var sampleData = {
-  friends: [
-    {
-      key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      key: '2',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-    {
-      key: '3',
-      name: 'Hieu',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      key: '4',
-      name: 'Yuyang',
-      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
-      acc: 20.66,
-    }, {
-      key: '5',
-      name: 'Sipanis',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-  ]
-}
-
 class FriendList extends React.Component {
   constructor() {
     super()
@@ -70,6 +38,7 @@ class FriendList extends React.Component {
     };
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.renderButton = this.renderButton.bind(this);
+    this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
   }
 
   renderButton(isCreateGroup, updateUsers) {
@@ -83,14 +52,14 @@ class FriendList extends React.Component {
   onChangeCheckBox(e, checked) {
     if(checked && !(e.target.name in this.added_keys)) {
       this.added_keys.push(e.target.name);
-      const new_user = this.props.users.friends.filter(user => user.key == e.target.name)[0];
+      const new_user = this.props.users.filter(user => user.pk == e.target.name)[0];
       const newArray = this.state.added_users;
       newArray.push(new_user);
       this.setState({
         added_users: newArray
       });
     } else if(!checked) {
-      const newArrayB = this.state.added_users.filter(user => user.key != e.target.name);
+      const newArrayB = this.state.added_users.filter(user => user.pk != e.target.name);
       this.setState({
         added_users: newArrayB
       })
@@ -113,9 +82,7 @@ class FriendList extends React.Component {
         </div>
         <List renderHeader={() => 'Friends'} className="my-list">
         {
-          this.props.users.friends.map(friend => {
-            // console.log(this.props.updateUsers);
-            console.log("HIEU AAA HERE");
+          this.props.users.map(friend => {
             if(this.props.isCreateGroup) {
               return (
                 <Item
@@ -125,16 +92,16 @@ class FriendList extends React.Component {
                         style={{
                           width: '48px',
                           height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
                           display: 'inline-block' }}
                       />
                     </Badge>
                   }
                   multipleLine
                   // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#00b894' }}> <Checkbox name={friend.key} onChange={ this.onChangeCheckBox} /> </span>}
+                  extra={<span style={{ color: '#00b894' }}> <Checkbox name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
                 >
-                  {friend.name} <Brief>8/31/18</Brief>
+                  {friend.username} <Brief>8/31/18</Brief>
                 </Item>
               )
               
@@ -150,7 +117,7 @@ class FriendList extends React.Component {
                           style={{
                             width: '48px',
                             height: '48px',
-                            background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                            background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
                             display: 'inline-block' }}
                         />
                       </Badge>
@@ -158,7 +125,7 @@ class FriendList extends React.Component {
                     multipleLine
                     // onClick={() => { window.location.href = '/u/1'}}
                   >
-                    {friend.name} <Brief>8/31/18</Brief>
+                    {friend.username} <Brief>8/31/18</Brief>
                   </Item>
                 </Link>
             )

@@ -1,6 +1,8 @@
 import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank} from 'antd-mobile';
 
 import React from 'react'
+import axios from 'axios'
+import {Link} from 'react-router-dom'
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -21,10 +23,11 @@ class GroupInfoTab extends React.Component {
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </List.Item>
 
-          <List.Item extra= {this.props.count_users} arrow="horizontal">
-            <Badge text={0} style={{ marginLeft: 12 }}>Users</Badge>
-            {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
-          </List.Item>
+          <Link to={'/u/' + this.props.groupID +  "/friend_list"}>
+            <List.Item extra= {this.props.count_user} arrow="horizontal">
+              <Badge text={0} style={{ marginLeft: 12 }}>Users</Badge>
+            </List.Item>
+          </Link>
 
         </List>
       </div>

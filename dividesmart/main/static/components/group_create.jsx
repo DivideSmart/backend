@@ -16,37 +16,35 @@ const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
 const AgreeItem = Checkbox.AgreeItem;
 const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" style={{ width: 60, height: 60 }} alt="" />;
-var sampleData = {
-  friends: [
+var sampleData = [
     {
-      key: '1',
-      name: 'Harry',
+      pk: '1',
+      username: 'Harry',
       avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
       acc: 10.28,
     }, {
-      key: '2',
-      name: 'Oscar',
+      pk: '2',
+      username: 'Oscar',
       avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
       acc: 8.6,
     },
     {
-      key: '3',
-      name: 'Hieu',
+      pk: '3',
+      username: 'Hieu',
       avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
       acc: 10.28,
     }, {
-      key: '4',
-      name: 'Yuyang',
+      pk: '4',
+      username: 'Yuyang',
       avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
       acc: 20.66,
     }, {
-      key: '5',
-      name: 'Sipanis',
+      pk: '5',
+      username: 'Sipanis',
       avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
       acc: 8.6,
-    },
-  ]
-}
+    }
+]
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -63,7 +61,7 @@ class GroupCreateForm extends React.Component {
       type: 'group',
       showFriends: false,
       addFriendAlready: false,
-      users: {friends: []}
+      users: []
     }
     this.onChange = () => {
 
@@ -75,15 +73,6 @@ class GroupCreateForm extends React.Component {
         value2: value,
       });
     };
-    this.updateReceipt = (content) => {
-      this.setState({
-        data: [
-          { value: 0, label: 'Shiquasa Mojito', price: '4.90' },
-          { value: 1, label: 'Cranberry Juice', price: '3.50' },
-          { value: 2, label: 'Mountain Monster Curry', price: '24.00' },
-        ]
-      })
-    }
 
     this.mainRef = React.createRef();
     this.friendRef = React.createRef();
@@ -110,7 +99,7 @@ class GroupCreateForm extends React.Component {
     });
 
     this.setState({
-      users: {friends: added_users}
+      users: added_users
     })
   }
 
