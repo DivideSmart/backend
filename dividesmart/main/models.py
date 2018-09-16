@@ -189,10 +189,71 @@ class EntryParticipation(models.Model):
     amount = models.DecimalField(max_digits=18, decimal_places=2)
 
 
+class PaymentManager(PolymorphicManager):
+    use_in_migrations = True
+
+    def create_payment(self, group, creator, amount, receiver):
+        assert creator.pk != receiver.pk
+        payment = Payment(
+            group=group,
+            creator=creator,
+            initiator=creator,
+            amount=amount,
+            receiver=receiver
+        )
+        payment.save()
+
+        # Create participations
+        payer_part = EntryParticipation(
+            participant=creator, entry=payment,
+            amount=0  # we don't really need this value if im not wrong
+        )
+        payee_part = EntryParticipation(
+            participant=receiver, entry=payment, amount=0
+        )
+        payer_part.save()
+        payee_part.save()
+
+        # Update debts
+        payer_debt = Debt.objects.get(
+            group=group, user=creator, other_user=receiver
+        )
+        payee_debt = Debt.objects.get(
+            group=group, user=receiver, other_user=creator
+        )
+        payer_debt.amount += Decimal(amount)
+        payee_debt.amount -= Decimal(amount)
+        payer_debt.save()
+        payee_debt.save()
+
+        return payment
+
+    def update_payment(self):
+        # maybe add a "type" and restrict only to cash payment to be
+        # editable / deletable
+        pass
+
+    def delete_payment(self):
+        # maybe add a "type" and restrict only to cash payment to be
+        # editable / deletable
+        pass
+
+
 class Payment(Entry):
     receiver = models.ForeignKey(
         User, related_name='payments_received', on_delete=models.CASCADE
     )
+
+    objects = PaymentManager()
+
+    def to_dict(self):
+        return model_to_dict(
+            self,
+            fields=['creator', 'initiator', 'amount', 'receiver', 'date_created']
+        )
+
+    def to_dict_for_user(self, user):
+        return self.to_dict()
 
 
 class BillManager(PolymorphicManager):

@@ -31,7 +31,7 @@ def groups(request):
 def group(request, group_id):
     if request.method != 'GET':
         return HttpResponseNotFound('Invalid Request')
-    
+
     current_user = get_user(request)
     group = Group.objects.filter(pk=group_id).first()
     if not group or not group.has_member(current_user):
@@ -170,8 +170,8 @@ def group_bills(request, group_id):
         initiator = User.objects.get(pk=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', None))
-        loans = json.loads(request.POST.get('loans', None))
+        amount = float(request.POST.get('amount', -1))
+        loans = json.loads(request.POST.get('loans', "{}"))
 
         if not name:
             return HttpResponseBadRequest('Invalid name')

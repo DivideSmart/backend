@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user
-from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.http import (
     HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse,
@@ -8,7 +7,7 @@ from django.http import (
 from django.views.decorators.csrf import csrf_exempt
 
 from main.models import (
-    User, Group, Entry, Debt, Bill
+    User, Group, Entry, Debt, Bill, Payment
 )
 from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
@@ -178,8 +177,8 @@ def friend_bills(request, user_id, friend_id):
         initiator = User.objects.get(pk=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', None))
-        loans = json.loads(request.POST.get('loans', None))
+        amount = float(request.POST.get('amount', -1))
+        loans = json.loads(request.POST.get('loans', "{}"))
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -224,7 +223,15 @@ def friend_payments(request, user_id, friend_id):
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
-        initiator_id = creator_id = current_user.pk
-
+        amount = float(request.POST.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        payment = Payment.objects.create_payment(
+            group=None,
+            creator=current_user,
+            amount=amount,
+            receiver=friend_user
+        )
+        return JsonResponse(payment.to_dict())
 
     return HttpResponseNotFound('Invalid Request')
