@@ -8,7 +8,6 @@ from django.contrib.auth.models import (
 )
 from django.core.mail import send_mail
 from django.db import models
-from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from polymorphic.models import PolymorphicModel, PolymorphicManager
@@ -102,6 +101,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email_address], **kwargs)
 
+    def to_dict(self):
+        user_json = {
+            'id': self.id,
+            'emailAddress': self.email_address,
+            'username': self.username,
+            'dateJoined': self.date_joined,
+        }
+        return user_json
+
+    def to_dict_for_self(self):
+        user_json = self.to_dict()
+        user_json['balance'] = self.balance
+        return user_json
+
+    def to_dict_for_others(self, for_user, for_group=None, show_debt=True):
+        user_json = self.to_dict()
+        if show_debt and for_user.id != self.id:
+            debt_amount = Debt.objects.get(
+                user=for_user, other_user=self, group=for_group
+            ).amount
+            user_json['debt'] = debt_amount
+        return user_json
+
+    @classmethod
+    def to_dicts_for_others(cls, users, for_user, for_group=None,
+                            show_debt=True):
+        return [u.to_dict_for_others(for_user, for_group, show_debt)
+                for u in users]
+
 
 class GroupManager(models.Manager):
     use_in_migrations = True
@@ -128,10 +156,23 @@ class Group(models.Model):
     objects = GroupManager()
 
     def has_member(self, user):
-        return bool(self.users.filter(pk=user.pk).first())
+        return bool(self.users.filter(id=user.pk).first())
 
     def has_invited_member(self, user):
-        return bool(self.invited_users.filter(pk=user.pk).first())
+        return bool(self.invited_users.filter(id=user.id).first())
+
+    def to_dict(self):
+        group_json = {
+            'id': self.id,
+            'name': self.name,
+            'dateCreated': self.date_created,
+            'creator': self.creator.id
+        }
+        return group_json
+
+    @classmethod
+    def to_dicts(cls, groups):
+        return [g.to_dict() for g in groups]
 
 
 class Debt(models.Model):
@@ -174,8 +215,8 @@ class Entry(PolymorphicModel):
     def to_dict(self):
         raise RuntimeError('Implement me')
 
-    def to_dict_for_user(self):
-        raise RuntimeError('Implement me')
+    def to_dict_for_user(self, user):
+        return self.to_dict()
 
 
 class EntryParticipation(models.Model):
@@ -251,15 +292,15 @@ class Payment(Entry):
     objects = PaymentManager()
 
     def to_dict(self):
-        return model_to_dict(
-            self,
-            fields=['creator', 'initiator', 'amount',
-                    'receiver', 'date_created']
-        )
-
-    def to_dict_for_user(self, user):
-        payment_json = self.to_dict()
-        payment_json['id'] = self.id
+        payment_json = {
+            'type': 'payment',
+            'id': self.id,
+            'dateCreated': self.date_created,
+            'creator': self.creator.id,
+            'initiator': self.initiator.id,
+            'amount': self.amount,
+            'receiver': self.receiver.id
+        }
         return payment_json
 
 
@@ -338,19 +379,29 @@ class Bill(Entry):
     objects = BillManager()
 
     def to_dict(self):
-        return model_to_dict(
-            self,
-            fields=['name', 'creator', 'initiator', 'date_created']
-        )
+        bill_json = {
+            'type': 'bill',
+            'id': self.id,
+            'name': self.name,
+            'creator': self.creator.id,
+            'initiator': self.initiator.id,
+            'dateCreated': self.date_created,
+            'loans': {}
+        }
+        loans = Loan.objects.filter(bill=self).all()
+        for loan in loans:
+            bill_json['loans'][str(loan.receiver.id)] = loan.amount
+
+        assert bill_json['loans']
+        return bill_json
 
     def to_dict_for_user(self, user):
-        assert(self.participants.filter(id=user.id).first())
-        bill = self.to_dict()
-        bill['user_amount'] = EntryParticipation.objects.get(
+        assert self.participants.filter(id=user.id).exists()
+        bill_json = self.to_dict()
+        bill_json['userAmount'] = EntryParticipation.objects.get(
             participant=user, entry=self
         ).amount
-        bill['id'] = self.id
-        return bill
+        return bill_json
 
 
 class Loan(models.Model):

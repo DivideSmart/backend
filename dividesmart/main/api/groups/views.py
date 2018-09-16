@@ -4,7 +4,7 @@ from django.http import (
 )
 from django.views.decorators.csrf import csrf_exempt
 from main.utils import (
-    ensure_authenticated, other_users_to_dict
+    ensure_authenticated
 )
 from main.forms import CreateGroupForm
 from main.models import (
@@ -53,8 +53,10 @@ def group_members(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     return JsonResponse({
-        'members': other_users_to_dict(
-            group.users.all(), current_user, True, group)
+        'members': User.to_dicts_for_others(
+            users=group.users.all(), for_user=current_user, for_group=group,
+            show_debt=True
+        )
     })
 
 
@@ -69,8 +71,10 @@ def group_invites(request, group_id):
     if request.method == 'GET':
         # Get all invited users
         return JsonResponse({
-            'invites': other_users_to_dict(
-                group.invited_users.all(), current_user, False, group)
+            'invites': User.to_dicts_for_others(
+                users=group.invited_users.all(), for_user=current_user,
+                for_group=group, show_debt=False
+            )
         })
 
     if request.method == 'POST':

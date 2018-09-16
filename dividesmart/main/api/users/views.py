@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user
-from django.forms.models import model_to_dict
 from django.http import (
     HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse,
     HttpResponseBadRequest
@@ -10,7 +9,7 @@ from main.models import (
     User, Group, Entry, Debt, Bill, Payment
 )
 from main.utils import (
-    ensure_authenticated, other_users_to_dict, other_user_to_dict
+    ensure_authenticated,
 )
 import ujson as json
 import uuid
@@ -18,13 +17,6 @@ import uuid
 
 def groups_to_dict(groups):
     return [group_to_dict(g) for g in groups]
-
-
-def group_to_dict(group):
-    group_json = model_to_dict(
-        group, fields=['name', 'date_created', 'creator'])
-    group_json['id'] = group.id
-    return group_json
 
 
 @ensure_authenticated
@@ -46,7 +38,7 @@ def user(request, user_id):
     if not is_related:
         return HttpResponseForbidden('Cannot view this user')
     other_user = User.objects.get(id=user_id)
-    return JsonResponse(other_user_to_dict(other_user, current_user, True))
+    return JsonResponse(other_user.to_dict_for_others(current_user))
 
 
 @csrf_exempt
@@ -57,17 +49,19 @@ def friends(request, user_id):
         return HttpResponseForbidden('Cannot view this user\'s friends')
     if request.method == 'GET':
         return JsonResponse({
-            'friends': other_users_to_dict(
-                current_user.friends.all(), current_user, True, None),
+            'friends': User.to_dicts_for_others(
+                users=current_user.friends.all(), for_user=current_user,
+                for_group=None, show_debt=True
+            ),
             'invites': {
-                'sent': other_users_to_dict(
-                    current_user.requested_friends.all(),
-                    current_user, False, None
+                'sent': User.to_dicts_for_others(
+                    users=current_user.requested_friends.all(),
+                    for_user=current_user, for_group=None, show_debt=False
                 ),
-                'received': other_users_to_dict(
-                    current_user.received_friend_requests.all(),
-                    current_user, False, None
-                )
+                'received': User.to_dicts_for_others(
+                    users=current_user.received_friend_requests.all(),
+                    for_user=current_user, for_group=None, show_debt=False
+                ),
             }
         })
 
@@ -130,8 +124,8 @@ def groups(request, user_id):
     if request.method == 'GET':
         # get all groups for this user
         return JsonResponse({
-            'groups': groups_to_dict(current_user.joined_groups.all()),
-            'invites': groups_to_dict(current_user.group_invites.all())
+            'groups': Group.to_dicts(current_user.joined_groups.all()),
+            'invites': Group.to_dicts(current_user.group_invites.all())
         })
     if request.method == 'POST':
         return HttpResponse('nice POST')
