@@ -5,19 +5,12 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
 import { CSSTransition, TransitionGroup } from "react-transition-group"
-import {
-  Link,
-  Route,
-  BrowserRouter as Router,
-  Switch
-} from 'react-router-dom'
-
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
-import store from './redux/store';
-import { setCurrentUser, logoutUser } from './redux/actions/authActions.js';
+import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
-import { faReceipt, faDollarSign, faHome, faChevronLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
-
+import {CreateForm} from './components/create_form.jsx'
 import FlaoatingButton from './components/material/material_float_btn.jsx'
 import { FriendList } from './components/tabs/friend_list.jsx'
 import { FriendsTab } from './components/tabs/friends_tab.jsx'
@@ -32,6 +25,7 @@ import {UserTab} from './components/tabs/user_tab2.jsx'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import store from './redux/store';
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
@@ -123,6 +117,16 @@ class App extends React.Component {
                   />
 
                   <Route
+                    path={'/create'}
+                    render={ ({match, location}) =>
+                      <CreateForm
+                        match={match}
+                        location={location}
+                      />
+                    }
+                  />
+
+                  <Route
                     path={'/g/create'}
                     render={ ({match, location}) =>
                       <div>
@@ -154,8 +158,6 @@ class App extends React.Component {
                       </div>
                     }
                   />
-
-
                 </Switch>
               </CSSTransition>
             </TransitionGroup>
