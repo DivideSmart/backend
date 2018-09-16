@@ -140,6 +140,7 @@ class Debt(models.Model):
     amount = 0: `user` and `other_user` are settled up.
     amount < 0: `user` owes `amount` to `other_user`.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='debt_source', on_delete=models.CASCADE)
@@ -186,6 +187,7 @@ class EntryParticipation(models.Model):
     amount = 0: `user` and `other_user`
     amount < 0: `user` owes `amount`
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participant = models.ForeignKey(User, on_delete=models.CASCADE)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=18, decimal_places=2)
@@ -251,11 +253,14 @@ class Payment(Entry):
     def to_dict(self):
         return model_to_dict(
             self,
-            fields=['creator', 'initiator', 'amount', 'receiver', 'date_created']
+            fields=['creator', 'initiator', 'amount',
+                    'receiver', 'date_created']
         )
 
     def to_dict_for_user(self, user):
-        return self.to_dict()
+        payment_json = self.to_dict()
+        payment_json['id'] = self.id
+        return payment_json
 
 
 class BillManager(PolymorphicManager):
@@ -339,15 +344,17 @@ class Bill(Entry):
         )
 
     def to_dict_for_user(self, user):
-        assert(self.participants.filter(pk=user.pk).first())
+        assert(self.participants.filter(id=user.id).first())
         bill = self.to_dict()
         bill['user_amount'] = EntryParticipation.objects.get(
             participant=user, entry=self
         ).amount
+        bill['id'] = self.id
         return bill
 
 
 class Loan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bill = models.ForeignKey(
         Bill, related_name='loans', on_delete=models.CASCADE)
     receiver = models.ForeignKey(

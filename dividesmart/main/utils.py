@@ -25,9 +25,9 @@ def other_users_to_dict(other_users, current_user, show_debt, group=None):
 
 def other_user_to_dict(other_user, current_user, show_debt, group=None):
     user_json = model_to_dict(other_user, fields=['email_address', 'username'])
-    user_json['pk'] = other_user.pk
+    user_json['id'] = other_user.id
     if show_debt:
-        if current_user.pk != other_user.pk:
+        if current_user.id != other_user.id:
             debt = Debt.objects.filter(
                 user=current_user, other_user=other_user, group=group
             ).first()

@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('<int:user_id>/', views.user),
-    path('<int:user_id>/friends/', views.friends),
-    path('<int:user_id>/friends/<int:friend_id>/', views.friend),
-    path('<int:user_id>/friends/<int:friend_id>/entries/', views.friend_entries),
-    path('<int:user_id>/friends/<int:friend_id>/bills/', views.friend_bills),
-    path('<int:user_id>/friends/<int:friend_id>/payments/', views.friend_payments),
-    path('<int:user_id>/groups/', views.groups)
+    path('<uuid:user_id>/', views.user),
+    path('<uuid:user_id>/friends/', views.friends),
+    path('<uuid:user_id>/friends/<uuid:friend_id>/', views.friend),
+    path('<uuid:user_id>/friends/<uuid:friend_id>/entries/', views.friend_entries),
+    path('<uuid:user_id>/friends/<uuid:friend_id>/bills/', views.friend_bills),
+    path('<uuid:user_id>/friends/<uuid:friend_id>/payments/', views.friend_payments),
+    path('<uuid:user_id>/groups/', views.groups)
 ]

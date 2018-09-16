@@ -11,7 +11,7 @@ def user(request):
         return HttpResponseForbidden('Not logged in')
     user_json = model_to_dict(
         current_user,
-        fields=('email_address', 'username', 'date_joined', 'balance')
+        fields=['email_address', 'username', 'date_joined', 'balance']
     )
-    user_json['pk'] = current_user.pk
+    user_json['id'] = current_user.pk
     return JsonResponse(user_json, status=200)

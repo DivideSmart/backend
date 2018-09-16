@@ -13,14 +13,17 @@ from main.utils import (
     ensure_authenticated, other_users_to_dict, other_user_to_dict
 )
 import ujson as json
+import uuid
+
 
 def groups_to_dict(groups):
     return [group_to_dict(g) for g in groups]
 
 
 def group_to_dict(group):
-    group_json = model_to_dict(group, fields=['name', 'date_created', 'creator'])
-    group_json['pk'] = group.pk
+    group_json = model_to_dict(
+        group, fields=['name', 'date_created', 'creator'])
+    group_json['id'] = group.id
     return group_json
 
 
@@ -32,26 +35,25 @@ def user(request, user_id):
         # TODO: Unless you are this user?
         return HttpResponseForbidden('Cannot modify this user')
     current_user = get_user(request)
-    is_related = (current_user.pk == user_id) \
-                 or (current_user.friends.filter(pk=user_id).first() is not None) \
+    is_related = (current_user.id == user_id) \
+                 or (current_user.friends.filter(id=user_id).exists()) \
                  or (
-                     Group.objects
-                        .filter(users__id=user_id)
-                        .filter(users__id=current_user.id).first() is not None
+                    Group.objects
+                    .filter(users__id=user_id)
+                    .filter(users__id=current_user.id)
+                    .exists()
                  )
     if not is_related:
         return HttpResponseForbidden('Cannot view this user')
-    other_user = User.objects.filter(pk=user_id).first()
-    return JsonResponse(
-        other_user_to_dict(other_user, current_user, True)
-    )
+    other_user = User.objects.get(id=user_id)
+    return JsonResponse(other_user_to_dict(other_user, current_user, True))
 
 
 @csrf_exempt
 @ensure_authenticated
 def friends(request, user_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot view this user\'s friends')
     if request.method == 'GET':
         return JsonResponse({
@@ -72,12 +74,16 @@ def friends(request, user_id):
     if request.method == 'POST':
         # Request friendship with this user id
         # Or accept friendship with this user id
-        friend_id = request.POST.get('friend_id', None)
-        other_user = User.objects.filter(pk=friend_id).first()
+        try:
+            friend_id = uuid.UUID(request.POST.get('friend_id', None))
+            other_user = User.objects.filter(id=friend_id).first()
+        except ValueError:
+            return HttpResponseBadRequest('Invalid friend id')
+
         if not other_user:
             return HttpResponseNotFound('No such user')
         received_fr = (
-            current_user.received_friend_requests.filter(pk=friend_id).first()
+            current_user.received_friend_requests.filter(id=friend_id).first()
         )
         if received_fr:
             current_user.received_friend_requests.remove(other_user)
@@ -99,9 +105,9 @@ def friends(request, user_id):
 @ensure_authenticated
 def friend(request, user_id, friend_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot modify this user\'s friends')
-    friend_user = current_user.friends.filter(pk=friend_id).first()
+    friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'DELETE':
@@ -119,7 +125,7 @@ def friend(request, user_id, friend_id):
 @ensure_authenticated
 def groups(request, user_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot view this user\'s groups')
     if request.method == 'GET':
         # get all groups for this user
@@ -140,9 +146,9 @@ def group(request, user_id, group_id):
 @ensure_authenticated
 def friend_entries(request, user_id, friend_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot modify this user')
-    friend_user = current_user.friends.filter(pk=friend_id).first()
+    friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'GET':
@@ -165,16 +171,20 @@ def friend_entries(request, user_id, friend_id):
 @ensure_authenticated
 def friend_bills(request, user_id, friend_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot modify this user')
-    friend_user = current_user.friends.filter(pk=friend_id).first()
+    friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
-        initiator_id = int(request.POST.get('initiator', None))
+        try:
+            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid initiator')
+
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
             return HttpResponseBadRequest('Invalid initiator')
-        initiator = User.objects.get(pk=initiator_id)
+        initiator = User.objects.get(id=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
         amount = float(request.POST.get('amount', -1))
@@ -192,14 +202,17 @@ def friend_bills(request, user_id, friend_id):
         actual_loans = {}
         total_loan_amt = 0
         for loan_user_id, loan_amt in loans.items():
-            loan_user_id = int(loan_user_id)
-            if loan_user_id == initiator.pk:
+            try:
+                loan_user_id = uuid.UUID(loan_user_id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid loan user')
+            if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
             if loan_user_id != user_id and loan_user_id != friend_id:
                 return HttpResponseBadRequest('Invalid loan user')
             total_loan_amt += loan_amt
-            loan_user = User.objects.get(pk=loan_user_id)
+            loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt
 
         if total_loan_amt > amount:
@@ -217,9 +230,9 @@ def friend_bills(request, user_id, friend_id):
 @ensure_authenticated
 def friend_payments(request, user_id, friend_id):
     current_user = get_user(request)
-    if current_user.pk != user_id:
+    if current_user.id != user_id:
         return HttpResponseForbidden('Cannot modify this user')
-    friend_user = current_user.friends.filter(pk=friend_id).first()
+    friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':

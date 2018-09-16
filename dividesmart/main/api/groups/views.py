@@ -12,6 +12,7 @@ from main.models import (
 )
 from django.contrib.auth import get_user
 import ujson as json
+import uuid
 
 
 @csrf_exempt
@@ -33,7 +34,7 @@ def group(request, group_id):
     if request.method != 'GET':
         return HttpResponseNotFound('Invalid Request')
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     return JsonResponse({
@@ -48,7 +49,7 @@ def group_members(request, group_id):
         return HttpResponseNotFound('Invalid request')
     # must be a member of this group to view other members
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     return JsonResponse({
@@ -61,7 +62,7 @@ def group_members(request, group_id):
 @ensure_authenticated
 def group_invites(request, group_id):
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
 
@@ -74,8 +75,12 @@ def group_invites(request, group_id):
 
     if request.method == 'POST':
         # Invite a new user
-        invite_user = User.objects.filter(
-            pk=request.POST.get('user_id', None)).first()
+        try:
+            invited_user_id = uuid.UUID(request.POST.get('user_id', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid user id')
+
+        invite_user = User.objects.filter(id=invited_user_id).first()
         if not invite_user:
             return HttpResponseNotFound('Invalid user id')
         group.invited_users.add(invite_user)
@@ -89,12 +94,12 @@ def group_invites(request, group_id):
 @ensure_authenticated
 def group_invite(request, group_id, invite_id):
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'DELETE':
         # Delete an invited user
-        invited_user = group.invited_users.filter(pk=invite_id).first()
+        invited_user = group.invited_users.filter(id=invite_id).first()
         if not invited_user:
             return HttpResponseNotFound('No such invited user')
         group.invited_users.remove(invited_user)
@@ -108,7 +113,7 @@ def group_invite(request, group_id, invite_id):
 def group_accept(request, group_id):
     # Accept group invite
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_invited_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
@@ -128,7 +133,7 @@ def group_accept(request, group_id):
 def group_decline(request, group_id):
     # Decline group invite
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_invited_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
@@ -142,16 +147,13 @@ def group_decline(request, group_id):
 @ensure_authenticated
 def group_entries(request, group_id):
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'GET':
         # TODO: Add pagination
         entries = (
-            Entry.objects
-            .filter(group=group)
-            .order_by('-date_created')
-            .all()
+            Entry.objects.filter(group=group).order_by('-date_created').all()
         )
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
@@ -163,15 +165,19 @@ def group_entries(request, group_id):
 @ensure_authenticated
 def group_bills(request, group_id):
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
-        group_member_ids = set(m.pk for m in group.users.all())
-        initiator_id = int(request.POST.get('initiator', -1))
+        group_member_ids = set(m.id for m in group.users.all())
+        try:
+            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid initiator')
+
         if not initiator_id or initiator_id not in group_member_ids:
             return HttpResponseBadRequest('Invalid initiator')
-        initiator = User.objects.get(pk=initiator_id)
+        initiator = User.objects.get(id=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
         amount = float(request.POST.get('amount', -1))
@@ -187,14 +193,17 @@ def group_bills(request, group_id):
         actual_loans = {}
         total_loan_amt = 0
         for loan_user_id, loan_amt in loans.items():
-            loan_user_id = int(loan_user_id)
-            if loan_user_id == initiator.pk:
+            try:
+                loan_user_id = uuid.UUID(loan_user_id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid loan user id')
+            if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
             if loan_user_id not in group_member_ids:
                 return HttpResponseBadRequest('Invalid loan user not in group')
             total_loan_amt += loan_amt
-            loan_user = User.objects.get(pk=loan_user_id)
+            loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt
 
         if total_loan_amt > amount:
@@ -212,17 +221,22 @@ def group_bills(request, group_id):
 @ensure_authenticated
 def group_payments(request, group_id):
     current_user = get_user(request)
-    group = Group.objects.filter(pk=group_id).first()
+    group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
         amount = float(request.POST.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
-        receiver_id = int(request.POST.get('receiver', -1))
-        receiver = group.users.filter(pk=receiver_id).first()
+
+        try:
+            receiver_id = uuid.UUID(request.POST.get('receiver', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid receiver id')
+
+        receiver = group.users.filter(id=receiver_id).first()
         if not receiver:
-            return HttpResponseBadRequest('No such member in group')
+            return HttpResponseBadRequest('No such receiver in group')
         payment = Payment.objects.create_payment(
             group=group,
             creator=current_user,
