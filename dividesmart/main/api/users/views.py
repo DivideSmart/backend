@@ -175,7 +175,7 @@ def friend_bills(request, user_id, friend_id):
         initiator_id = int(request.POST.get('initiator', None))
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
             return HttpResponseBadRequest('Invalid initiator')
-        initiator = User.objects.filter(pk=initiator_id).first()
+        initiator = User.objects.get(pk=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
         amount = float(request.POST.get('amount', None))
@@ -211,10 +211,20 @@ def friend_bills(request, user_id, friend_id):
             name, None, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
-    return HttpResponse()
+    return HttpResponseNotFound('Invalid Request')
 
 
 @csrf_exempt
 @ensure_authenticated
 def friend_payments(request, user_id, friend_id):
-    return HttpResponse()
+    current_user = get_user(request)
+    if current_user.pk != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(pk=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
+    if request.method == 'POST':
+        initiator_id = creator_id = current_user.pk
+
+
+    return HttpResponseNotFound('Invalid Request')
