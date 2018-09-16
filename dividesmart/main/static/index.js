@@ -11,10 +11,10 @@ import {
   BrowserRouter as Router,
   Switch
 } from 'react-router-dom'
-import { setCurrentUser, logoutUser } from './actions/authActions.js';
+import { setCurrentUser, logoutUser } from './redux/actions/authActions.js';
 
 import { Provider, connect } from 'react-redux';
-import store from './reducers/store';
+import store from './redux/store';
 
 import { faReceipt, faDollarSign, faHome, faChevronLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
