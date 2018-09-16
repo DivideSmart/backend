@@ -8,7 +8,7 @@ from main.utils import (
 )
 from main.forms import CreateGroupForm
 from main.models import (
-    Group, User, Debt, Entry, Bill
+    Group, User, Debt, Entry, Bill, Payment
 )
 from django.contrib.auth import get_user
 import ujson as json
@@ -26,17 +26,19 @@ def groups(request):
         return HttpResponse('group created')
     return HttpResponseNotFound('Invalid request')
 
+
 @csrf_exempt
 @ensure_authenticated
 def group(request, group_id):
     if request.method != 'GET':
         return HttpResponseNotFound('Invalid Request')
-    
     current_user = get_user(request)
     group = Group.objects.filter(pk=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
-    return HttpResponse(group.name)
+    return JsonResponse({
+        'name': group.name
+    })
 
 
 @csrf_exempt
@@ -157,6 +159,8 @@ def group_entries(request, group_id):
     return HttpResponse()
 
 
+@csrf_exempt
+@ensure_authenticated
 def group_bills(request, group_id):
     current_user = get_user(request)
     group = Group.objects.filter(pk=group_id).first()
@@ -164,14 +168,14 @@ def group_bills(request, group_id):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
         group_member_ids = set(m.pk for m in group.users.all())
-        initiator_id = int(request.POST.get('initiator', None))
+        initiator_id = int(request.POST.get('initiator', -1))
         if not initiator_id or initiator_id not in group_member_ids:
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(pk=initiator_id)
         name = request.POST.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', None))
-        loans = json.loads(request.POST.get('loans', None))
+        amount = float(request.POST.get('amount', -1))
+        loans = json.loads(request.POST.get('loans', "{}"))
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -201,8 +205,29 @@ def group_bills(request, group_id):
             name, group, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
-    return HttpResponse()
+    return HttpResponseNotFound('Invalid Request')
 
 
+@csrf_exempt
+@ensure_authenticated
 def group_payments(request, group_id):
-    pass
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'POST':
+        amount = float(request.POST.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        receiver_id = int(request.POST.get('receiver', -1))
+        receiver = group.users.filter(pk=receiver_id).first()
+        if not receiver:
+            return HttpResponseBadRequest('No such member in group')
+        payment = Payment.objects.create_payment(
+            group=group,
+            creator=current_user,
+            amount=amount,
+            receiver=receiver
+        )
+        return JsonResponse(payment.to_dict())
+    return HttpResponseNotFound('Invalid Request')
