@@ -3,14 +3,16 @@ from __future__ import unicode_literals
 
 from decimal import Decimal
 
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
-                                        PermissionsMixin)
+from django.contrib.auth.models import (
+    AbstractBaseUser, BaseUserManager, PermissionsMixin
+)
 from django.core.mail import send_mail
 from django.db import models
 from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from polymorphic.models import PolymorphicModel, PolymorphicManager
+import uuid
 
 
 class UserManager(BaseUserManager):
@@ -53,18 +55,19 @@ def user_avatar_upload_to(instance, filename):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email_address = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=128)
     balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     date_joined = models.DateTimeField(default=timezone.now)
     friends = models.ManyToManyField('self')
     requested_friends = models.ManyToManyField(
-        'self',
-        related_name='received_friend_requests',
-        symmetrical=False
+        'self', related_name='received_friend_requests', symmetrical=False
     )
 
-    avatar = models.ImageField(upload_to=user_avatar_upload_to, blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to=user_avatar_upload_to, blank=True, null=True
+    )
     external_avatar_url = models.TextField(blank=True, null=True)
 
     @property
@@ -76,9 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return "/media/portrait/default_portrait.png"
 
-    is_active = models.BooleanField(
-        default=True,
-    )
+    is_active = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(
         _('staff status'),
@@ -116,6 +117,7 @@ class GroupManager(models.Manager):
 
 
 class Group(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     date_created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(
@@ -138,7 +140,6 @@ class Debt(models.Model):
     amount = 0: `user` and `other_user` are settled up.
     amount < 0: `user` owes `amount` to `other_user`.
     """
-
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='debt_source', on_delete=models.CASCADE)
@@ -153,6 +154,7 @@ class Entry(PolymorphicModel):
     I need this so that it is easier to get all entries (bills + payments)
     in a sorted order by date created
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     group = models.ForeignKey(
         Group, null=True, related_name='entries', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -346,7 +348,8 @@ class Bill(Entry):
 
 
 class Loan(models.Model):
-    bill = models.ForeignKey(Bill, related_name='loans', on_delete=models.CASCADE)
+    bill = models.ForeignKey(
+        Bill, related_name='loans', on_delete=models.CASCADE)
     receiver = models.ForeignKey(
         User, related_name='loans_received', on_delete=models.CASCADE
     )
