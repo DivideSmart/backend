@@ -13,8 +13,8 @@ import {
 } from 'react-router-dom'
 import { setCurrentUser, logoutUser } from './actions/authActions.js';
 
-import { Provider } from 'react-redux';
-import store from './store.js';
+import { Provider, connect } from 'react-redux';
+import store from './reducers/store';
 
 import { faReceipt, faDollarSign, faHome, faChevronLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 
@@ -35,7 +35,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
-// store.dispatch(setCurrentUser({CU: '1'}));
 
 class App extends React.Component {
   constructor() {
@@ -97,82 +96,89 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider locale={enUS} store={store}>
-        <Router basename={''}>
-          <Route render={({ location }) => (
-            <div>
-              <TopBar />
-              <TransitionGroup>
-                <CSSTransition key={location.key} classNames="fade" timeout={380}>
-                  <Switch>
-                    <Route
-                      path={'/u/:group_id/friend_list'}
-                      render={ ({match, location}) => {
-                          this.findFriendList(match.params.group_id);
-                          return (<FriendList users={this.state.friends}/>)
-                        }
+      <Router basename={''}>
+        <Route render={({ location }) => (
+          <div>
+            <TopBar />
+            <TransitionGroup>
+              <CSSTransition key={location.key} classNames="fade" timeout={380}>
+                <Switch>
+                  <Route
+                    path={'/u/:group_id/friend_list'}
+                    render={ ({match, location}) => {
+                        this.findFriendList(match.params.group_id);
+                        return (<FriendList users={this.state.friends}/>)
                       }
-                    />
+                    }
+                  />
 
-                    <Route
-                      path={'/u/:userPk'}
-                      render={ ({match, location}) =>
-                        <div>
-                          <UserTab
-                            match={match}
-                            location={location}
-                          />
-                          <FlaoatingButton />
-                        </div>
+                  <Route
+                    path={'/u/:userPk'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <UserTab
+                          match={match}
+                          location={location}
+                        />
+                        <FlaoatingButton />
+                      </div>
+                    }
+                  />
+
+                  <Route
+                    path={'/g/create'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <GroupCreate users = {this.state.users} />
+                      </div>
+                    }
+                  />
+
+                  <Route
+                    path={'/g/:gPk'}
+                    render={ ({match, location}) => {
+                        this.updateGroupInfo(match.params.gPk);
+                        return (
+                          <div>
+                            <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
+                            <FriendsTab />
+                          </div>
+                        )
                       }
-                    />
+                    }
+                  />
 
-                    <Route
-                      path={'/g/create'}
-                      render={ ({match, location}) => 
-                        <div>
-                          <GroupCreate users = {this.state.users} />
-                        </div>
-                      }
-                    />
-
-                    <Route
-                      path={'/g/:gPk'}
-                      render={ ({match, location}) => {
-                          this.updateGroupInfo(match.params.gPk);
-                          return (
-                            <div>
-                              <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
-                              <FriendsTab />
-                            </div>
-                          )
-                        }
-                      }
-                    />
-
-                    <Route
-                      path={'/'}
-                      render={ ({match, location}) =>
-                        <div>
-                          <Tabs />
-                          <FlaoatingButton />
-                        </div>
-                      }
-                    />
+                  <Route
+                    path={'/'}
+                    render={ ({match, location}) =>
+                      <div>
+                        <Tabs />
+                        <FlaoatingButton />
+                      </div>
+                    }
+                  />
 
 
-                  </Switch>
-                </CSSTransition>
-              </TransitionGroup>
-            </div>
-          )} />
-        </Router>
-      </Provider>
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          </div>
+        )} />
+      </Router>
     )
   }
 }
 
+const mapStoreToProps = (store, ownProps) => {
+  return {...ownProps, user: store.user}
+}
+const AppWithRedux = connect(mapStoreToProps)(App)
+
 ReactDOM.render(
-  <App />,
+  <Provider store={store}>
+    <LocaleProvider locale={enUS}>
+      <AppWithRedux />
+    </LocaleProvider>
+  </Provider>,
   document.getElementById('main')
 )
