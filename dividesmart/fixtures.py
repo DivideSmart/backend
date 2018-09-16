@@ -90,3 +90,10 @@ Bill.objects.create_bill(
     amount=34.56,
     loans=dict([(JOHN, 12.34), (TRUMP, 22.22)])
 )
+
+Payment.objects.create_payment(
+    group=TEST_GROUP,
+    creator=JOHN,
+    amount=12.34,
+    receiver=BILL
+)
