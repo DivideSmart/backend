@@ -30,12 +30,6 @@ class FriendList extends React.Component {
       added_users: []
     }
     this.added_keys = [];
-    this.onChange2 = (value) => {
-      console.log(value);
-      // this.setState({
-      //   value2: value,
-      // });
-    };
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';

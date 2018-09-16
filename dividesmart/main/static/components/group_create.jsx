@@ -128,6 +128,10 @@ class GroupCreateForm extends React.Component {
               <div style={{ backgroundImage: 'url(http://i64.tinypic.com/314wh1l.jpg)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
             </InputItem>
           </List>
+
+          <WhiteSpace />
+          <WhiteSpace />
+
           
           <List>
             <TextareaItem placeholder="Enter your group description" rows="5"/>

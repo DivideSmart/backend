@@ -10,6 +10,7 @@ import React from 'react'
 import Close from '@material-ui/icons/Close';
 import Group from '@material-ui/icons/Group';
 import axios from 'axios'
+import store from '../../redux/store.js'
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -24,43 +25,6 @@ function copy(o) {
   return output;
 }
 
-var sampleData = {
-  groupsOweYou: [
-    {
-      key: '1',
-      name: 'Farewell Dinner',
-      acc: 10.28,
-      lastActivityDate: '8/31/18',
-    }, {
-      key: '2',
-      name: 'Housemates',
-      acc: 8.6,
-      lastActivityDate: '8/30/18',
-    },
-  ],
-  groupsYouOwe: [
-    {
-      key: '1',
-      name: 'Movie',
-      acc: 10.28,
-      lastActivityDate: '8/31/18',
-    }, {
-      key: '2',
-      name: 'Birthday Party',
-      acc: 20.66,
-      lastActivityDate: '8/31/18',
-    },
-  ],
-  groupsSettledUp: [
-    {
-      key: '1',
-      name: 'Road Trip',
-      acc: 100.28,
-      lastActivityDate: '8/31/18',
-    },
-  ],
-}
-
 class GroupTab extends React.Component {
   constructor() {
     super()
@@ -70,44 +34,52 @@ class GroupTab extends React.Component {
       groupsYouOwe: [],
       groupsSettledUp: []
     }
+    console.log("A");
   }
 
   // Need to discuss about definition of owe, owed and settled up.
   componentWillMount() {
-    axios.get('/api/users/' + localStorage.userPk + "/groups").then(response => {
-      // console.log(response);
 
-      response.data.groups.map(group_entry => {
-        var group_pk = group_entry.pk;
-        axios.get('/api/groups/' + group_pk.toString() + "/members").then(responseA => {
-          var acc = responseA.data.members.reduce((x, y) => {
-                      if(!y.debt) y.debt = 0;
-                      return x + parseFloat(y.debt)
-                     }, 0);
-          // This check is not correct in some sense, need to discuss
-          var newArray = [];
-          group_entry.acc = parseFloat(acc).toString();
-          if(acc > 0) {
-            newArray = copy(this.state.groupsOweYou);
-            newArray.push(group_entry);
-            this.setState({
-              groupsOweYou: newArray
-            })
-          } else if (acc < 0) {
-            newArray = copy(this.state.groupsYouOwe);
-            newArray.push(group_entry);
-            this.setState({
-              groupsYouOwe: newArray
-            })
-          } else{
-            newArray = copy(this.state.groupsSettledUp);
-            newArray.push(group_entry);
-            this.setState({
-              groupsSettledUp: newArray
-            })
-          }
-        })
-      } );
+      var userPk = store.getState().auth.user.pk;
+      axios.get('/api/users/' + userPk + "/groups").then(response => {
+
+        response.data.groups.map(group_entry => {
+          var group_pk = group_entry.pk;
+          axios.get('/api/groups/' + group_pk.toString() + "/members").then(responseA => {
+            var acc = responseA.data.members.reduce((x, y) => {
+                        if(!y.debt) y.debt = 0;
+                        return x + parseFloat(y.debt)
+                      }, 0);
+            // This check is not correct in some sense, need to discuss
+            var newArray = [];
+            group_entry.acc = parseFloat(acc).toString();
+            if(acc > 0) {
+              newArray = copy(this.state.groupsOweYou);
+              newArray.push(group_entry);
+              
+              this.setState({
+                groupsOweYou: newArray
+              })
+              
+            
+            } else if (acc < 0) {
+              newArray = copy(this.state.groupsYouOwe);
+              newArray.push(group_entry);
+
+              this.setState({
+                groupsYouOwe: newArray
+              })
+              
+            } else{
+              newArray = copy(this.state.groupsSettledUp);
+              newArray.push(group_entry);
+              this.setState({
+                groupsSettledUp: newArray
+              })
+              
+            }
+          })
+        } );
 
     })
   }
@@ -120,9 +92,9 @@ class GroupTab extends React.Component {
       {
         this.state.groupsOweYou.map(group => {
           return (
-            <Link key={group.key} to={"g/" + (group.pk)} onClick={e => e.stopPropagation()}>
+            <Link key={group.pk} to={"g/" + (group.pk)} onClick={e => e.stopPropagation()}>
               <Item
-                key={group.key}
+                key={group.pk}
                 arrow="horizontal"
                 thumb={
                   <Badge>
@@ -162,9 +134,9 @@ class GroupTab extends React.Component {
         {
           this.state.groupsYouOwe.map(group => {
           return (
-            <Link key={group.key} to={"/g/"+group.pk}>
+            <Link key={group.pk} to={"/g/"+group.pk}>
               <Item
-              key={group.key}
+              key={group.pk}
               arrow="horizontal"
               thumb={
                 <Badge>
@@ -204,9 +176,9 @@ class GroupTab extends React.Component {
         {
           this.state.groupsSettledUp.map(group => {
           return (
-            <Link key={group.key} to={"/g/" + group.pk}>
+            <Link key={group.pk} to={"/g/" + group.pk}>
               <Item
-                key={group.key}
+                key={group.pk}
                 arrow="horizontal"
                 thumb={
                   <Badge>
