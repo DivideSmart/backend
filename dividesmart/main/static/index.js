@@ -72,9 +72,11 @@ class App extends React.Component {
   }
   updateGroupInfo(groupID) {
     axios.get('/api/groups/' + groupID).then(response => {
+      console.log("RESPONsE");
+      console.log(response);
       if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
         this.setState({
-          name: response.data
+          name: response.data.name
         })
       }
     })
