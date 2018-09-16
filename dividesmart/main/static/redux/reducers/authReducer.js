@@ -1,19 +1,21 @@
 
 import { SET_CURRENT_USER } from '../actions/types';
 
-const initialState = {
-  isAuthenticated: false,
-  user: {HIEU: "AA"}
+const initialStore = {
+  user: {
+    usernmae: '',
+    emailAddress: '',
+    isAuthenticated: false,
+    portraitUrl: '/media/portrait/default_portrait.png',
+  },
 };
 
-export default function(state = initialState, action) {
+export default function(state = initialStore, action) {
   switch (action.type) {
     case SET_CURRENT_USER:
-      console.log("HERE ROI DISPATCH");
-      console.log(action.payload);
+      console.log("set current user action");
       return {
         ...state,
-        isAuthenticated: !isEmpty(action.payload),
         user: action.payload
       };
     default:
