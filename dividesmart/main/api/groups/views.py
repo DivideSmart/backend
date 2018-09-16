@@ -27,8 +27,15 @@ def groups(request):
     return HttpResponseNotFound('Invalid request')
 
 
-def group(request, id):
-    return HttpResponse(request.path)
+def group(request, group_id):
+    if request.method != 'GET':
+        return HttpResponseNotFound('Invalid Request')
+    
+    current_user = get_user(request)
+    group = Group.objects.filter(pk=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    return HttpResponse(group.name)
 
 
 @csrf_exempt
