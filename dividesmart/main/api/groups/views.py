@@ -26,17 +26,19 @@ def groups(request):
         return HttpResponse('group created')
     return HttpResponseNotFound('Invalid request')
 
+
 @csrf_exempt
 @ensure_authenticated
 def group(request, group_id):
     if request.method != 'GET':
         return HttpResponseNotFound('Invalid Request')
-
     current_user = get_user(request)
     group = Group.objects.filter(pk=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
-    return HttpResponse(group.name)
+    return JsonResponse({
+        'name': group.name
+    })
 
 
 @csrf_exempt
