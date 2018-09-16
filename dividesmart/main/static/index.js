@@ -45,7 +45,6 @@ class App extends React.Component {
       name: '',
       friends: []
     }
-    console.log("ACTUAL HERE");
     this.updateUsers = this.updateUsers.bind(this);
     this.updateGroupInfo = this.updateGroupInfo.bind(this);
     this.findFriendList = this.findFriendList.bind(this);
@@ -53,8 +52,7 @@ class App extends React.Component {
 
   componentWillMount() {
     axios.get('/api/user').then(response => {
-      localStorage.setItem('userPk', response.data.pk);
-      store.dispatch(setCurrentUser(response.data));
+      this.props.setCurrentUser(response.data)
       this.setState({
         user: response.data
       })
@@ -62,7 +60,6 @@ class App extends React.Component {
         this.setState({
           friends: response.data
         })
-        console.log(this.state)
       })
     })
   }
@@ -172,7 +169,7 @@ class App extends React.Component {
 const mapStoreToProps = (store, ownProps) => {
   return {...ownProps, user: store.user}
 }
-const AppWithRedux = connect(mapStoreToProps)(App)
+const AppWithRedux = connect(mapStoreToProps, {setCurrentUser})(App)
 
 ReactDOM.render(
   <Provider store={store}>
