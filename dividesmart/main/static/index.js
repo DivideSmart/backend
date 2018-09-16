@@ -52,7 +52,7 @@ class App extends React.Component {
       })
       axios.get('/api/users/{0}/friends'.format(this.state.user.pk)).then(response => {
         this.setState({
-          friends: response.data
+          users: response.data
         })
       })
     })
@@ -62,18 +62,30 @@ class App extends React.Component {
     this.setState({ users: added_users})
   }
 
+  shouldComponentUpdate(nextProp, nextState) {
+    if(JSON.stringify(nextProp) === JSON.stringify(this.props) &&
+       JSON.stringify(nextState) === JSON.stringify(this.state)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   updateGroupInfo(groupID) {
     axios.get('/api/groups/' + groupID).then(response => {
-      this.setState({
-        name: response.data
-      })
+      if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
+        this.setState({
+          name: response.data
+        })
+      }
     })
 
     axios.get('/api/groups/' + groupID + '/members').then(response => {
       var count_user = response.data.members.length;
-      this.setState({
-        count_user: count_user
-      })
+      if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
+        this.setState({
+          count_user: count_user
+        })
+      }
     } )
   }
 
@@ -98,7 +110,7 @@ class App extends React.Component {
                     path={'/u/:group_id/friend_list'}
                     render={ ({match, location}) => {
                         this.findFriendList(match.params.group_id);
-                        return (<FriendList users={this.state.friends}/>)
+                        return (<FriendList isCreateGroup={false} users={this.state.friends}/>)
                       }
                     }
                   />

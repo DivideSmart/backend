@@ -9,6 +9,7 @@ const Brief = Item.Brief;
 class GroupInfoTab extends React.Component {
   constructor() {
     super()
+    console.log("B");
   }
 
   render() {
