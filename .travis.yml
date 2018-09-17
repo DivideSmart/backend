@@ -1,0 +1,19 @@
+language: python
+
+python:
+  - 3.6
+
+env:
+  - DJANGO_VERSION=2.1.1
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install python3-pip
+
+install:
+  - pip install -r dev_requirements.txt
+
+script:
+  - coverage run dividesmart/manage.py test -v 2 dividesmart/tests/
+
+after_success: coverage report

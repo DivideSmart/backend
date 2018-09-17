@@ -179,7 +179,7 @@ class Group(models.Model):
     def add_member(self, user):
         if self.has_member(user) or not self.has_invited_member(user):
             return
-        self.members.add(user)
+        self.users.add(user)
         self.invited_users.remove(user)
         self.save()
         Debt.objects.create_debt_for_group(user=user, group=self)

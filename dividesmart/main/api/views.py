@@ -23,7 +23,7 @@ def handle_login(request):
         password=form.cleaned_data['password']
     )
     if not user:
-        return HttpResponse('Invalid email or password', status=401)
+        return HttpResponseBadRequest('Invalid email or password')
     if not user.is_active:
         return HttpResponse('Inactive account', status=404)
     login(request, user)
@@ -36,7 +36,7 @@ def handle_register(request):
     form = RegistrationForm(request.POST)
     is_successful = False
     if form.is_valid():
-        is_successful = False
+        is_successful = True
         User.objects.create_user(
             username=form.cleaned_data['username'],
             email_address=form.cleaned_data['email_address'],
@@ -45,7 +45,7 @@ def handle_register(request):
     return JsonResponse({
         'success': is_successful,
         'errors': json.loads(form.errors.as_json())
-    }, status=400)
+    })
 
 
 def handle_logout(request):

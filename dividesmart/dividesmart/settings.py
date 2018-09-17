@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from .private_settings import DEBUG, SECRET_KEY, DATABASES
+try:
+    from .private_settings import DEBUG, SECRET_KEY, DATABASES
+except ImportError:
+    # for tests in Travis
+    from .test_settings import DEBUG, SECRET_KEY, DATABASES
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
