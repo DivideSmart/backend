@@ -3,7 +3,7 @@ from main.api.groups import views
 
 urlpatterns = [
     path('', views.groups),
-    path('<uuid:group_id>', views.group),
+    path('<uuid:group_id>/', views.group),
     path('<uuid:group_id>/members/', views.group_members),
     path('<uuid:group_id>/invites/', views.group_invites),
     path('<uuid:group_id>/invites/<uuid:invite_id>/', views.group_invite),
