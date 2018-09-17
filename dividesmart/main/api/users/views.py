@@ -72,20 +72,12 @@ def friends(request, user_id):
 
         if not other_user:
             return HttpResponseNotFound('No such user')
-        received_fr = (
-            current_user.received_friend_requests.filter(id=friend_id).first()
-        )
+        received_fr = current_user.has_friend_request(from_user_id=friend_id)
         if received_fr:
-            current_user.received_friend_requests.remove(other_user)
-            current_user.friends.add(other_user)
-            Debt.objects.create_debt(current_user, other_user)
-            current_user.save()
-            other_user.save()
+            current_user.accept_friend_invite(from_user=other_user)
             return HttpResponse('Friend request accepted')
         else:
-            current_user.requested_friends.add(other_user)
-            current_user.save()
-            other_user.save()
+            current_user.send_friend_request(other_user)
             return HttpResponse('Friend request sent')
     return HttpResponseNotFound('Invalid request')
 

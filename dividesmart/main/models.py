@@ -130,6 +130,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         return [u.to_dict_for_others(for_user, for_group, show_debt)
                 for u in users]
 
+    def has_friend_request(self, from_user_id):
+        return self.received_friend_requests.filter(id=from_user_id).exists()
+
+    def send_friend_request(self, to_user):
+        self.requested_friends.add(to_user)
+        self.save()
+
+    def accept_friend_invite(self, from_user):
+        assert self.has_friend_request(from_user.id)
+        self.received_friend_requests.remove(from_user)
+        self.friends.add(from_user)
+        Debt.objects.create_debt(self, from_user)
+        self.save()
+        from_user.save()
+
 
 class GroupManager(models.Manager):
     use_in_migrations = True
@@ -156,10 +171,18 @@ class Group(models.Model):
     objects = GroupManager()
 
     def has_member(self, user):
-        return bool(self.users.filter(id=user.pk).first())
+        return self.users.filter(id=user.id).exists()
 
     def has_invited_member(self, user):
-        return bool(self.invited_users.filter(id=user.id).first())
+        return self.invited_users.filter(id=user.id).exists()
+
+    def add_member(self, user):
+        if self.has_member(user) or not self.has_invited_member(user):
+            return
+        self.members.add(user)
+        self.invited_users.remove(user)
+        self.save()
+        Debt.objects.create_debt_for_group(user=user, group=self)
 
     def to_dict(self):
         group_json = {

@@ -42,10 +42,10 @@ TRUMP = User.objects.create_user(
 
 TEST_GROUP = Group.objects.create_group(name='Test Group', user=JOHN)
 
-JOHN.friends.add(JANE)
-Debt.objects.create_debt(user=JOHN, other_user=JANE)
+JOHN.send_friend_request(JANE)
+JANE.accept_friend_invite(JOHN)
 
-JOHN.requested_friends.add(BILL)
+JOHN.send_friend_request(BILL)
 TEST_GROUP.users.add(JOHN)
 
 TEST_GROUP.users.add(BILL)
