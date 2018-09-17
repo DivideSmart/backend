@@ -1,18 +1,20 @@
+import uuid
+
+import ujson as json
+from django.contrib.auth import get_user
 from django.http import (
     HttpResponse, HttpResponseNotFound, HttpResponseBadRequest,
     HttpResponseForbidden, JsonResponse
 )
 from django.views.decorators.csrf import csrf_exempt
-from main.utils import (
-    ensure_authenticated
-)
+
 from main.forms import CreateGroupForm
 from main.models import (
     Group, User, Debt, Entry, Bill, Payment
 )
-from django.contrib.auth import get_user
-import ujson as json
-import uuid
+from main.utils import (
+    ensure_authenticated
+)
 
 
 @csrf_exempt
