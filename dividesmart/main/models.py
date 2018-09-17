@@ -195,6 +195,7 @@ class Debt(models.Model):
     amount = 0: `user` and `other_user` are settled up.
     amount < 0: `user` owes `amount` to `other_user`.
     """
+    use_in_migrations = True
 
     objects = DebtManager()
 
