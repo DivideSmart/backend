@@ -123,13 +123,10 @@ def group_accept(request, group_id):
     if not group or not group.has_invited_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
-        current_members = group.users.all()
         group.users.add(current_user)
         group.invited_users.remove(current_user)
         group.save()
-        for member in current_members:
-            Debt.objects.create(group=group, user=current_user, other_user=member)
-            Debt.objects.create(group=group, user=member, other_user=current_user)
+        Debt.objects.create_debt_for_group(current_user, group)
         return HttpResponse('Joined group')
     return HttpResponseNotFound('Invalid request')
 

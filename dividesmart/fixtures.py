@@ -43,33 +43,16 @@ TRUMP = User.objects.create_user(
 TEST_GROUP = Group.objects.create_group(name='Test Group', user=JOHN)
 
 JOHN.friends.add(JANE)
-JOHN_JANE_DEBT = Debt.objects.create(user=JOHN, other_user=JANE)
-JANE_JOHN_DEBT = Debt.objects.create(user=JANE, other_user=JOHN)
+Debt.objects.create_debt(user=JOHN, other_user=JANE)
 
 JOHN.requested_friends.add(BILL)
 TEST_GROUP.users.add(JOHN)
 
 TEST_GROUP.users.add(BILL)
-TEST_GROUP_JOHN_BILL_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=JOHN, other_user=BILL
-)
-TEST_GROUP_BILL_JOHN_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=BILL, other_user=JOHN
-)
+Debt.objects.create_debt_for_group(user=BILL, group=TEST_GROUP)
 
 TEST_GROUP.users.add(TRUMP)
-TEST_GROUP_JOHN_TRUMP_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=JOHN, other_user=TRUMP
-)
-TEST_GROUP_TRUMP_JOHN_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=TRUMP, other_user=JOHN
-)
-TEST_GROUP_BILL_TRUMP_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=BILL, other_user=TRUMP
-)
-TEST_GROUP_TRUMP_BILL_DEBT = Debt.objects.create(
-    group=TEST_GROUP, user=TRUMP, other_user=BILL
-)
+Debt.objects.create_debt_for_group(user=TRUMP, group=TEST_GROUP)
 
 TEST_GROUP.invited_users.add(JANE)
 

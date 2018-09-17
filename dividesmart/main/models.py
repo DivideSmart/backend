@@ -175,12 +175,29 @@ class Group(models.Model):
         return [g.to_dict() for g in groups]
 
 
+class DebtManager(models.Manager):
+
+    def create_debt(self, user, other_user, group=None):
+        if user.id == other_user.id:
+            return
+        Debt.objects.create(group=group, user=user, other_user=other_user)
+        Debt.objects.create(group=group, user=other_user, other_user=user)
+
+    def create_debt_for_group(self, user, group):
+        members = group.users.all()
+        for member in members:
+            self.create_debt(user, member, group)
+
+
 class Debt(models.Model):
     """
     amount > 0: `user` is owed `amount` by `other_user`.
     amount = 0: `user` and `other_user` are settled up.
     amount < 0: `user` owes `amount` to `other_user`.
     """
+
+    objects = DebtManager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(

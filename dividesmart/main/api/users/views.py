@@ -15,10 +15,6 @@ import ujson as json
 import uuid
 
 
-def groups_to_dict(groups):
-    return [group_to_dict(g) for g in groups]
-
-
 @ensure_authenticated
 def user(request, user_id):
     # Can only look at this user if you are a friend of this user
@@ -82,8 +78,7 @@ def friends(request, user_id):
         if received_fr:
             current_user.received_friend_requests.remove(other_user)
             current_user.friends.add(other_user)
-            Debt.objects.create(user=current_user, other_user=other_user)
-            Debt.objects.create(user=other_user, other_user=current_user)
+            Debt.objects.create_debt(current_user, other_user)
             current_user.save()
             other_user.save()
             return HttpResponse('Friend request accepted')
