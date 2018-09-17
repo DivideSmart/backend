@@ -50,7 +50,7 @@ class App extends React.Component {
       this.setState({
         user: response.data
       })
-      axios.get('/api/users/{0}/friends'.format(this.state.user.pk)).then(response => {
+      axios.get('/api/users/{0}/friends'.format(this.state.user.id)).then(response => {
         this.setState({
           users: response.data
         })
