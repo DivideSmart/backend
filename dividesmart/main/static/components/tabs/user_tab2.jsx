@@ -1,14 +1,20 @@
-import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
 
 import React from 'react'
 
 const Item = List.Item
 const Brief = Item.Brief
 
+const prompt = Modal.prompt
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+
 
 class UserTab extends React.Component {
   constructor() {
     super()
+    this.state = {
+      showSettleUpModal: false
+    }
   }
 
   render() {
@@ -105,11 +111,48 @@ class UserTab extends React.Component {
         <WhiteSpace />
         <WhiteSpace />
 
+        <Button
+          type="primary" icon="check-circle-o"
+          // onClick={
+          //   () => prompt('defaultValue', 'defaultValue for prompt',
+          //     [
+          //       { text: 'Cancel' },
+          //       { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
+          //     ], 'default', '100')
+          // }
+          onClick = {() => this.setState({ showSettleUpModal: true })}
+        >
+          Settle Up
+        </Button>
 
-        <Button type="primary" icon="check-circle-o">settle up</Button><WhiteSpace />
+        <Modal
+          visible={this.state.showSettleUpModal}
+          transparent
+          maskClosable={true}
+          onClose={() => this.setState({ showSettleUpModal: false })}
+          title="Settle up"
+          // footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
+          wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+        >
+          <div >
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+            scoll content...<br />
+          </div>
+        </Modal>
+
+        <WhiteSpace />
         <WhiteSpace />
       </div>
-
     )
   }
 }
