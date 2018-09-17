@@ -45,7 +45,7 @@ def handle_register(request):
     return JsonResponse({
         'success': is_successful,
         'errors': json.loads(form.errors.as_json())
-    }, status=200 if is_successful else 400)
+    })
 
 
 def handle_logout(request):

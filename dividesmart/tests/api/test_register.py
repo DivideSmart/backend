@@ -1,4 +1,5 @@
 from django.test import TestCase
+import json
 
 
 class RegistrationTest(TestCase):
@@ -25,6 +26,8 @@ class RegistrationTest(TestCase):
             'password': self.TEST_PASSWORD
         })
         assert response.status_code == 200
+        json_response = response.json()
+        assert json_response['success']
 
         # login and expect success
         response = self.client.post(self.LOGIN_URL, {
