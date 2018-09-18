@@ -91,7 +91,7 @@ def group_invites(request, group_id):
             return HttpResponseNotFound('Invalid user id')
         group.invited_users.add(invite_user)
         group.save()
-        return HttpResponseNotFound('user invited')
+        return HttpResponse('user invited')
 
     return HttpResponseNotFound('Invalid request')
 
@@ -124,7 +124,6 @@ def group_accept(request, group_id):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
         group.add_member(current_user)
-        Debt.objects.create_debt_for_group(current_user, group)
         return HttpResponse('Joined group')
     return HttpResponseNotFound('Invalid request')
 
