@@ -40,12 +40,12 @@ class GroupTab extends React.Component {
   // Need to discuss about definition of owe, owed and settled up.
   componentWillMount() {
 
-      var userPk = store.getState().auth.user.pk;
-      axios.get('/api/users/' + userPk + "/groups").then(response => {
+      var userid = store.getState().auth.user.id;
+      axios.get('/api/users/' + userid + "/groups").then(response => {
 
         response.data.groups.map(group_entry => {
-          var group_pk = group_entry.pk;
-          axios.get('/api/groups/' + group_pk.toString() + "/members").then(responseA => {
+          var group_id = group_entry.id;
+          axios.get('/api/groups/' + group_id.toString() + "/members").then(responseA => {
             var acc = responseA.data.members.reduce((x, y) => {
                         if(!y.debt) y.debt = 0;
                         return x + parseFloat(y.debt)
@@ -92,9 +92,9 @@ class GroupTab extends React.Component {
       {
         this.state.groupsOweYou.map(group => {
           return (
-            <Link key={group.pk} to={"g/" + (group.pk)} onClick={e => e.stopPropagation()}>
+            <Link key={group.id} to={"g/" + (group.id)} onClick={e => e.stopPropagation()}>
               <Item
-                key={group.pk}
+                key={group.id}
                 arrow="horizontal"
                 thumb={
                   <Badge>
@@ -134,9 +134,9 @@ class GroupTab extends React.Component {
         {
           this.state.groupsYouOwe.map(group => {
           return (
-            <Link key={group.pk} to={"/g/"+group.pk}>
+            <Link key={group.id} to={"/g/"+group.id}>
               <Item
-              key={group.pk}
+              key={group.id}
               arrow="horizontal"
               thumb={
                 <Badge>
@@ -176,9 +176,9 @@ class GroupTab extends React.Component {
         {
           this.state.groupsSettledUp.map(group => {
           return (
-            <Link key={group.pk} to={"/g/" + group.pk}>
+            <Link key={group.id} to={"/g/" + group.id}>
               <Item
-                key={group.pk}
+                key={group.id}
                 arrow="horizontal"
                 thumb={
                   <Badge>
