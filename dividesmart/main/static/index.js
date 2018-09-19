@@ -189,11 +189,6 @@ class App extends React.Component {
   }
 }
 
-const mapStoreToProps = (store, ownProps) => {
-  return {...ownProps, user: store.user}
-}
-const AppWithRedux = connect(mapStoreToProps, {setCurrentUser})(App)
-
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -206,8 +201,13 @@ const theme = createMuiTheme({
   // status: {
   //   danger: 'orange',
   // },
-});
+})
 
+
+const mapStoreToProps = (store, ownProps) => {
+  return {...ownProps, user: store.user}
+}
+const AppWithRedux = connect(mapStoreToProps, {setCurrentUser})(App)
 
 ReactDOM.render(
   <Provider store={store}>

@@ -152,30 +152,31 @@ const { classes } = this.props;
           wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
           <div >
-            scoll content...<br />
-
-        <FormControl >
-          <InputLabel htmlFor="adornment-amount">Amount</InputLabel>
-          <Input
-            id="adornment-amount"
-            // value={this.state.amount}
-            // onChange={this.handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
-
+            scoll content...
             <br />
-        <TextField
-          id="outlined-adornment-amount"
-          className={classNames(classes.margin, classes.textField)}
-          variant="outlined"
-          label="Amount"
-          // value={this.state.amount}
-          // onChange={this.handleChange('amount')}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          }}
-        />
+
+            <FormControl >
+              <InputLabel htmlFor="adornment-amount">Amount</InputLabel>
+              <Input
+                id="adornment-amount"
+                // value={this.state.amount}
+                // onChange={this.handleChange('amount')}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              />
+            </FormControl>
+
+                <br />
+            <TextField
+              id="outlined-adornment-amount"
+              className={classNames(classes.margin, classes.textField)}
+              variant="outlined"
+              label="Amount"
+              // value={this.state.amount}
+              // onChange={this.handleChange('amount')}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
             <br />
 
             <br/>
@@ -199,18 +200,19 @@ const { classes } = this.props;
   }
 }
 
-    const styles = theme => ({
-      root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-      },
-      margin: {
-        margin: theme.spacing.unit,
-      },
-      textField: {
-        flexBasis: 280,
-      },
-    });
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    flexBasis: 280,
+  },
+})
+
 const UserTab = withStyles(styles)(UserTabWithoutStyle)
 export { UserTab}
 
