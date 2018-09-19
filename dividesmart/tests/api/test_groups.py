@@ -1,5 +1,7 @@
 from django.test import TestCase, Client
-from main.models import User, Group
+from main.models import (
+    User, Group, Bill, Payment
+)
 from tests.api.test_utils import LOGIN_URL
 from django.http.response import JsonResponse
 import ujson as json
@@ -10,20 +12,20 @@ def jsonify(obj):
     return json.loads(JsonResponse(obj).content)
 
 
+def get_client_with_credentials(email, password):
+    client = Client()
+    client.post(LOGIN_URL, {
+        'email_address': email,
+        'password': password
+    })
+    return client
+
+
 class GroupTest(TestCase):
 
     GROUP_URL = '/api/groups/%s/'
     GROUP_MEMBERS_URL = '/api/groups/%s/members/'
     GROUP_INVITES_URL = '/api/groups/%s/invites/'
-
-    @staticmethod
-    def get_client_with_credentials(email, password):
-        client = Client()
-        client.post(LOGIN_URL, {
-            'email_address': email,
-            'password': password
-        })
-        return client
 
     @classmethod
     def setUpTestData(cls):
@@ -40,13 +42,13 @@ class GroupTest(TestCase):
         cls.JOHNS_GROUP.invited_users.add(cls.TRUMP)
         cls.JOHNS_GROUP.add_member(cls.TRUMP)
 
-        cls.JOHN_CLIENT = GroupTest.get_client_with_credentials(
+        cls.JOHN_CLIENT = get_client_with_credentials(
             'johnsmith@gmail.com', 'johnsmith123'
         )
-        cls.JANE_CLIENT = GroupTest.get_client_with_credentials(
+        cls.JANE_CLIENT = get_client_with_credentials(
             'janedoe@gmail.com', 'janedoe94'
         )
-        cls.TRUMP_CLIENT = GroupTest.get_client_with_credentials(
+        cls.TRUMP_CLIENT = get_client_with_credentials(
             'realdonaldtrump@gmail.com', 'djt'
         )
         cls.JOHNS_GROUP_URL = cls.GROUP_URL % str(cls.JOHNS_GROUP.id)
@@ -190,22 +192,82 @@ class GroupTest(TestCase):
                == sorted([jsonify(m) for m in dicts], key=lambda x: x['id'])
 
 
+class GroupEntries(TestCase):
 
-    # def test_create_and_get_my_group(self):
-    #     pass
+    GROUP_ENTRIES_URL = '/api/groups/%s/entries/'
+    GROUP_BILLS_URL = '/api/groups/%s/bills/'
+    GROUP_PAYMENTS_URL = '/api/groups/%s/payments/'
 
-    # # def test_get_my_other_group(self):
-    # #     pass
-    #
-    # def test_get_not_my_group(self):
-    #     pass
-    #
-    # def test_invite_user_to_my_group(self):
-    #     pass
-    #
-    # def test_accept_invite_to_group(self):
-    #     pass
-    #
-    # def test_reject_invite_to_group(self):
-    #     pass
+    @classmethod
+    def setUpTestData(cls):
+        # People in group
+        cls.JOHN = User.objects.create_user(
+            'John Smith', 'johnsmith@gmail.com', 'johnsmith123'
+        )
+        cls.JANE = User.objects.create_user(
+            'Jane Doe', 'janedoe@gmail.com', 'janedoe94'
+        )
+        cls.TRUMP = User.objects.create_user(
+            'Donald Trump', 'realdonaldtrump@gmail.com', 'djt'
+        )
 
+        # People outside group
+        cls.BILL = User.objects.create_user(
+            'Bill Gates', 'billgates@outlook.com', 'bg'
+        )
+        cls.JOHNS_GROUP = Group.objects.create_group('John\'s Group', cls.JOHN)
+        cls.JOHNS_GROUP.invited_users.add(cls.TRUMP)
+        cls.JOHNS_GROUP.invited_users.add(cls.JANE)
+        cls.JOHNS_GROUP.add_member(cls.TRUMP)
+        cls.JOHNS_GROUP.add_member(cls.JANE)
+        cls.JOHN_CLIENT = get_client_with_credentials(
+            'johnsmith@gmail.com', 'johnsmith123'
+        )
+        cls.JANE_CLIENT = get_client_with_credentials(
+            'janedoe@gmail.com', 'janedoe94'
+        )
+        cls.TRUMP_CLIENT = get_client_with_credentials(
+            'realdonaldtrump@gmail.com', 'djt'
+        )
+        cls.BILL_CLIENT = get_client_with_credentials(
+            'billgates@outlook.com', 'bg'
+        )
+
+        # Test bill
+        Bill.objects.create_bill(
+            'Breakfast', group=cls.JOHNS_GROUP, creator=cls.JOHN,
+            initiator=cls.JOHN, amount=25.59, loans={
+                cls.JANE: 7.12,
+                cls.TRUMP: 8.38,
+            }
+        )
+
+        # Test payment
+        Payment.objects.create_payment(
+            cls.JOHNS_GROUP, creator=cls.JANE, amount=7.12,
+            receiver=cls.JOHN
+        )
+
+        # Test bill
+        Bill.objects.create_bill(
+            'Lunch', group=cls.JOHNS_GROUP, creator=cls.JANE,
+            initiator=cls.TRUMP, amount=43.57, loans={
+                cls.JOHN: 15.63,
+                cls.JANE: 14.99
+            }
+        )
+
+    def test_get_entries(self):
+        pass
+
+    def test_add_bill(self):
+        pass
+
+    def test_add_payment(self):
+        pass
+
+    def test_edit_bill(self):
+        pass
+
+    def test_delete_bill(self):
+        pass
