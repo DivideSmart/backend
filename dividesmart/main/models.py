@@ -427,6 +427,7 @@ class Bill(Entry):
             'creator': self.creator.id,
             'initiator': self.initiator.id,
             'dateCreated': self.date_created,
+            'billAmount': self.amount,
             'loans': {}
         }
         loans = Loan.objects.filter(bill=self).all()

@@ -194,6 +194,7 @@ class GroupTest(TestCase):
 
 class GroupEntries(TestCase):
 
+    GROUP_MEMBERS_URL = '/api/groups/%s/members/'
     GROUP_ENTRIES_URL = '/api/groups/%s/entries/'
     GROUP_BILLS_URL = '/api/groups/%s/bills/'
     GROUP_PAYMENTS_URL = '/api/groups/%s/payments/'
@@ -233,6 +234,11 @@ class GroupEntries(TestCase):
             'billgates@outlook.com', 'bg'
         )
 
+        cls.GROUP_MEMBERS_URL = cls.GROUP_MEMBERS_URL % str(cls.JOHNS_GROUP.id)
+        cls.GROUP_ENTRIES_URL = cls.GROUP_ENTRIES_URL % str(cls.JOHNS_GROUP.id)
+        cls.GROUP_BILLS_URL = cls.GROUP_BILLS_URL % str(cls.JOHNS_GROUP.id)
+        cls.GROUP_PAYMENTS_URL = cls.GROUP_PAYMENTS_URL % str(cls.JOHNS_GROUP.id)
+
         # Test bill
         Bill.objects.create_bill(
             'Breakfast', group=cls.JOHNS_GROUP, creator=cls.JOHN,
@@ -243,22 +249,71 @@ class GroupEntries(TestCase):
         )
 
         # Test payment
-        Payment.objects.create_payment(
-            cls.JOHNS_GROUP, creator=cls.JANE, amount=7.12,
-            receiver=cls.JOHN
-        )
+        # Payment.objects.create_payment(
+        #     cls.JOHNS_GROUP, creator=cls.JANE, amount=7.12,
+        #     receiver=cls.JOHN
+        # )
 
         # Test bill
-        Bill.objects.create_bill(
-            'Lunch', group=cls.JOHNS_GROUP, creator=cls.JANE,
-            initiator=cls.TRUMP, amount=43.57, loans={
-                cls.JOHN: 15.63,
-                cls.JANE: 14.99
-            }
-        )
+        # Bill.objects.create_bill(
+        #     'Lunch', group=cls.JOHNS_GROUP, creator=cls.JANE,
+        #     initiator=cls.TRUMP, amount=43.57, loans={
+        #         cls.JOHN: 15.63,
+        #         cls.JANE: 14.99
+        #     }
+        # )
 
     def test_get_entries(self):
-        pass
+        # TODO: Maybe make this test more robust. Right now only test
+        # correct amount shown for user.
+
+        # Get John's perspective
+        response = self.JOHN_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == "15.50"
+
+        response = self.JOHN_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.JOHN.email_address]
+        assert email_user_map[self.JANE.email_address]['debt'] == '7.12'
+        assert email_user_map[self.TRUMP.email_address]['debt'] == '8.38'
+
+        # Get Jane's perspective
+        response = self.JANE_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == "-7.12"
+
+        response = self.JANE_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.JANE.email_address]
+        assert email_user_map[self.JOHN.email_address]['debt'] == '-7.12'
+        assert email_user_map[self.TRUMP.email_address]['debt'] == '0.00'
+
+        # Get Trump's perspective
+        response = self.TRUMP_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == "-8.38"
+
+        response = self.TRUMP_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.TRUMP.email_address]
+        assert email_user_map[self.JOHN.email_address]['debt'] == '-8.38'
+        assert email_user_map[self.JANE.email_address]['debt'] == '0.00'
 
     def test_add_bill(self):
         pass
