@@ -17,7 +17,6 @@ from main.utils import (
 )
 
 
-@csrf_exempt
 @ensure_authenticated
 def groups(request):
     if request.method == 'POST':
@@ -30,7 +29,6 @@ def groups(request):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group(request, group_id):
     if request.method != 'GET':
@@ -44,7 +42,6 @@ def group(request, group_id):
     })
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_members(request, group_id):
     if request.method != 'GET':
@@ -62,7 +59,6 @@ def group_members(request, group_id):
     })
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_invites(request, group_id):
     current_user = get_user(request)
@@ -96,7 +92,6 @@ def group_invites(request, group_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_invite(request, group_id, invite_id):
     current_user = get_user(request)
@@ -114,7 +109,6 @@ def group_invite(request, group_id, invite_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_accept(request, group_id):
     # Accept group invite
@@ -128,7 +122,6 @@ def group_accept(request, group_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_decline(request, group_id):
     # Decline group invite
@@ -143,7 +136,6 @@ def group_decline(request, group_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_entries(request, group_id):
     current_user = get_user(request)
@@ -161,7 +153,6 @@ def group_entries(request, group_id):
     return HttpResponse()
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_bills(request, group_id):
     current_user = get_user(request)
@@ -221,10 +212,18 @@ def group_bills(request, group_id):
             name, group, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass
     return HttpResponseNotFound('Invalid Request')
 
 
-@csrf_exempt
+@ensure_authenticated
+def group_bill(request, group_id, bill_id):
+    pass
+
+
 @ensure_authenticated
 def group_payments(request, group_id):
     current_user = get_user(request)

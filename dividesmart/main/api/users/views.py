@@ -37,7 +37,6 @@ def user(request, user_id):
     return JsonResponse(other_user.to_dict_for_others(current_user))
 
 
-@csrf_exempt
 @ensure_authenticated
 def friends(request, user_id):
     current_user = get_user(request)
@@ -82,7 +81,6 @@ def friends(request, user_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend(request, user_id, friend_id):
     current_user = get_user(request)
@@ -102,7 +100,6 @@ def friend(request, user_id, friend_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def groups(request, user_id):
     current_user = get_user(request)
@@ -123,7 +120,6 @@ def group(request, user_id, group_id):
     pass
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend_entries(request, user_id, friend_id):
     current_user = get_user(request)
@@ -148,7 +144,6 @@ def friend_entries(request, user_id, friend_id):
     return HttpResponse()
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend_bills(request, user_id, friend_id):
     current_user = get_user(request)
@@ -214,7 +209,6 @@ def friend_bills(request, user_id, friend_id):
     return HttpResponseNotFound('Invalid Request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend_payments(request, user_id, friend_id):
     current_user = get_user(request)
