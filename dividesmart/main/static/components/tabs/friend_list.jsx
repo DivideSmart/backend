@@ -77,9 +77,10 @@ class FriendList extends React.Component {
         <List renderHeader={() => 'Friends'} className="my-list">
         {
           this.props.users.map(friend => {
-            if(this.props.isCreateGroup) {
+            if (this.props.isCreateGroup) {
               return (
                 <Item
+                  key={friend.pk}
                   thumb={
                     <Badge>
                       <span
@@ -98,10 +99,10 @@ class FriendList extends React.Component {
                   {friend.username} <Brief>8/31/18</Brief>
                 </Item>
               )
-              
+
             }
 
-            
+
             return (
                 <Link to='u/1'>
                   <Item
@@ -130,7 +131,7 @@ class FriendList extends React.Component {
         { this.renderButton(this.props.isCreateGroup, this.props.updateUsers) }
 
         </List>
-        
+
         <WhiteSpace />
         <WhiteSpace />
 

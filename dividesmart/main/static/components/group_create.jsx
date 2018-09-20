@@ -105,10 +105,10 @@ class GroupCreateForm extends React.Component {
 
   componentDidCatch(error) {
     if(!this.state.error) { // set error only once per update
-       this.setState({
-         error,
-       })
-   }
+      this.setState({
+        error,
+      })
+    }
   }
 
   render() {
@@ -132,11 +132,11 @@ class GroupCreateForm extends React.Component {
           <WhiteSpace />
           <WhiteSpace />
 
-          
+
           <List>
             <TextareaItem placeholder="Enter your group description" rows="5"/>
           </List>
-          
+
           <WhiteSpace size="lg" />
 
           <div style={{marginLeft: '80px', marginRight: '80px'}}>
