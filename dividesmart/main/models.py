@@ -411,7 +411,8 @@ class BillManager(PolymorphicManager):
 
     def delete_bill(self, bill):
         # First update all the debts involved (through the participations)
-        for participation in bill.entry_participation_set:
+        participations = EntryParticipation.objects.filter(entry=bill).all()
+        for participation in participations:
             if participation.participant.id == bill.initiator.id:
                 continue
 

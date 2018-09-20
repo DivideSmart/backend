@@ -240,13 +240,15 @@ class GroupEntries(TestCase):
         cls.GROUP_PAYMENTS_URL = cls.GROUP_PAYMENTS_URL % str(cls.JOHNS_GROUP.id)
 
         # Test bill
-        Bill.objects.create_bill(
+        bill = Bill.objects.create_bill(
             'Breakfast', group=cls.JOHNS_GROUP, creator=cls.JOHN,
             initiator=cls.JOHN, amount=25.59, loans={
                 cls.JANE: 7.12,
                 cls.TRUMP: 8.38,
             }
         )
+
+        cls.GROUP_BILL_URL = cls.GROUP_BILLS_URL + str(bill.id) + '/'
 
         # Test payment
         # Payment.objects.create_payment(
@@ -376,11 +378,12 @@ class GroupEntries(TestCase):
         assert email_user_map[self.JOHN.email_address]['debt'] == '7.25'
         assert email_user_map[self.JANE.email_address]['debt'] == '14.99'
 
+    def test_delete_bill(self):
+        response = self.JOHN_CLIENT.delete(self.GROUP_BILL_URL)
+        assert response.status_code == 200
+
     def test_add_payment(self):
         pass
 
     def test_edit_bill(self):
-        pass
-
-    def test_delete_bill(self):
         pass
