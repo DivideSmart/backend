@@ -212,16 +212,22 @@ def group_bills(request, group_id):
             name, group, creator, initiator, amount, actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
-    if request.method == 'PUT':
-        pass
-    if request.method == 'DELETE':
-        pass
     return HttpResponseNotFound('Invalid Request')
 
 
 @ensure_authenticated
 def group_bill(request, group_id, bill_id):
-    pass
+    current_user = get_user(request)
+    group = Group.objects.filter(id=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    # TODO: Maybe we have GET here?
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        Bill.objects.delete_bill(bill_id, group)
+        return HttpResponse('Bill deleted')
+    return HttpResponseBadRequest('Invalid request')
 
 
 @ensure_authenticated
