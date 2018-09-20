@@ -427,8 +427,9 @@ class BillManager(PolymorphicManager):
                 .get(group=bill.group, user=participation.participant,
                      other_user=bill.initiator)
             )
-            loaner_debt.amount -= participation.amount
-            receiver_debt.amount += participation.amount
+            # participation amount is < 0 in receiver's perspective
+            loaner_debt.amount += participation.amount
+            receiver_debt.amount -= participation.amount
             loaner_debt.save()
             receiver_debt.save()
 

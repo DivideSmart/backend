@@ -382,6 +382,54 @@ class GroupEntries(TestCase):
         response = self.JOHN_CLIENT.delete(self.GROUP_BILL_URL)
         assert response.status_code == 200
 
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 0
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.JOHN.email_address]
+        assert email_user_map[self.JANE.email_address]['debt'] == '0.00'
+        assert email_user_map[self.TRUMP.email_address]['debt'] == '0.00'
+
+        # Get Jane's entry perspective
+        response = self.JANE_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 0
+
+        # Get Jane's debt perspective
+        response = self.JANE_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.JANE.email_address]
+        assert email_user_map[self.JOHN.email_address]['debt'] == '0.00'
+        assert email_user_map[self.TRUMP.email_address]['debt'] == '0.00'
+
+        # Get Trump's entry perspective
+        response = self.TRUMP_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 0
+
+        # Get Trump's debt perspective
+        response = self.TRUMP_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.TRUMP.email_address]
+        assert email_user_map[self.JOHN.email_address]['debt'] == '0.00'
+        assert email_user_map[self.JANE.email_address]['debt'] == '0.00'
+
     def test_add_payment(self):
         pass
 

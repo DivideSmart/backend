@@ -228,7 +228,6 @@ def group_bill(request, group_id, bill_id):
         bill = Bill.objects.filter(id=bill_id, group=group).first()
         if not bill:
             return HttpResponseBadRequest('Invalid bill')
-        # import pdb; pdb.set_trace()
         Bill.objects.delete_bill(bill)
         return HttpResponse('Bill deleted')
     return HttpResponseBadRequest('Invalid request')
