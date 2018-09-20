@@ -1,4 +1,4 @@
-import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
+import {Badge, Button, Icon, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
 
 import React from 'react'
 
@@ -21,6 +21,8 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import classNames from 'classnames';
+import Avatar from '@material-ui/core/Avatar';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 
 
 class UserTabWithoutStyle extends React.Component {
@@ -128,19 +130,31 @@ const { classes } = this.props;
         <WhiteSpace />
         <WhiteSpace />
 
-        <Button
-          type="primary" icon="check-circle-o"
-          // onClick={
-          //   () => prompt('defaultValue', 'defaultValue for prompt',
-          //     [
-          //       { text: 'Cancel' },
-          //       { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
-          //     ], 'default', '100')
-          // }
-          onClick = {() => this.setState({ showSettleUpModal: true })}
+        {/*<Button*/}
+          {/*type="primary" icon="check-circle-o"*/}
+          {/*// onClick={*/}
+          {/*//   () => prompt('defaultValue', 'defaultValue for prompt',*/}
+          {/*//     [*/}
+          {/*//       { text: 'Cancel' },*/}
+          {/*//       { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },*/}
+          {/*//     ], 'default', '100')*/}
+          {/*// }*/}
+          {/*onClick = {() => this.setState({ showSettleUpModal: true })}*/}
+        {/*>*/}
+          {/*Settle Up*/}
+        {/*</Button>*/}
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-          Settle Up
-        </Button>
+          <MButton
+            onClick = {() => this.setState({ showSettleUpModal: true })}
+            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
+            <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Settle Up
+          </MButton>
+        </div>
 
         <Modal
           visible={this.state.showSettleUpModal}
@@ -152,7 +166,20 @@ const { classes } = this.props;
           wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
           <div >
-            scoll content...
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif"
+                style={{width: 60, height: 60}}
+              />
+            </div>
+
+            <br />
+            You pay xxx
             <br />
 
             <FormControl >
