@@ -348,7 +348,8 @@ class Payment(Entry):
 class BillManager(PolymorphicManager):
     use_in_migrations = True
 
-    def create_bill(self, name, group, creator, initiator, amount, loans):
+    def create_bill(self, name, group, creator, initiator, amount, loans,
+                    date_created=None):
         # loans is a list of tuples [(loan_user, loan_amount), ...]
         # Assumes that this data is sane
         # (e.g. creator is in group, loaner in group)
@@ -359,6 +360,8 @@ class BillManager(PolymorphicManager):
             initiator=initiator,
             amount=amount
         )
+        if date_created:
+            bill.date_created = date_created
         bill.save()
 
         if not group:
@@ -403,11 +406,21 @@ class BillManager(PolymorphicManager):
             amount=Decimal(loaner_gets_back),
         )
         bill_loan_participation.save()
-
         return bill
 
-    def update_bill(self, new_name, new_initiator, new_amount, new_loans):
-        pass
+    def update_bill(self, bill, group, new_name, new_initiator,
+                    new_amount, new_loans):
+
+        # Lazy way delete old bill
+        old_creator = bill.creator
+        old_date_created = bill.date_created
+        self.delete_bill(bill)
+
+        # Insert new bill with new last update, old date created
+        return self.create_bill(
+            new_name, group=group, creator=old_creator,
+            initiator=new_initiator, amount=new_amount, loans=new_loans,
+            date_created=old_date_created)
 
     def delete_bill(self, bill):
         # First update all the debts involved (through the participations)
