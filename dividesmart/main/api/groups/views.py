@@ -221,11 +221,12 @@ def group_bill(request, group_id, bill_id):
     group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
+    old_bill = Bill.objects.filter(id=bill_id, group=group).first()
+    if not old_bill:
+        return HttpResponseBadRequest('Invalid bill')
+
     # TODO: Maybe we have GET here?
     if request.method == 'PUT':
-        old_bill = Bill.objects.filter(id=bill_id, group=group).first()
-        if not old_bill:
-            return HttpResponseBadRequest('Invalid bill')
         # Copied from POST bill
         # Changed content-type: application/json
         # Now we need to load the json object in the request
@@ -281,10 +282,7 @@ def group_bill(request, group_id, bill_id):
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
     if request.method == 'DELETE':
-        bill = Bill.objects.filter(id=bill_id, group=group).first()
-        if not bill:
-            return HttpResponseBadRequest('Invalid bill')
-        Bill.objects.delete_bill(bill)
+        Bill.objects.delete_bill(old_bill)
         return HttpResponse('Bill deleted')
     return HttpResponseBadRequest('Invalid request')
 
