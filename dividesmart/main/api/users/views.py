@@ -226,7 +226,7 @@ def friend_bill(request, user_id, friend_id, bill_id):
         len(participant_ids) == 2 and
         all(i in (user_id, friend_id) for i in participant_ids)
     )
-    if is_friend_bill:
+    if not is_friend_bill:
         return HttpResponseBadRequest('No such bill')
     # TODO: Add GET?
     if request.method == 'PUT':
@@ -313,3 +313,35 @@ def friend_payments(request, user_id, friend_id):
         return JsonResponse(payment.to_dict())
 
     return HttpResponseNotFound('Invalid Request')
+
+
+@ensure_authenticated
+def friend_payment(request, user_id, friend_id, payment_id):
+    current_user = get_user(request)
+    if current_user.id != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(id=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
+
+    old_payment = Payment.objects.filter(id=payment_id).first()
+    if not old_payment or old_payment.group:
+        return HttpResponseBadRequest('No such payment')
+    is_friend_payment = all(
+        [p.id in (user_id, friend_id) for p in
+         [old_payment.creator, old_payment.receiver]]
+    )
+    if not is_friend_payment:
+        return HttpResponseBadRequest('No such payment')
+
+    if request.method == 'PUT':
+        amount = float(request.PUT.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        new_payment = Payment.objects.update_payment(old_payment, amount)
+        return JsonResponse(new_payment.to_dict())
+    if request.method == 'DELETE':
+        Payment.objects.delete_payment(old_payment)
+        return HttpResponse('Payment deleted')
+
+    return HttpResponseBadRequest('Invalid Request')

@@ -314,3 +314,25 @@ def group_payments(request, group_id):
         )
         return JsonResponse(payment.to_dict())
     return HttpResponseNotFound('Invalid Request')
+
+
+@ensure_authenticated
+def group_payment(request, group_id, payment_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(id=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+
+    old_payment = Payment.objects.filter(id=payment_id, group=group).first()
+    if not old_payment:
+        return HttpResponseBadRequest('No such payment')
+    if request.method == 'PUT':
+        amount = float(request.PUT.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        new_payment = Payment.objects.update_payment(old_payment, amount)
+        return JsonResponse(new_payment.to_dict())
+    if request.method == 'DELETE':
+        Payment.objects.delete_payment(old_payment)
+        return HttpResponse('Payment deleted')
+    return HttpResponseBadRequest('Invalid Request')
