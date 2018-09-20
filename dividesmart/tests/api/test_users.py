@@ -66,7 +66,7 @@ class UserEntriesTest(TestCase):
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 1
-        assert res_json['entries'][0]['userAmount'] == "-3.56"
+        assert res_json['entries'][0]['userAmount'] == '-3.56'
 
         # Get Jane's debt perspective
         response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
@@ -104,8 +104,8 @@ class UserEntriesTest(TestCase):
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 2
-        assert res_json['entries'][0]['userAmount'] == "18.76"
-        assert res_json['entries'][1]['userAmount'] == "-3.56"
+        assert res_json['entries'][0]['userAmount'] == '18.76'
+        assert res_json['entries'][1]['userAmount'] == '-3.56'
 
         # Get Jane's debt perspective
         response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
@@ -156,7 +156,6 @@ class UserEntriesTest(TestCase):
         response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)
         res_json = response.json()
         assert response.status_code == 200
-        # import pdb; pdb.set_trace()
         assert len(res_json['entries']) == 1
         assert res_json['entries'][0]['userAmount'] == '4.89'
 
@@ -171,7 +170,7 @@ class UserEntriesTest(TestCase):
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 1
-        assert res_json['entries'][0]['userAmount'] == "-4.89"
+        assert res_json['entries'][0]['userAmount'] == '-4.89'
 
         # Get Jane's debt perspective
         response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
@@ -180,4 +179,103 @@ class UserEntriesTest(TestCase):
         assert res_json['debt'] == '-4.89'
 
     def test_payment(self):
-        pass
+        # Add payment
+        response = self.JANE_CLIENT.post(self.JANE_PAYMENTS_URL, {
+            'amount': '3.56',
+        })
+        PAYMENT_URL = self.JOHN_PAYMENTS_URL + response.json()['id'] + '/'
+        assert response.status_code == 200
+
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 2
+        assert res_json['entries'][0]['amount'] == '3.56'
+        assert res_json['entries'][1]['userAmount'] == '3.56'
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.JOHNS_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '0.00'
+
+        # Get Jane's entry perspective
+        response = self.JANE_CLIENT.get(self.JANE_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 2
+        assert res_json['entries'][0]['amount'] == '3.56'
+        assert res_json['entries'][1]['userAmount'] == '-3.56'
+
+        # Get Jane's debt perspective
+        response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '0.00'
+
+        # Edit payment
+        response = self.JOHN_CLIENT.put(PAYMENT_URL, {
+            'amount': '1.23'
+        }, content_type='application/json')
+        assert response.status_code == 200
+        PAYMENT_URL = self.JANE_PAYMENTS_URL + response.json()['id'] + '/'
+
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 2
+        assert res_json['entries'][0]['amount'] == '1.23'
+        assert res_json['entries'][1]['userAmount'] == '3.56'
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.JOHNS_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '2.33'
+
+        # Get Jane's entry perspective
+        response = self.JANE_CLIENT.get(self.JANE_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 2
+        assert res_json['entries'][0]['amount'] == '1.23'
+        assert res_json['entries'][1]['userAmount'] == '-3.56'
+
+        # Get Jane's debt perspective
+        response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '-2.33'
+
+
+        # Delete payment
+        response = self.JANE_CLIENT.delete(PAYMENT_URL)
+        assert response.status_code == 200
+
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == '3.56'
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.JOHNS_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '3.56'
+
+        # Get Jane's entry perspective
+        response = self.JANE_CLIENT.get(self.JANE_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == '-3.56'
+
+        # Get Jane's debt perspective
+        response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '-3.56'
