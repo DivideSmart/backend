@@ -158,18 +158,24 @@ def friend_bills(request, user_id, friend_id):
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
+
         try:
-            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
         except ValueError:
             return HttpResponseBadRequest('Invalid initiator')
 
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
-        name = request.POST.get('name', None)
+        name = req_json.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', -1))
-        loans = json.loads(request.POST.get('loans', "{}"))
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -187,6 +193,7 @@ def friend_bills(request, user_id, friend_id):
                 loan_user_id = uuid.UUID(loan_user_id)
             except ValueError:
                 return HttpResponseBadRequest('Invalid loan user')
+            loan_amt = float(loan_amt)
             if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
