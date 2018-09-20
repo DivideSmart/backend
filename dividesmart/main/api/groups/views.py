@@ -169,19 +169,25 @@ def group_bills(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
+
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
         group_member_ids = set(m.id for m in group.users.all())
         try:
-            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
         except ValueError:
             return HttpResponseBadRequest('Invalid initiator')
 
         if not initiator_id or initiator_id not in group_member_ids:
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
-        name = request.POST.get('name', None)
+        name = req_json.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', -1))
-        loans = json.loads(request.POST.get('loans', "{}"))
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -202,6 +208,7 @@ def group_bills(request, group_id):
                     'Initiator cannot receive own loan')
             if loan_user_id not in group_member_ids:
                 return HttpResponseBadRequest('Invalid loan user not in group')
+            loan_amt = float(loan_amt)
             total_loan_amt += loan_amt
             loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt

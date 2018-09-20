@@ -254,26 +254,18 @@ class GroupEntries(TestCase):
         #     receiver=cls.JOHN
         # )
 
-        # Test bill
-        # Bill.objects.create_bill(
-        #     'Lunch', group=cls.JOHNS_GROUP, creator=cls.JANE,
-        #     initiator=cls.TRUMP, amount=43.57, loans={
-        #         cls.JOHN: 15.63,
-        #         cls.JANE: 14.99
-        #     }
-        # )
-
     def test_get_entries(self):
         # TODO: Maybe make this test more robust. Right now only test
         # correct amount shown for user.
 
-        # Get John's perspective
+        # Get John's entry perspective
         response = self.JOHN_CLIENT.get(self.GROUP_ENTRIES_URL)
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 1
         assert res_json['entries'][0]['userAmount'] == "15.50"
 
+        # Get John's debt perspective
         response = self.JOHN_CLIENT.get(self.GROUP_MEMBERS_URL)
         res_json = response.json()
         assert response.status_code == 200
@@ -283,13 +275,14 @@ class GroupEntries(TestCase):
         assert email_user_map[self.JANE.email_address]['debt'] == '7.12'
         assert email_user_map[self.TRUMP.email_address]['debt'] == '8.38'
 
-        # Get Jane's perspective
+        # Get Jane's entry perspective
         response = self.JANE_CLIENT.get(self.GROUP_ENTRIES_URL)
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 1
         assert res_json['entries'][0]['userAmount'] == "-7.12"
 
+        # Get Jane's debt perspective
         response = self.JANE_CLIENT.get(self.GROUP_MEMBERS_URL)
         res_json = response.json()
         assert response.status_code == 200
@@ -299,13 +292,14 @@ class GroupEntries(TestCase):
         assert email_user_map[self.JOHN.email_address]['debt'] == '-7.12'
         assert email_user_map[self.TRUMP.email_address]['debt'] == '0.00'
 
-        # Get Trump's perspective
+        # Get Trump's entry perspective
         response = self.TRUMP_CLIENT.get(self.GROUP_ENTRIES_URL)
         res_json = response.json()
         assert response.status_code == 200
         assert len(res_json['entries']) == 1
         assert res_json['entries'][0]['userAmount'] == "-8.38"
 
+        # Get Trump's debt perspective
         response = self.TRUMP_CLIENT.get(self.GROUP_MEMBERS_URL)
         res_json = response.json()
         assert response.status_code == 200
@@ -316,7 +310,69 @@ class GroupEntries(TestCase):
         assert email_user_map[self.JANE.email_address]['debt'] == '0.00'
 
     def test_add_bill(self):
-        pass
+        response = self.JOHN_CLIENT.post(self.GROUP_BILLS_URL, {
+            'name': 'Lunch',
+            'initiator': str(self.TRUMP.id),
+            'creator': str(self.JANE.id),
+            'amount': '43.57',
+            'loans': {
+                str(self.JOHN.id): '15.63',
+                str(self.JANE.id): '14.99'
+            }
+        }, content_type='application/json')
+        assert response.status_code == 200
+
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.GROUP_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 2
+        assert res_json['entries'][0]['userAmount'] == '-15.63'
+        assert res_json['entries'][1]['userAmount'] == '15.50'
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.GROUP_MEMBERS_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['members']) == 3
+        email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        assert 'debt' not in email_user_map[self.JOHN.email_address]
+        assert email_user_map[self.JANE.email_address]['debt'] == '7.12'
+        assert email_user_map[self.TRUMP.email_address]['debt'] == '-7.25'
+
+        # # Get Jane's entry perspective
+        # response = self.JANE_CLIENT.get(self.GROUP_ENTRIES_URL)
+        # res_json = response.json()
+        # assert response.status_code == 200
+        # assert len(res_json['entries']) == 1
+        # assert res_json['entries'][0]['userAmount'] == "-7.12"
+        #
+        # # Get Jane's debt perspective
+        # response = self.JANE_CLIENT.get(self.GROUP_MEMBERS_URL)
+        # res_json = response.json()
+        # assert response.status_code == 200
+        # assert len(res_json['members']) == 3
+        # email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        # assert 'debt' not in email_user_map[self.JANE.email_address]
+        # assert email_user_map[self.JOHN.email_address]['debt'] == '-7.12'
+        # assert email_user_map[self.TRUMP.email_address]['debt'] == '0.00'
+        #
+        # # Get Trump's entry perspective
+        # response = self.TRUMP_CLIENT.get(self.GROUP_ENTRIES_URL)
+        # res_json = response.json()
+        # assert response.status_code == 200
+        # assert len(res_json['entries']) == 1
+        # assert res_json['entries'][0]['userAmount'] == "-8.38"
+        #
+        # # Get Trump's debt perspective
+        # response = self.TRUMP_CLIENT.get(self.GROUP_MEMBERS_URL)
+        # res_json = response.json()
+        # assert response.status_code == 200
+        # assert len(res_json['members']) == 3
+        # email_user_map = {m['emailAddress']: m for m in res_json['members']}
+        # assert 'debt' not in email_user_map[self.TRUMP.email_address]
+        # assert email_user_map[self.JOHN.email_address]['debt'] == '-8.38'
+        # assert email_user_map[self.JANE.email_address]['debt'] == '0.00'
 
     def test_add_payment(self):
         pass
