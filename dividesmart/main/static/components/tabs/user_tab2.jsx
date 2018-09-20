@@ -1,4 +1,4 @@
-import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
+import {Badge, Button, Icon, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
 
 import React from 'react'
 
@@ -7,9 +7,25 @@ const Brief = Item.Brief
 
 const prompt = Modal.prompt
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import MButton from '@material-ui/core/Button'
+
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import classNames from 'classnames';
+import Avatar from '@material-ui/core/Avatar';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 
 
-class UserTab extends React.Component {
+class UserTabWithoutStyle extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -18,6 +34,9 @@ class UserTab extends React.Component {
   }
 
   render() {
+
+const { classes } = this.props;
+
     return (
       <div>
         <WhiteSpace />
@@ -111,19 +130,31 @@ class UserTab extends React.Component {
         <WhiteSpace />
         <WhiteSpace />
 
-        <Button
-          type="primary" icon="check-circle-o"
-          // onClick={
-          //   () => prompt('defaultValue', 'defaultValue for prompt',
-          //     [
-          //       { text: 'Cancel' },
-          //       { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
-          //     ], 'default', '100')
-          // }
-          onClick = {() => this.setState({ showSettleUpModal: true })}
+        {/*<Button*/}
+          {/*type="primary" icon="check-circle-o"*/}
+          {/*// onClick={*/}
+          {/*//   () => prompt('defaultValue', 'defaultValue for prompt',*/}
+          {/*//     [*/}
+          {/*//       { text: 'Cancel' },*/}
+          {/*//       { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },*/}
+          {/*//     ], 'default', '100')*/}
+          {/*// }*/}
+          {/*onClick = {() => this.setState({ showSettleUpModal: true })}*/}
+        {/*>*/}
+          {/*Settle Up*/}
+        {/*</Button>*/}
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-          Settle Up
-        </Button>
+          <MButton
+            onClick = {() => this.setState({ showSettleUpModal: true })}
+            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
+            <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Settle Up
+          </MButton>
+        </div>
 
         <Modal
           visible={this.state.showSettleUpModal}
@@ -135,18 +166,57 @@ class UserTab extends React.Component {
           wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
           <div >
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
-            scoll content...<br />
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif"
+                style={{width: 60, height: 60}}
+              />
+            </div>
+
+            <br />
+            You pay xxx
+            <br />
+
+            <FormControl >
+              <InputLabel htmlFor="adornment-amount">Amount</InputLabel>
+              <Input
+                id="adornment-amount"
+                // value={this.state.amount}
+                // onChange={this.handleChange('amount')}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              />
+            </FormControl>
+
+                <br />
+            <TextField
+              id="outlined-adornment-amount"
+              className={classNames(classes.margin, classes.textField)}
+              variant="outlined"
+              label="Amount"
+              // value={this.state.amount}
+              // onChange={this.handleChange('amount')}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+            <br />
+
+            <br/>
+            <MButton variant="contained" color="primary" size="medium" style={{ width: '80%' }}>
+              Default
+            </MButton>
+            <br />
+            <br />
+            <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%' }}>
+              Default
+            </MButton>
+
+            <WhiteSpace />
           </div>
         </Modal>
 
@@ -157,6 +227,19 @@ class UserTab extends React.Component {
   }
 }
 
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    flexBasis: 280,
+  },
+})
 
-export { UserTab }
+const UserTab = withStyles(styles)(UserTabWithoutStyle)
+export { UserTab}
 

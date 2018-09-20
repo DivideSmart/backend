@@ -17,7 +17,6 @@ from main.utils import (
 )
 
 
-@csrf_exempt
 @ensure_authenticated
 def groups(request):
     if request.method == 'POST':
@@ -30,7 +29,6 @@ def groups(request):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group(request, group_id):
     if request.method != 'GET':
@@ -44,7 +42,6 @@ def group(request, group_id):
     })
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_members(request, group_id):
     if request.method != 'GET':
@@ -62,7 +59,6 @@ def group_members(request, group_id):
     })
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_invites(request, group_id):
     current_user = get_user(request)
@@ -91,12 +87,11 @@ def group_invites(request, group_id):
             return HttpResponseNotFound('Invalid user id')
         group.invited_users.add(invite_user)
         group.save()
-        return HttpResponseNotFound('user invited')
+        return HttpResponse('user invited')
 
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_invite(request, group_id, invite_id):
     current_user = get_user(request)
@@ -114,7 +109,6 @@ def group_invite(request, group_id, invite_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_accept(request, group_id):
     # Accept group invite
@@ -124,12 +118,10 @@ def group_accept(request, group_id):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
         group.add_member(current_user)
-        Debt.objects.create_debt_for_group(current_user, group)
         return HttpResponse('Joined group')
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_decline(request, group_id):
     # Decline group invite
@@ -144,7 +136,6 @@ def group_decline(request, group_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_entries(request, group_id):
     current_user = get_user(request)
@@ -162,7 +153,6 @@ def group_entries(request, group_id):
     return HttpResponse()
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_bills(request, group_id):
     current_user = get_user(request)
@@ -170,19 +160,25 @@ def group_bills(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
+
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
         group_member_ids = set(m.id for m in group.users.all())
         try:
-            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
         except ValueError:
             return HttpResponseBadRequest('Invalid initiator')
 
         if not initiator_id or initiator_id not in group_member_ids:
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
-        name = request.POST.get('name', None)
+        name = req_json.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', -1))
-        loans = json.loads(request.POST.get('loans', "{}"))
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -203,6 +199,7 @@ def group_bills(request, group_id):
                     'Initiator cannot receive own loan')
             if loan_user_id not in group_member_ids:
                 return HttpResponseBadRequest('Invalid loan user not in group')
+            loan_amt = float(loan_amt)
             total_loan_amt += loan_amt
             loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt
@@ -218,7 +215,78 @@ def group_bills(request, group_id):
     return HttpResponseNotFound('Invalid Request')
 
 
-@csrf_exempt
+@ensure_authenticated
+def group_bill(request, group_id, bill_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(id=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    old_bill = Bill.objects.filter(id=bill_id, group=group).first()
+    if not old_bill:
+        return HttpResponseBadRequest('Invalid bill')
+
+    # TODO: Maybe we have GET here?
+    if request.method == 'PUT':
+        # Copied from POST bill
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
+        group_member_ids = set(m.id for m in group.users.all())
+        try:
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid initiator')
+
+        if not initiator_id or initiator_id not in group_member_ids:
+            return HttpResponseBadRequest('Invalid initiator')
+        initiator = User.objects.get(id=initiator_id)
+        name = req_json.get('name', None)
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
+
+        if not name:
+            return HttpResponseBadRequest('Invalid name')
+        if not amount or amount <= 0:
+            return HttpResponseBadRequest('Invalid amount')
+        if not loans:
+            return HttpResponseBadRequest('Invalid loans')
+
+        actual_loans = {}
+        total_loan_amt = 0
+        for loan_user_id, loan_amt in loans.items():
+            try:
+                loan_user_id = uuid.UUID(loan_user_id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid loan user id')
+            if loan_user_id == initiator.id:
+                return HttpResponseBadRequest(
+                    'Initiator cannot receive own loan')
+            if loan_user_id not in group_member_ids:
+                return HttpResponseBadRequest(
+                    'Invalid loan user not in group')
+            loan_amt = float(loan_amt)
+            total_loan_amt += loan_amt
+            loan_user = User.objects.get(id=loan_user_id)
+            actual_loans[loan_user] = loan_amt
+
+        if total_loan_amt > amount:
+            return HttpResponseBadRequest(
+                'Loan sums do not make sense with total amount')
+
+        bill = Bill.objects.update_bill(
+            old_bill, group=group, new_name=name,
+            new_initiator=initiator, new_amount=amount,
+            new_loans=actual_loans
+        )
+        return JsonResponse(bill.to_dict_for_user(current_user))
+    if request.method == 'DELETE':
+        Bill.objects.delete_bill(old_bill)
+        return HttpResponse('Bill deleted')
+    return HttpResponseBadRequest('Invalid request')
+
+
 @ensure_authenticated
 def group_payments(request, group_id):
     current_user = get_user(request)

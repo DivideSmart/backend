@@ -27,6 +27,7 @@ import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
@@ -199,6 +200,21 @@ class App extends React.Component {
   }
 }
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#0060c0',
+    },
+    secondary: {
+      main: '#0060c0',
+    }
+  },
+  // status: {
+  //   danger: 'orange',
+  // },
+})
+
+
 const mapStoreToProps = (store, ownProps) => {
   return {...ownProps, user: store.user}
 }
@@ -207,7 +223,9 @@ const AppWithRedux = connect(mapStoreToProps, {setCurrentUser})(App)
 ReactDOM.render(
   <Provider store={store}>
     <LocaleProvider locale={enUS}>
-      <AppWithRedux />
+      <MuiThemeProvider theme={theme}>
+        <AppWithRedux />
+      </MuiThemeProvider>
     </LocaleProvider>
   </Provider>,
   document.getElementById('main')

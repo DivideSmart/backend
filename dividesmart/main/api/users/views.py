@@ -37,7 +37,6 @@ def user(request, user_id):
     return JsonResponse(other_user.to_dict_for_others(current_user))
 
 
-@csrf_exempt
 @ensure_authenticated
 def friends(request, user_id):
     current_user = get_user(request)
@@ -82,7 +81,6 @@ def friends(request, user_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend(request, user_id, friend_id):
     current_user = get_user(request)
@@ -102,7 +100,6 @@ def friend(request, user_id, friend_id):
     return HttpResponseNotFound('Invalid request')
 
 
-@csrf_exempt
 @ensure_authenticated
 def groups(request, user_id):
     current_user = get_user(request)
@@ -123,7 +120,6 @@ def group(request, user_id, group_id):
     pass
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend_entries(request, user_id, friend_id):
     current_user = get_user(request)
@@ -148,7 +144,6 @@ def friend_entries(request, user_id, friend_id):
     return HttpResponse()
 
 
-@csrf_exempt
 @ensure_authenticated
 def friend_bills(request, user_id, friend_id):
     current_user = get_user(request)
@@ -158,18 +153,24 @@ def friend_bills(request, user_id, friend_id):
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
+
         try:
-            initiator_id = uuid.UUID(request.POST.get('initiator', None))
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
         except ValueError:
             return HttpResponseBadRequest('Invalid initiator')
 
         if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
-        name = request.POST.get('name', None)
+        name = req_json.get('name', None)
         creator = current_user
-        amount = float(request.POST.get('amount', -1))
-        loans = json.loads(request.POST.get('loans', "{}"))
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
 
         if not name:
             return HttpResponseBadRequest('Invalid name')
@@ -187,6 +188,7 @@ def friend_bills(request, user_id, friend_id):
                 loan_user_id = uuid.UUID(loan_user_id)
             except ValueError:
                 return HttpResponseBadRequest('Invalid loan user')
+            loan_amt = float(loan_amt)
             if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
@@ -207,7 +209,90 @@ def friend_bills(request, user_id, friend_id):
     return HttpResponseNotFound('Invalid Request')
 
 
-@csrf_exempt
+@ensure_authenticated
+def friend_bill(request, user_id, friend_id, bill_id):
+    current_user = get_user(request)
+    if current_user.id != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(id=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
+
+    old_bill = Bill.objects.filter(id=bill_id).first()
+    if not old_bill or old_bill.group:
+        return HttpResponseBadRequest('No such bill')
+    participant_ids = [p.id for p in old_bill.participants.all()]
+    is_friend_bill = (
+        len(participant_ids) == 2 and
+        all(i in (user_id, friend_id) for i in participant_ids)
+    )
+    if is_friend_bill:
+        return HttpResponseBadRequest('No such bill')
+    # TODO: Add GET?
+    if request.method == 'PUT':
+        # Copied from POST bill
+        # Changed content-type: application/json
+        # Now we need to load the json object in the request
+        if not request.body:
+            return HttpResponseBadRequest('Invalid request')
+        req_json = json.loads(request.body)
+
+        try:
+            initiator_id = uuid.UUID(req_json.get('initiator', None))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid initiator')
+
+        if not initiator_id or (initiator_id != user_id and initiator_id != friend_id):
+            return HttpResponseBadRequest('Invalid initiator')
+        initiator = User.objects.get(id=initiator_id)
+        name = req_json.get('name', None)
+        creator = current_user
+        amount = float(req_json.get('amount', -1))
+        loans = req_json.get('loans', {})
+
+        if not name:
+            return HttpResponseBadRequest('Invalid name')
+        if not amount or amount <= 0:
+            return HttpResponseBadRequest('Invalid amount')
+        if not loans:
+            return HttpResponseBadRequest('Invalid loans')
+        if len(loans) != 1:
+            return HttpResponseBadRequest('Invalid number of loans')
+
+        actual_loans = {}
+        total_loan_amt = 0
+        for loan_user_id, loan_amt in loans.items():
+            try:
+                loan_user_id = uuid.UUID(loan_user_id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid loan user')
+            loan_amt = float(loan_amt)
+            if loan_user_id == initiator.id:
+                return HttpResponseBadRequest(
+                    'Initiator cannot receive own loan')
+            if loan_user_id != user_id and loan_user_id != friend_id:
+                return HttpResponseBadRequest('Invalid loan user')
+            total_loan_amt += loan_amt
+            loan_user = User.objects.get(id=loan_user_id)
+            actual_loans[loan_user] = loan_amt
+
+        if total_loan_amt > amount:
+            return HttpResponseBadRequest(
+                'Loan sums do not make sense with total amount')
+
+        bill = Bill.objects.update_bill(
+            old_bill, group=None, new_name=name,
+            new_initiator=initiator, new_amount=amount,
+            new_loans=actual_loans
+        )
+        return JsonResponse(bill.to_dict_for_user(current_user))
+
+    if request.method == 'DELETE':
+        Bill.objects.delete_bill(old_bill)
+        return HttpResponse('Bill deleted')
+    return HttpResponseBadRequest('Invalid request')
+
+
 @ensure_authenticated
 def friend_payments(request, user_id, friend_id):
     current_user = get_user(request)

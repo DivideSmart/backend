@@ -2,11 +2,9 @@ import 'regenerator-runtime/runtime'
 
 import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
-import {
-  Link,
-} from 'react-router-dom'
 import React from 'react'
 import Close from '@material-ui/icons/Close';
+import {FriendsList} from './shared_components/friends_list.jsx'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -61,117 +59,7 @@ class FriendsTab extends React.Component {
     return (
       <div>
         <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
-        <List renderHeader={() => 'Friends owe you'} className="my-list">
-        {
-          sampleData.friendsOweYou.map(friend => {
-            return (
-              <Link key={friend.key} to="/u/123">
-                <Item
-                  arrow="horizontal"
-                  thumb={
-                    <Badge>
-                      <span
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
-                      />
-                    </Badge>
-                  }
-                  multipleLine
-                  // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span className={'other-owe-amount'}>${ friend.acc }</span>}
-                >
-                  {friend.name} <Brief>8/31/18</Brief>
-                </Item>
-              </Link>
-            )
-          })
-        }
-        </List>
-
-
-        <List renderHeader={() => 'Friends you owe'} className="my-list">
-          {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-            Title <Brief>subtitle</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            multipleLine
-            onClick={() => {}}
-            platform="android"
-          >
-            ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-          </Item> */}
-          {
-            sampleData.friendsYouOwe.map(friend => {
-              return (
-                <Item
-                  key={friend.key}
-                  arrow="horizontal"
-                  thumb={
-                    <Badge>
-                      <span
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
-                      />
-                    </Badge>
-                  }
-                  multipleLine
-                  onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span className={'owe-other-amount'}>${ friend.acc }</span>}
-                >
-                  {friend.name} <Brief>8/31/18</Brief>
-                </Item>
-              )
-            })
-          }
-        </List>
-
-
-        <List renderHeader={() => 'Friends settled up'} className="my-list">
-          {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-            Title <Brief>subtitle</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            multipleLine
-            onClick={() => {}}
-            platform="android"
-          >
-            ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-          </Item> */}
-          {
-            sampleData.friendsYouOwe.map(friend => {
-              return (
-                <Item
-                  key={friend.key}
-                  arrow="horizontal"
-                  thumb={
-                    <Badge>
-                      <span
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
-                      />
-                    </Badge>
-                  }
-                  multipleLine
-                  onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span>settled up</span>}
-                >
-                  {friend.name} <Brief>8/31/18</Brief>
-                </Item>
-              )
-            })
-          }
-        </List>
+        <FriendsList friends={sampleData}/>
 
         <WhiteSpace />
         <WhiteSpace />

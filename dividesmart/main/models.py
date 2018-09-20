@@ -348,7 +348,8 @@ class Payment(Entry):
 class BillManager(PolymorphicManager):
     use_in_migrations = True
 
-    def create_bill(self, name, group, creator, initiator, amount, loans):
+    def create_bill(self, name, group, creator, initiator, amount, loans,
+                    date_created=None):
         # loans is a list of tuples [(loan_user, loan_amount), ...]
         # Assumes that this data is sane
         # (e.g. creator is in group, loaner in group)
@@ -359,10 +360,12 @@ class BillManager(PolymorphicManager):
             initiator=initiator,
             amount=amount
         )
+        if date_created:
+            bill.date_created = date_created
         bill.save()
 
         if not group:
-            assert(len(loans) == 1)
+            assert len(loans) == 1
 
         loaner_gets_back = 0
         # Handle loanees
@@ -378,13 +381,11 @@ class BillManager(PolymorphicManager):
             # Update debts
             loaner_debt = (
                 Debt.objects
-                .filter(group=group, user=initiator, other_user=loan_user)
-                .first()
+                .get(group=group, user=initiator, other_user=loan_user)
             )
             receiver_debt = (
                 Debt.objects
-                .filter(group=group, user=loan_user, other_user=initiator)
-                .first()
+                .get(group=group, user=loan_user, other_user=initiator)
             )
             loaner_debt.amount += Decimal(loan_amt)
             receiver_debt.amount -= Decimal(loan_amt)
@@ -405,14 +406,49 @@ class BillManager(PolymorphicManager):
             amount=Decimal(loaner_gets_back),
         )
         bill_loan_participation.save()
-
         return bill
 
-    def update_bill(self, new_name, new_initiator, new_amount, new_loans):
-        pass
+    def update_bill(self, bill, group, new_name, new_initiator,
+                    new_amount, new_loans):
 
-    def delete_bill(self):
-        pass
+        # Lazy way delete old bill
+        old_creator = bill.creator
+        old_date_created = bill.date_created
+        self.delete_bill(bill)
+
+        # Insert new bill with new last update, old date created
+        return self.create_bill(
+            new_name, group=group, creator=old_creator,
+            initiator=new_initiator, amount=new_amount, loans=new_loans,
+            date_created=old_date_created)
+
+    def delete_bill(self, bill):
+        # First update all the debts involved (through the participations)
+        participations = EntryParticipation.objects.filter(entry=bill).all()
+        for participation in participations:
+            if participation.participant.id == bill.initiator.id:
+                continue
+
+            # Update debts
+            loaner_debt = (
+                Debt.objects
+                .get(group=bill.group, user=bill.initiator,
+                     other_user=participation.participant)
+            )
+            receiver_debt = (
+                Debt.objects
+                .get(group=bill.group, user=participation.participant,
+                     other_user=bill.initiator)
+            )
+            # participation amount is < 0 in receiver's perspective
+            loaner_debt.amount += participation.amount
+            receiver_debt.amount -= participation.amount
+            loaner_debt.save()
+            receiver_debt.save()
+
+        # Delete this bill should propagate
+        # to the loans and participations
+        bill.delete()
 
 
 class Bill(Entry):
@@ -427,6 +463,7 @@ class Bill(Entry):
             'creator': self.creator.id,
             'initiator': self.initiator.id,
             'dateCreated': self.date_created,
+            'billAmount': self.amount,
             'loans': {}
         }
         loans = Loan.objects.filter(bill=self).all()
