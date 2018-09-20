@@ -43,7 +43,7 @@ TRUMP = User.objects.create_user(
 TEST_GROUP = Group.objects.create_group(name='Test Group', user=JOHN)
 
 JOHN.send_friend_request(JANE)
-JANE.accept_friend_invite(JOHN)
+JANE.accept_friend_request(JOHN)
 
 JOHN.send_friend_request(BILL)
 TEST_GROUP.users.add(JOHN)

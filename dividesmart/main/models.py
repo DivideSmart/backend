@@ -137,7 +137,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.requested_friends.add(to_user)
         self.save()
 
-    def accept_friend_invite(self, from_user):
+    def accept_friend_request(self, from_user):
         assert self.has_friend_request(from_user.id)
         self.received_friend_requests.remove(from_user)
         self.friends.add(from_user)

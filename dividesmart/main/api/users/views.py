@@ -73,7 +73,7 @@ def friends(request, user_id):
             return HttpResponseNotFound('No such user')
         received_fr = current_user.has_friend_request(from_user_id=friend_id)
         if received_fr:
-            current_user.accept_friend_invite(from_user=other_user)
+            current_user.accept_friend_request(from_user=other_user)
             return HttpResponse('Friend request accepted')
         else:
             current_user.send_friend_request(other_user)
@@ -89,6 +89,11 @@ def friend(request, user_id, friend_id):
     friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
+    if request.method == 'GET':
+        return JsonResponse(
+            friend_user.to_dict_for_others(
+                current_user, for_group=None, show_debt=True)
+        )
     if request.method == 'DELETE':
         # Delete friendship / request with this user id
         current_user.received_friend_requests.remove(friend_user)

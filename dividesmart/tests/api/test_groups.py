@@ -1,24 +1,10 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from main.models import (
     User, Group, Bill
 )
-from tests.api.test_utils import LOGIN_URL
-from django.http.response import JsonResponse
-import ujson as json
-
-
-def jsonify(obj):
-    # Super weird way to get json (dict) equivalent
-    return json.loads(JsonResponse(obj).content)
-
-
-def get_client_with_credentials(email, password):
-    client = Client()
-    client.post(LOGIN_URL, {
-        'email_address': email,
-        'password': password
-    })
-    return client
+from tests.api.test_utils import (
+    get_client_with_credentials, jsonify
+)
 
 
 class GroupTest(TestCase):
@@ -192,7 +178,7 @@ class GroupTest(TestCase):
                == sorted([jsonify(m) for m in dicts], key=lambda x: x['id'])
 
 
-class GroupEntries(TestCase):
+class GroupEntriesTest(TestCase):
 
     GROUP_MEMBERS_URL = '/api/groups/%s/members/'
     GROUP_ENTRIES_URL = '/api/groups/%s/entries/'
