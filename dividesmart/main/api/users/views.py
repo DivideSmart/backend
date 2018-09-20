@@ -251,7 +251,6 @@ def friend_bill(request, user_id, friend_id, bill_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
-        creator = current_user
         amount = float(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 

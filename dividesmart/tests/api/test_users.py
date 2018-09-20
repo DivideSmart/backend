@@ -78,7 +78,6 @@ class UserEntriesTest(TestCase):
         response = self.JOHN_CLIENT.post(self.JOHN_BILLS_URL, {
             'name': 'Hat',
             'initiator': str(self.JANE.id),
-            'creator': str(self.JOHN.id),
             'amount': '30.59',
             'loans': {
                 str(self.JOHN.id): '18.76',
@@ -143,7 +142,42 @@ class UserEntriesTest(TestCase):
         assert res_json['debt'] == '0.00'
 
     def test_edit_bill(self):
-        pass
+        response = self.JOHN_CLIENT.put(self.JOHN_BILL_URL, {
+            'name': 'Hat 3',
+            'initiator': str(self.JOHN.id),
+            'amount': '13.27',
+            'loans': {
+                str(self.JANE.id): '4.89',
+            }
+        }, content_type='application/json')
+        assert response.status_code == 200
+
+        # Get John's entry perspective
+        response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        # import pdb; pdb.set_trace()
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == '4.89'
+
+        # Get John's debt perspective
+        response = self.JOHN_CLIENT.get(self.JOHNS_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '4.89'
+
+        # Get Jane's entry perspective
+        response = self.JANE_CLIENT.get(self.JANE_ENTRIES_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert len(res_json['entries']) == 1
+        assert res_json['entries'][0]['userAmount'] == "-4.89"
+
+        # Get Jane's debt perspective
+        response = self.JANE_CLIENT.get(self.JANE_FRIEND_URL)
+        res_json = response.json()
+        assert response.status_code == 200
+        assert res_json['debt'] == '-4.89'
 
     def test_payment(self):
         pass
