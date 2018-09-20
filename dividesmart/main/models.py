@@ -324,7 +324,7 @@ class PaymentManager(PolymorphicManager):
             receiver=old_payment.receiver,
             date_created=old_payment.date_created
         )
-        old_payment.delete()
+        self.delete_payment(old_payment)
         return new_payment
 
     def delete_payment(self, payment):
@@ -335,8 +335,8 @@ class PaymentManager(PolymorphicManager):
         payee_debt = Debt.objects.get(
             group=payment.group, user=payment.receiver, other_user=payment.creator
         )
-        payer_debt -= payment.amount
-        payee_debt += payment.amount
+        payer_debt.amount -= payment.amount
+        payee_debt.amount += payment.amount
         payer_debt.save()
         payee_debt.save()
 

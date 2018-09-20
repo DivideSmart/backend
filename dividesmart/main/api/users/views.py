@@ -335,7 +335,8 @@ def friend_payment(request, user_id, friend_id, payment_id):
         return HttpResponseBadRequest('No such payment')
 
     if request.method == 'PUT':
-        amount = float(request.PUT.get('amount', -1))
+        req_json = json.loads(request.body)
+        amount = float(req_json.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         new_payment = Payment.objects.update_payment(old_payment, amount)
