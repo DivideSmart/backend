@@ -281,9 +281,8 @@ def friend_bill(request, user_id, friend_id, bill_id):
                 'Loan sums do not make sense with total amount')
 
         bill = Bill.objects.update_bill(
-            old_bill, group=None, new_name=name,
-            new_initiator=initiator, new_amount=amount,
-            new_loans=actual_loans
+            old_bill, new_name=name, new_initiator=initiator,
+            new_amount=amount, new_loans=actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
 

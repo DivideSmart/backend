@@ -276,7 +276,7 @@ def group_bill(request, group_id, bill_id):
                 'Loan sums do not make sense with total amount')
 
         bill = Bill.objects.update_bill(
-            old_bill, group=group, new_name=name,
+            old_bill, new_name=name,
             new_initiator=initiator, new_amount=amount,
             new_loans=actual_loans
         )
