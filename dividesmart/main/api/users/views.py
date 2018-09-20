@@ -210,6 +210,33 @@ def friend_bills(request, user_id, friend_id):
 
 
 @ensure_authenticated
+def friend_bill(request, user_id, friend_id, bill_id):
+    current_user = get_user(request)
+    if current_user.id != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(id=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
+    # TODO: Add GET?
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        bill = Bill.objects.filter(id=bill_id).first()
+        if not bill or bill.group:
+            return HttpResponseBadRequest('No such bill')
+        participant_ids = [p.id for p in bill.participants.all()]
+        is_friend_bill = (
+            len(participant_ids) == 2 and
+            all(i in (user_id, friend_id) for i in participant_ids)
+        )
+        if is_friend_bill:
+            return HttpResponseBadRequest('No such bill')
+        Bill.objects.delete_bill(bill_id, None)
+        return HttpResponse('Bill deleted')
+    return HttpResponseBadRequest('Invalid request')
+
+
+@ensure_authenticated
 def friend_payments(request, user_id, friend_id):
     current_user = get_user(request)
     if current_user.id != user_id:

@@ -409,11 +409,7 @@ class BillManager(PolymorphicManager):
     def update_bill(self, new_name, new_initiator, new_amount, new_loans):
         pass
 
-    def delete_bill(self, bill_id, group):
-        bill = Bill.objects.filter(id=bill_id, group=group).first()
-        if not bill:
-            return
-
+    def delete_bill(self, bill):
         # First update all the debts involved (through the participations)
         for participation in bill.entry_participation_set:
             if participation.participant.id == bill.initiator.id:
@@ -422,12 +418,12 @@ class BillManager(PolymorphicManager):
             # Update debts
             loaner_debt = (
                 Debt.objects
-                .get(group=group, user=bill.initiator,
+                .get(group=bill.group, user=bill.initiator,
                      other_user=participation.participant)
             )
             receiver_debt = (
                 Debt.objects
-                .get(group=group, user=participation.participant,
+                .get(group=bill.group, user=participation.participant,
                      other_user=bill.initiator)
             )
             loaner_debt.amount -= participation.amount

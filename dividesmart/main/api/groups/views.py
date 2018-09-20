@@ -225,7 +225,10 @@ def group_bill(request, group_id, bill_id):
     if request.method == 'PUT':
         pass
     if request.method == 'DELETE':
-        Bill.objects.delete_bill(bill_id, group)
+        bill = Bill.objects.filter(id=bill_id, group=group)
+        if not bill:
+            return HttpResponseBadRequest('Invalid bill')
+        Bill.objects.delete_bill(bill)
         return HttpResponse('Bill deleted')
     return HttpResponseBadRequest('Invalid request')
 
