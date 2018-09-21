@@ -137,7 +137,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.requested_friends.add(to_user)
         self.save()
 
-    def accept_friend_invite(self, from_user):
+    def accept_friend_request(self, from_user):
         assert self.has_friend_request(from_user.id)
         self.received_friend_requests.remove(from_user)
         self.friends.add(from_user)
@@ -278,8 +278,9 @@ class EntryParticipation(models.Model):
 class PaymentManager(PolymorphicManager):
     use_in_migrations = True
 
-    def create_payment(self, group, creator, amount, receiver):
-        assert creator.pk != receiver.pk
+    def create_payment(self, group, creator, amount, receiver,
+                       date_created=None):
+        assert creator.id != receiver.id
         payment = Payment(
             group=group,
             creator=creator,
@@ -287,6 +288,8 @@ class PaymentManager(PolymorphicManager):
             amount=amount,
             receiver=receiver
         )
+        if date_created:
+            payment.date_created = date_created
         payment.save()
 
         # Create participations
@@ -314,15 +317,31 @@ class PaymentManager(PolymorphicManager):
 
         return payment
 
-    def update_payment(self):
-        # maybe add a "type" and restrict only to cash payment to be
-        # editable / deletable
-        pass
+    def update_payment(self, old_payment, new_amount):
+        # Lazy way to updating...
+        new_payment = self.create_payment(
+            old_payment.group, creator=old_payment.creator, amount=new_amount,
+            receiver=old_payment.receiver,
+            date_created=old_payment.date_created
+        )
+        self.delete_payment(old_payment)
+        return new_payment
 
-    def delete_payment(self):
-        # maybe add a "type" and restrict only to cash payment to be
-        # editable / deletable
-        pass
+    def delete_payment(self, payment):
+        # Update debts for payer and payee
+        payer_debt = Debt.objects.get(
+            group=payment.group, user=payment.creator, other_user=payment.receiver
+        )
+        payee_debt = Debt.objects.get(
+            group=payment.group, user=payment.receiver, other_user=payment.creator
+        )
+        payer_debt.amount -= payment.amount
+        payee_debt.amount += payment.amount
+        payer_debt.save()
+        payee_debt.save()
+
+        # Delete the actual payment
+        payment.delete()
 
 
 class Payment(Entry):
@@ -408,17 +427,18 @@ class BillManager(PolymorphicManager):
         bill_loan_participation.save()
         return bill
 
-    def update_bill(self, bill, group, new_name, new_initiator,
+    def update_bill(self, bill, new_name, new_initiator,
                     new_amount, new_loans):
 
         # Lazy way delete old bill
         old_creator = bill.creator
+        old_group = bill.group
         old_date_created = bill.date_created
         self.delete_bill(bill)
 
         # Insert new bill with new last update, old date created
         return self.create_bill(
-            new_name, group=group, creator=old_creator,
+            new_name, group=old_group, creator=old_creator,
             initiator=new_initiator, amount=new_amount, loans=new_loans,
             date_created=old_date_created)
 

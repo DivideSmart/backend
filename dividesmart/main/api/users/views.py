@@ -73,7 +73,7 @@ def friends(request, user_id):
             return HttpResponseNotFound('No such user')
         received_fr = current_user.has_friend_request(from_user_id=friend_id)
         if received_fr:
-            current_user.accept_friend_invite(from_user=other_user)
+            current_user.accept_friend_request(from_user=other_user)
             return HttpResponse('Friend request accepted')
         else:
             current_user.send_friend_request(other_user)
@@ -89,6 +89,11 @@ def friend(request, user_id, friend_id):
     friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
+    if request.method == 'GET':
+        return JsonResponse(
+            friend_user.to_dict_for_others(
+                current_user, for_group=None, show_debt=True)
+        )
     if request.method == 'DELETE':
         # Delete friendship / request with this user id
         current_user.received_friend_requests.remove(friend_user)
@@ -226,7 +231,7 @@ def friend_bill(request, user_id, friend_id, bill_id):
         len(participant_ids) == 2 and
         all(i in (user_id, friend_id) for i in participant_ids)
     )
-    if is_friend_bill:
+    if not is_friend_bill:
         return HttpResponseBadRequest('No such bill')
     # TODO: Add GET?
     if request.method == 'PUT':
@@ -246,7 +251,6 @@ def friend_bill(request, user_id, friend_id, bill_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
-        creator = current_user
         amount = float(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 
@@ -281,9 +285,8 @@ def friend_bill(request, user_id, friend_id, bill_id):
                 'Loan sums do not make sense with total amount')
 
         bill = Bill.objects.update_bill(
-            old_bill, group=None, new_name=name,
-            new_initiator=initiator, new_amount=amount,
-            new_loans=actual_loans
+            old_bill, new_name=name, new_initiator=initiator,
+            new_amount=amount, new_loans=actual_loans
         )
         return JsonResponse(bill.to_dict_for_user(current_user))
 
@@ -314,3 +317,36 @@ def friend_payments(request, user_id, friend_id):
         return JsonResponse(payment.to_dict())
 
     return HttpResponseNotFound('Invalid Request')
+
+
+@ensure_authenticated
+def friend_payment(request, user_id, friend_id, payment_id):
+    current_user = get_user(request)
+    if current_user.id != user_id:
+        return HttpResponseForbidden('Cannot modify this user')
+    friend_user = current_user.friends.filter(id=friend_id).first()
+    if not friend_user:
+        return HttpResponseNotFound('No such friend')
+
+    old_payment = Payment.objects.filter(id=payment_id).first()
+    if not old_payment or old_payment.group:
+        return HttpResponseBadRequest('No such payment')
+    is_friend_payment = all(
+        [p.id in (user_id, friend_id) for p in
+         [old_payment.creator, old_payment.receiver]]
+    )
+    if not is_friend_payment:
+        return HttpResponseBadRequest('No such payment')
+
+    if request.method == 'PUT':
+        req_json = json.loads(request.body)
+        amount = float(req_json.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        new_payment = Payment.objects.update_payment(old_payment, amount)
+        return JsonResponse(new_payment.to_dict())
+    if request.method == 'DELETE':
+        Payment.objects.delete_payment(old_payment)
+        return HttpResponse('Payment deleted')
+
+    return HttpResponseBadRequest('Invalid Request')

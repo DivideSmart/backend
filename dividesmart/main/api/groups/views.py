@@ -276,7 +276,7 @@ def group_bill(request, group_id, bill_id):
                 'Loan sums do not make sense with total amount')
 
         bill = Bill.objects.update_bill(
-            old_bill, group=group, new_name=name,
+            old_bill, new_name=name,
             new_initiator=initiator, new_amount=amount,
             new_loans=actual_loans
         )
@@ -314,3 +314,26 @@ def group_payments(request, group_id):
         )
         return JsonResponse(payment.to_dict())
     return HttpResponseNotFound('Invalid Request')
+
+
+@ensure_authenticated
+def group_payment(request, group_id, payment_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(id=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+
+    old_payment = Payment.objects.filter(id=payment_id, group=group).first()
+    if not old_payment:
+        return HttpResponseBadRequest('No such payment')
+    if request.method == 'PUT':
+        req_json = json.loads(request.body)
+        amount = float(req_json.get('amount', -1))
+        if amount <= 0:
+            return HttpResponseBadRequest('Invalid payment amount')
+        new_payment = Payment.objects.update_payment(old_payment, amount)
+        return JsonResponse(new_payment.to_dict())
+    if request.method == 'DELETE':
+        Payment.objects.delete_payment(old_payment)
+        return HttpResponse('Payment deleted')
+    return HttpResponseBadRequest('Invalid Request')
