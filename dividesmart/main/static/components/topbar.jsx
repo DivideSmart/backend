@@ -87,8 +87,9 @@ class TopBar extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ height: '6vh' }}>
         <NavBar
+          style={{height: '100%'}}
           icon={
             <Link className='topbar-btn' to='/'>
               <Home
