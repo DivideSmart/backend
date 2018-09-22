@@ -27,7 +27,7 @@ class FriendsList extends React.Component {
           this.state.friends.friendsOweYou.map(friend => {
             return (
               <Item
-                key={friend.key} 
+                key={friend.key}
                 arrow="horizontal"
                 thumb={
                   <Badge>

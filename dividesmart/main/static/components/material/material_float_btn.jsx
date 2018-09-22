@@ -88,7 +88,7 @@ class FlaoatingButton extends React.Component {
           <Button
             variant="fab"
             className={classes.fab + ' create-debt-btn'}
-            style={{bottom: 66, zIndex: 1000}}
+            style={{bottom: 66, zIndex: 1000, position: 'fixed'}}
           >
             <AddIcon style={{ color: 'white' }} />
           </Button>

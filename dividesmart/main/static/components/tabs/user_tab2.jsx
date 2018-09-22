@@ -20,9 +20,19 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Collapse from '@material-ui/core/Collapse';
 import classNames from 'classnames';
 import Avatar from '@material-ui/core/Avatar';
 import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
+
+
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 
 
 class UserTabWithoutStyle extends React.Component {
@@ -42,7 +52,18 @@ const { classes } = this.props;
         <WhiteSpace />
         <WhiteSpace />
         <List>
-          <List.Item extra="extra content" arrow="horizontal">
+          <List.Item extra={
+            <div>
+              <MButton
+                onClick = {() => this.setState({ showSettleUpModal: true })}
+                variant="outlined" color="primary" size="small"
+              >
+                <Icon type={'check-circle-o'} style={{ height: 18, marginRight: 8}}/>
+                <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+              </MButton>
+            </div>
+
+          }>
             <Badge>
               <span
                 style={{
@@ -56,6 +77,15 @@ const { classes } = this.props;
             <span style={{ marginLeft: 12 }}>Harry</span>
           </List.Item>
 
+          <Item
+            arrow="horizontal"
+            // thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            // multipleLine
+            extra={<span className={'other-owe-amount'}>$20</span>}
+          >
+            <Badge text={0} style={{ marginLeft: 12 }}>Summary</Badge>
+          </Item>
+
           <List.Item extra="12345678" arrow="horizontal">
             <Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
@@ -66,22 +96,49 @@ const { classes } = this.props;
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </List.Item>
 
-          {/* <List.Item>
-            Customize
-            <Badge text="券" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#f19736', borderRadius: 2 }} />
-            <Badge text="NEW" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#21b68a', borderRadius: 2 }} />
-            <Badge text="自动缴费"
-              style={{
-                marginLeft: 12,
-                padding: '0 3px',
-                backgroundColor: '#fff',
-                borderRadius: 2,
-                color: '#f19736',
-                border: '1px solid #f19736',
-              }}
-            />
-          </List.Item> */}
+          {/*<List.Item>*/}
+            {/*Customize*/}
+            {/*<Badge text="券" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#f19736', borderRadius: 2 }} />*/}
+            {/*<Badge text="NEW" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#21b68a', borderRadius: 2 }} />*/}
+            {/*<Badge text="自动缴费"*/}
+              {/*style={{*/}
+                {/*marginLeft: 12,*/}
+                {/*padding: '0 3px',*/}
+                {/*backgroundColor: '#fff',*/}
+                {/*borderRadius: 2,*/}
+                {/*color: '#f19736',*/}
+                {/*border: '1px solid #f19736',*/}
+              {/*}}*/}
+            {/*/>*/}
+          {/*</List.Item>*/}
         </List>
+
+
+        {/*<Card className={classes.card}>*/}
+          {/*<CardContent>*/}
+            {/*<List.Item extra={*/}
+              {/*<IconButton*/}
+                {/*aria-label="Show more"*/}
+              {/*>*/}
+                {/*<ExpandMoreIcon />*/}
+              {/*</IconButton>*/}
+            {/*} arrow="horizontal">*/}
+              {/*<Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>*/}
+              {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
+            {/*</List.Item>*/}
+          {/*</CardContent>*/}
+        {/*</Card>*/}
+        {/*<Collapse in={true} timeout="auto" unmountOnExit>*/}
+          {/*<List.Item extra="12345678" arrow="horizontal">*/}
+            {/*<Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>*/}
+            {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
+          {/*</List.Item>*/}
+
+          {/*<List.Item extra="test@test.com" arrow="horizontal">*/}
+            {/*<Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>*/}
+            {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
+          {/*</List.Item>*/}
+        {/*</Collapse>*/}
 
         <WhiteSpace />
         <List renderHeader={() => 'Debt List with Tom'} className="my-list">
@@ -114,15 +171,6 @@ const { classes } = this.props;
             extra={<span className={'other-owe-amount'}>$15</span>}
           >
             Dinner Date <Brief>8/31/18</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            // thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'other-owe-amount'}>$20</span>}
-          >
-            <Brief>Overall</Brief>
           </Item>
         </List>
 
