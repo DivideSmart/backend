@@ -186,7 +186,7 @@ class App extends React.Component {
                     render={ ({match, location}) =>
                       <div>
                         <Tabs />
-                        <FlaoatingButton />
+                        <FloatingButton />
                       </div>
                     }
                   />
