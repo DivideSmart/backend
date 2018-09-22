@@ -27,6 +27,7 @@ class FriendsList extends React.Component {
           this.state.friends.friendsOweYou.map(friend => {
             return (
               <Item
+                key={friend.key} 
                 arrow="horizontal"
                 thumb={
                   <Badge>
@@ -43,7 +44,7 @@ class FriendsList extends React.Component {
                 // onClick={() => { window.location.href = '/u/1'}}
                 extra={<Link key={friend.key} to="/u/123" style={{ color: 'black' }}><span className={'other-owe-amount'}>${ friend.acc }</span></Link>}
               >
-                <Link key={friend.key} to="/u/123" style={{ color: 'black' }}>
+                <Link to="/u/123" style={{ color: 'black' }}>
                   {friend.name} <Brief>8/31/18</Brief>
                 </Link>
               </Item>
