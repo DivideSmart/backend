@@ -9,6 +9,7 @@ import { createForm } from 'rc-form';
 
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
+
 const AgreeItem = Checkbox.AgreeItem;
 const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" style={{ width: 60, height: 60 }} alt="" />;
 
@@ -153,6 +154,8 @@ class H5NumberInputExample extends React.Component {
         <WingBlank>
           <Button type="primary">SAVE</Button>
         </WingBlank>
+
+
         <ReceiptButton updateReceipt={this.updateReceipt}/>
         {/* <WingBlank size="lg">
           <WhiteSpace size="lg" />

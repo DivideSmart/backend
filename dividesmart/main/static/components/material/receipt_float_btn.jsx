@@ -7,8 +7,8 @@ import MButton from '@material-ui/core/Button';
 import React from 'react'
 import axios from 'axios'
 import { getCookie } from 'util.js'
-import green from '@material-ui/core/colors/green';
 import { withStyles } from '@material-ui/core/styles';
+import '../../style/index.less'
 
 let wrapProps;
 const styles = theme => ({
@@ -22,10 +22,6 @@ const styles = theme => ({
     position: 'absolute',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
-  },
-  fabGreen: {
-    color: theme.palette.common.white,
-    backgroundColor: green[500],
   },
 });
 
@@ -102,10 +98,11 @@ class FlaoatingButton extends React.Component {
           type={'file'}
           onChange={async () => this.handleFiles()}>
         </input>
+
         <MButton
           variant="fab"
-          className={classes.fab}
-          style={{position: 'fixed', bottom: 60, backgroundColor: 'dodgerblue', zIndex: 1000}}
+          className={classes.fab + ' scan-receipt-btn'}
+          style={{position: 'fixed', bottom: 60, zIndex: 1000}}
           onClick={this.onClick}
         >
           <CameraAlt style={{ color: 'white' }} />
