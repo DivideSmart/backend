@@ -26,27 +26,27 @@ class FriendsList extends React.Component {
         {
           this.state.friends.friendsOweYou.map(friend => {
             return (
-              <Link key={friend.key} to="/u/123">
-                <Item
-                  arrow="horizontal"
-                  thumb={
-                    <Badge>
-                      <span
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
-                      />
-                    </Badge>
-                  }
-                  multipleLine
-                  // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span className={'other-owe-amount'}>${ friend.acc }</span>}
-                >
+              <Item
+                arrow="horizontal"
+                thumb={
+                  <Badge>
+                    <span
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        background: 'url(' + friend.avatarUrl + ') center center /  44px 44px no-repeat',
+                        display: 'inline-block' }}
+                    />
+                  </Badge>
+                }
+                multipleLine
+                // onClick={() => { window.location.href = '/u/1'}}
+                extra={<Link key={friend.key} to="/u/123" style={{ color: 'black' }}><span className={'other-owe-amount'}>${ friend.acc }</span></Link>}
+              >
+                <Link key={friend.key} to="/u/123" style={{ color: 'black' }}>
                   {friend.name} <Brief>8/31/18</Brief>
-                </Item>
-              </Link>
+                </Link>
+              </Item>
             )
           })
         }
@@ -75,18 +75,19 @@ class FriendsList extends React.Component {
                     <Badge>
                       <span
                         style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          width: '44px',
+                          height: '44px',
+                          background: 'url(' + friend.avatarUrl + ') center center /  44px 44px no-repeat',
                           display: 'inline-block' }}
                       />
                     </Badge>
                   }
                   multipleLine
-                  onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span className={'owe-other-amount'}>${ friend.acc }</span>}
+                  extra={<Link key={friend.key} to="/u/123" style={{ color: 'black' }}><span className={'owe-other-amount'}>${ friend.acc }</span></Link>}
                 >
-                  {friend.name} <Brief>8/31/18</Brief>
+                  <Link key={friend.key} to="/u/123" style={{ color: 'black' }}>
+                    {friend.name} <Brief>8/31/18</Brief>
+                  </Link>
                 </Item>
               )
             })
@@ -116,15 +117,14 @@ class FriendsList extends React.Component {
                     <Badge>
                       <span
                         style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                          width: '44px',
+                          height: '44px',
+                          background: 'url(' + friend.avatarUrl + ') center center /  44px 44px no-repeat',
                           display: 'inline-block' }}
                       />
                     </Badge>
                   }
                   multipleLine
-                  onClick={() => { window.location.href = '/u/1'}}
                   extra={<span>settled up</span>}
                 >
                   {friend.name} <Brief>8/31/18</Brief>
