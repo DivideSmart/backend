@@ -74,6 +74,24 @@ Bill.objects.create_bill(
     loans=dict([(JOHN, 12.34), (TRUMP, 22.22)])
 )
 
+Bill.objects.create_bill(
+    name='Bill\'s bill',
+    group=TEST_GROUP,
+    creator=BILL,
+    initiator=BILL,
+    amount=54.76,
+    loans=dict([(JOHN, 32.54), (TRUMP, 22.22)])
+)
+
+Bill.objects.create_bill(
+    name='Bill\'s bill',
+    group=TEST_GROUP,
+    creator=JOHN,
+    initiator=JOHN,
+    amount=34.56,
+    loans=dict([(BILL, 12.34), (TRUMP, 22.22)])
+)
+
 Payment.objects.create_payment(
     group=TEST_GROUP,
     creator=JOHN,
