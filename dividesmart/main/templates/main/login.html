@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign In</title>
+
 </head>
-<body>
-  <form method="POST" action="/api/login/">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-  </form>
+<body style="background-image: linear-gradient(to bottom right, white, #87cefa); background-repeat: no-repeat;  background-attachment: fixed;">
+    <div id="main"></div>
 </body>
+
+<script src="/static/bundle/main/login.js"></script>
 </html>
