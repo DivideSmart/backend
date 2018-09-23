@@ -117,6 +117,9 @@ class GroupCreateForm extends React.Component {
     return (
       <div>
         <div ref={this.mainRef} style={{display: this.state.showFriends ? 'none' : 'block'}}>
+
+          <WhiteSpace siz='xg' />
+
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
 
