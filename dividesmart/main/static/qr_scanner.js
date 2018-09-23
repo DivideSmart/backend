@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'
-import './style/index.css'
+import './style/index.less'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 
