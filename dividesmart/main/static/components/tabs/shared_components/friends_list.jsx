@@ -19,6 +19,12 @@ class FriendsList extends React.Component {
     }
   }
 
+  componentWillReceiveProps() {
+    this.setState({
+      friends: this.props.friends
+    });
+  }
+
   render() {
     return (
       <div>
@@ -109,7 +115,7 @@ class FriendsList extends React.Component {
             ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
           </Item> */}
           {
-            this.state.friends.friendsYouOwe.map(friend => {
+            this.state.friends.friendsSettledUp.map(friend => {
               return (
                 <Item
                   key={friend.key}

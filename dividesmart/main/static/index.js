@@ -4,6 +4,7 @@ import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
+import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
@@ -28,6 +29,7 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Tabs2 } from './components/tabs2.jsx'
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
@@ -118,6 +120,7 @@ class App extends React.Component {
                     path={'/u/:group_id/friend_list'}
                     render={ ({match, location}) => {
                         this.findFriendList(match.params.group_id);
+                        console.log(this.state.users);
                         return (<FriendList isCreateGroup={false} users={this.state.users}/>)
                       }
                     }
@@ -172,7 +175,10 @@ class App extends React.Component {
                         return (
                           <div>
                             <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
-                            <FriendsTab />
+                            <WhiteSpace size="xl"/>
+
+                            <Tabs2 group_id={match.params.gPk}/>
+                            {/* <FriendsTab /> */}
                           </div>
                         )
                       }

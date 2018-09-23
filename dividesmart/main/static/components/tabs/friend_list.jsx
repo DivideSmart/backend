@@ -77,10 +77,11 @@ class FriendList extends React.Component {
         <List renderHeader={() => 'Friends'} className="my-list">
         {
           this.props.users.map(friend => {
+            console.log(friend.id);
             if (this.props.isCreateGroup) {
               return (
                 <Item
-                  key={friend.pk}
+                  key={friend.id}
                   thumb={
                     <Badge>
                       <span
@@ -100,30 +101,30 @@ class FriendList extends React.Component {
                 </Item>
               )
 
+            } else {
+
+              return (
+                  <Link to='u/1'>
+                    <Item
+                      thumb={
+                        <Badge>
+                          <span
+                            style={{
+                              width: '48px',
+                              height: '48px',
+                              background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
+                              display: 'inline-block' }}
+                          />
+                        </Badge>
+                      }
+                      multipleLine
+                      // onClick={() => { window.location.href = '/u/1'}}
+                    >
+                      {friend.username} <Brief>8/31/18</Brief>
+                    </Item>
+                  </Link>
+              )
             }
-
-
-            return (
-                <Link to='u/1'>
-                  <Item
-                    thumb={
-                      <Badge>
-                        <span
-                          style={{
-                            width: '48px',
-                            height: '48px',
-                            background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
-                            display: 'inline-block' }}
-                        />
-                      </Badge>
-                    }
-                    multipleLine
-                    // onClick={() => { window.location.href = '/u/1'}}
-                  >
-                    {friend.username} <Brief>8/31/18</Brief>
-                  </Item>
-                </Link>
-            )
           })
         }
 
