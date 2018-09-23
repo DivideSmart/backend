@@ -13,13 +13,13 @@ class GroupInfoTab extends React.Component {
   }
 
   render() {
-    return (
+    return (  
       <div>
         <WhiteSpace />
         <WhiteSpace />
         <List>
 
-          <List.Item extra= {this.props.name} arrow="horizontal">
+          <List.Item extra= {this.props.name}>
             <Badge text={0} style={{ marginLeft: 12 }}>Group Name</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </List.Item>

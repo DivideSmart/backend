@@ -30,67 +30,57 @@ class GroupTab extends React.Component {
     super()
     this.state = {
       disabled: false,
-      groupsOweYou: [],
-      groupsYouOwe: [],
-      groupsSettledUp: []
+      groups: []
     }
-    console.log("A");
   }
 
   // Need to discuss about definition of owe, owed and settled up.
   componentWillMount() {
-
+      this.setState({
+        groups: []
+      });
       var userid = store.getState().auth.user.id;
       axios.get('/api/users/' + userid + "/groups").then(response => {
 
         response.data.groups.map(group_entry => {
           var group_id = group_entry.id;
           axios.get('/api/groups/' + group_id.toString() + "/members").then(responseA => {
-            var acc = responseA.data.members.reduce((x, y) => {
-                        if(!y.debt) y.debt = 0;
-                        return x + parseFloat(y.debt)
-                      }, 0);
+
+            var positiveDebt = responseA.data.members.reduce((x, y) => {
+                return parseFloat(y.debt) > 0 
+                          ? x + parseFloat(y.debt)
+                          : x
+                }, 0);
+
+            var negativeDebt = responseA.data.members.reduce((x, y) => {
+                return parseFloat(y.debt) < 0 
+                          ? x + parseFloat(y.debt)
+                          : x
+                }, 0);
+
+              
             // This check is not correct in some sense, need to discuss
             var newArray = [];
-            group_entry.acc = parseFloat(acc).toString();
-            if(acc > 0) {
-              newArray = copy(this.state.groupsOweYou);
-              newArray.push(group_entry);
+            group_entry.positiveDebt = parseFloat(positiveDebt).toString();
+            group_entry.negativeDebt = (-parseFloat(negativeDebt)).toString();
+            newArray = copy(this.state.groups);
+            newArray.push(group_entry);
               
-              this.setState({
-                groupsOweYou: newArray
-              })
-              
-            
-            } else if (acc < 0) {
-              newArray = copy(this.state.groupsYouOwe);
-              newArray.push(group_entry);
-
-              this.setState({
-                groupsYouOwe: newArray
-              })
-              
-            } else{
-              newArray = copy(this.state.groupsSettledUp);
-              newArray.push(group_entry);
-              this.setState({
-                groupsSettledUp: newArray
-              })
-              
-            }
+            this.setState({
+              groups: newArray
+            }) 
           })
         } );
-
-    })
+      })
   }
 
   render() {
     return (
     <div>
       <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
-      <List renderHeader={() => 'Groups owe you'} className="my-list">
+      <List renderHeader={() => 'Groups'} className="my-list">
       {
-        this.state.groupsOweYou.map(group => {
+        this.state.groups.map(group => {
           return (
             <Link key={group.id} to={"g/" + (group.id)} onClick={e => e.stopPropagation()}>
               <Item
@@ -108,8 +98,17 @@ class GroupTab extends React.Component {
                 }
                 multipleLine
                 // onClick={() => { window.location.href = '/u/1'}}
-                extra={<span style={{ color: '#00b894' }}>${ group.acc }</span>}
-              >
+                extra={
+                  <div>
+                    <div>
+                      <span style={{ color: '#dc143c', display:'inline-block', vertical_align:'middle' }}>${ group.negativeDebt }</span>
+                    </div>
+                    <div>
+                      <span style={{ color: '#00b894', display:'inline-block', vertical_align:'middle' }}>${ group.positiveDebt }</span>
+                    </div>
+                  </div>
+                }
+>
                 {group.name} <Brief>{group.lastActivityDate}</Brief>
               </Item>
             </Link>
@@ -117,138 +116,6 @@ class GroupTab extends React.Component {
         })
       }
       </List>
-
-
-      <List renderHeader={() => 'Groups you owe'} className="my-list">
-        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-          Title <Brief>subtitle</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          multipleLine
-          onClick={() => {}}
-          platform="android"
-        >
-          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-        </Item> */}
-        {
-          this.state.groupsYouOwe.map(group => {
-          return (
-            <Link key={group.id} to={"/g/"+group.id}>
-              <Item
-              key={group.id}
-              arrow="horizontal"
-              thumb={
-                <Badge>
-                  <Group
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      display: 'inline-block' }}
-                  />
-                </Badge>
-              }
-              multipleLine
-              // onClick={() => { window.location.href = '/u/1'}}
-              extra={<span style={{ color: '#e67e22' }}>${ group.acc }</span>}
-            >
-              {group.name} <Brief>{group.lastActivityDate}</Brief>
-              </Item>  
-            </Link>
-            )
-          })
-        }
-      </List>
-
-
-      <List renderHeader={() => 'Groups settled up'} className="my-list">
-        {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
-          Title <Brief>subtitle</Brief>
-        </Item>
-        <Item
-          arrow="horizontal"
-          multipleLine
-          onClick={() => {}}
-          platform="android"
-        >
-          ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
-        </Item> */}
-        {
-          this.state.groupsSettledUp.map(group => {
-          return (
-            <Link key={group.id} to={"/g/" + group.id}>
-              <Item
-                key={group.id}
-                arrow="horizontal"
-                thumb={
-                  <Badge>
-                    <Group
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        display: 'inline-block' }}
-                    />
-                  </Badge>
-                }
-                multipleLine
-                onClick={() => { window.location.href = '/u/1'}}
-                extra={<span>settled up</span>}
-              >
-                {group.name} <Brief>{group.lastActivityDate}</Brief>
-                </Item>
-            </Link>
-            )
-          })
-        }
-      </List>
-
-      {/*<List renderHeader={() => 'Customized Right Side（Empty Content / Text / Image）'} className="my-list">
-        <Item>Title</Item>
-        <Item arrow="horizontal" onClick={() => {}}>Title</Item>
-        <Item extra="extra content" arrow="horizontal" onClick={() => {}}>Title</Item>
-        <Item extra="10:30" align="top" thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png" multipleLine>
-          Title <Brief>subtitle</Brief>
-        </Item>
-      </List>
-      <List renderHeader={() => 'Align Vertical Center'} className="my-list">
-        <Item multipleLine extra="extra content">
-          Title <Brief>subtitle</Brief>
-        </Item>
-      </List>
-      <List renderHeader={() => 'Icon in the left'}>
-        <Item
-          thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-          arrow="horizontal"
-          onClick={() => {}}
-        >My wallet</Item>
-        <Item
-          thumb="https://zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png"
-          onClick={() => {}}
-          arrow="horizontal"
-        >
-          My Cost Ratio
-        </Item>
-      </List>
-       <List renderHeader={() => 'Text Wrapping'} className="my-list">
-        <Item data-seed="logId">Single line，long text will be hidden with ellipsis；</Item>
-        <Item wrap>Multiple line，long text will wrap；Long Text Long Text Long Text Long Text Long Text Long Text</Item>
-        <Item extra="extra content" multipleLine align="top" wrap>
-          Multiple line and long text will wrap. Long Text Long Text Long Text
-        </Item>
-        <Item extra="no arrow" arrow="empty" className="spe" wrap>
-          In rare cases, the text of right side will wrap in the single line with long text. long text long text long text
-        </Item>
-      </List> */}
-      {/* <List renderHeader={() => 'Other'} className="my-list">
-        <Item disabled={this.state.disabled} extra="" onClick={() => { console.log('click', this.state.disabled); this.setState({ disabled: true }); }}>Click to disable</Item>
-        <Item>
-          <select defaultValue="1">
-            <option value="1">Html select element</option>
-            <option value="2" disabled>Unable to select</option>
-            <option value="3">option 3</option>
-          </select>
-        </Item>
-      </List> */}
     </div>)
   }
 }

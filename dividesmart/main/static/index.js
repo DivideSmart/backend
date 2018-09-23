@@ -1,9 +1,10 @@
 import 'regenerator-runtime/runtime'
-import './style/index.css'
+import './style/index.less'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
+import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
@@ -27,6 +28,7 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Tabs2 } from './components/tabs2.jsx'
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
 
@@ -77,8 +79,6 @@ class App extends React.Component {
 
   updateGroupInfo(groupID) {
     axios.get('/api/groups/' + groupID).then(response => {
-      console.log("RESPONsE");
-      console.log(response);
       if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
         this.setState({
           name: response.data.name
@@ -100,7 +100,7 @@ class App extends React.Component {
   findFriendList(groupID) {
     axios.get('/api/groups/' + groupID + '/members').then(response => {
       this.setState({
-        friends: response.data.members
+        users: response.data.members
       })
     })
   }
@@ -119,7 +119,8 @@ class App extends React.Component {
                     path={'/u/:group_id/friend_list'}
                     render={ ({match, location}) => {
                         this.findFriendList(match.params.group_id);
-                        return (<FriendList isCreateGroup={false} users={this.state.friends}/>)
+                        console.log(this.state.users);
+                        return (<FriendList isCreateGroup={false} users={this.state.users}/>)
                       }
                     }
                   />
@@ -127,10 +128,11 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>
-                      <div>
+                      <div style={{ top: '6vh', position: 'relative' }}>
                         <UserTab
                           match={match}
                           location={location}
+
                         />
                         <FloatingButton />
                       </div>
@@ -150,10 +152,12 @@ class App extends React.Component {
                   <Route
                     path={'/create'}
                     render={ ({match, location}) =>
-                      <CreateForm
-                        match={match}
-                        location={location}
-                      />
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                        <CreateForm
+                          match={match}
+                          location={location}
+                        />
+                      </div>
                     }
                   />
 
@@ -173,7 +177,10 @@ class App extends React.Component {
                         return (
                           <div>
                             <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
-                            <FriendsTab />
+                            <WhiteSpace size="xl"/>
+
+                            <Tabs2 group_id={match.params.gPk}/>
+                            {/* <FriendsTab /> */}
                           </div>
                         )
                       }
@@ -185,7 +192,7 @@ class App extends React.Component {
                     render={ ({match, location}) =>
                       <div>
                         <Tabs />
-                        <FlaoatingButton />
+                        <FloatingButton />
                       </div>
                     }
                   />
