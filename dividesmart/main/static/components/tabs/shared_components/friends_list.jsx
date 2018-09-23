@@ -115,7 +115,7 @@ class FriendsList extends React.Component {
             ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
           </Item> */}
           {
-            this.state.friends.friendsSettledUp.map(friend => {
+            this.state.friends.friendsYouOwe.map(friend => {
               return (
                 <Item
                   key={friend.key}

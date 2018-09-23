@@ -48,7 +48,7 @@ class UserTabWithoutStyle extends React.Component {
 const { classes } = this.props;
 
     return (
-      <div>
+      <div style={{ top: '6vh', position: 'relative' }}>
         <WhiteSpace />
         <WhiteSpace />
         <List>
@@ -145,6 +145,34 @@ const { classes } = this.props;
           {/*<Item extra={'Debt'}>Date</Item>*/}
         </List>
         <List>
+          <Item
+            arrow="horizontal"
+            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            multipleLine
+            onClick={() => {}}
+            extra={<span className={'other-owe-amount'}>$10</span>}
+          >
+            Lunch @ PGP<Brief>8/29/18</Brief>
+          </Item>
+          <Item
+            arrow="horizontal"
+            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            multipleLine
+            onClick={() => {}}
+            extra={<span className={'owe-other-amount'}>-$5</span>}
+          >
+            Movie Night<Brief>8/30/18</Brief>
+          </Item>
+          <Item
+            arrow="horizontal"
+            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            multipleLine
+            onClick={() => {}}
+            extra={<span className={'other-owe-amount'}>$15</span>}
+          >
+            Dinner Date <Brief>8/31/18</Brief>
+          </Item>
+
           <Item
             arrow="horizontal"
             thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"

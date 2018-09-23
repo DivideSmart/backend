@@ -87,7 +87,7 @@ class TopBar extends React.Component {
 
   render() {
     return (
-      <div style={{ height: '6vh' }}>
+      <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
         <NavBar
           style={{height: '100%'}}
           icon={
