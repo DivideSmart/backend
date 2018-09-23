@@ -10,7 +10,6 @@ import { Provider, connect } from 'react-redux';
 import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
-import {LoginPage} from './components/login.jsx'
 import {CreateForm} from './components/create_form.jsx'
 import FloatingButton from './components/material/material_float_btn.jsx'
 import { FriendList } from './components/tabs/friend_list.jsx'
