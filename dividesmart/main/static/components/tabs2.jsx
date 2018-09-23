@@ -15,7 +15,8 @@ class Tabs2 extends React.Component {
     this.state = {
       selectedTab: 'blueTab',
       hidden: false,
-      members: { friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: [] }
+      members: { friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: [] },
+      users: {}
     };
   }
 
@@ -23,9 +24,10 @@ class Tabs2 extends React.Component {
     axios.get('/api/groups/' + this.props.group_id.toString() + "/members").then(responseA => {
 
       var details = { friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: [] };
-
+      var users = {};
       responseA.data.members.forEach( person => {
-        
+      
+        users[person.id] = person.username;
         if(person.debt) {
           person.name = person.username;
           person.avatarUrl = 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg';
@@ -44,8 +46,10 @@ class Tabs2 extends React.Component {
       })
 
       this.setState({
-        members: details
+        members: details,
+        users: users
       })
+      console.log(this.state.users);
 
       
     })
@@ -102,7 +106,7 @@ class Tabs2 extends React.Component {
             }}
             data-seed="logId1"
           >
-            <GroupHistoryTab group_id={this.props.group_id}/>
+            <GroupHistoryTab group_id={this.props.group_id} users={this.state.users}/>
           </TabBar.Item>
 
         </TabBar>
