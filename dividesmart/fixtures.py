@@ -98,3 +98,4 @@ Payment.objects.create_payment(
     amount=12.34,
     receiver=BILL
 )
+
