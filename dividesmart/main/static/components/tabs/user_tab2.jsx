@@ -48,7 +48,7 @@ class UserTabWithoutStyle extends React.Component {
 const { classes } = this.props;
 
     return (
-      <div style={{ top: '6vh', position: 'relative' }}>
+      <div>
         <WhiteSpace />
         <WhiteSpace />
         <List>

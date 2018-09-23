@@ -129,10 +129,11 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>
-                      <div>
+                      <div style={{ top: '6vh', position: 'relative' }}>
                         <UserTab
                           match={match}
                           location={location}
+
                         />
                         <FloatingButton />
                       </div>
@@ -152,10 +153,12 @@ class App extends React.Component {
                   <Route
                     path={'/create'}
                     render={ ({match, location}) =>
-                      <CreateForm
-                        match={match}
-                        location={location}
-                      />
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                        <CreateForm
+                          match={match}
+                          location={location}
+                        />
+                      </div>
                     }
                   />
 
