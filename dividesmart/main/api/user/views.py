@@ -12,7 +12,8 @@ from main.utils import (
 )
 import ujson as json
 import uuid
-
+from django.views.decorators.csrf import csrf_exempt
+from decimal import Decimal
 
 def user(request):
     current_user = get_user(request)
@@ -28,16 +29,16 @@ def friends(request):
         return JsonResponse({
             'friends': User.to_dicts_for_others(
                 users=current_user.friends.all(), for_user=current_user,
-                for_group=None, show_debt=True
+                show_debt=True
             ),
             'invites': {
                 'sent': User.to_dicts_for_others(
                     users=current_user.requested_friends.all(),
-                    for_user=current_user, for_group=None, show_debt=False
+                    for_user=current_user, show_debt=False
                 ),
                 'received': User.to_dicts_for_others(
                     users=current_user.received_friend_requests.all(),
-                    for_user=current_user, for_group=None, show_debt=False
+                    for_user=current_user, show_debt=False
                 ),
             }
         })
@@ -71,8 +72,7 @@ def friend(request, friend_id):
         return HttpResponseNotFound('No such friend')
     if request.method == 'GET':
         return JsonResponse(
-            friend_user.to_dict_for_others(
-                current_user, for_group=None, show_debt=True)
+            friend_user.to_dict_for_others(current_user, show_debt=True)
         )
     if request.method == 'DELETE':
         # Delete friendship / request with this user id
@@ -92,7 +92,7 @@ def groups(request):
         # get all groups for this user
         return JsonResponse({
             'groups': Group.to_dicts(current_user.joined_groups.all()),
-            'invites': Group.to_dicts(current_user.group_invites.all())
+            # 'invites': Group.to_dicts(current_user.group_invites.all())
         })
     if request.method == 'POST':
         return HttpResponse('nice POST')
@@ -126,6 +126,7 @@ def friend_entries(request, friend_id):
 
 
 @ensure_authenticated
+@csrf_exempt
 def friend_bills(request, friend_id):
     current_user = get_user(request)
     friend_user = current_user.friends.filter(id=friend_id).first()
@@ -148,7 +149,7 @@ def friend_bills(request, friend_id):
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
         creator = current_user
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 
         if not name:
@@ -167,7 +168,7 @@ def friend_bills(request, friend_id):
                 loan_user_id = uuid.UUID(loan_user_id)
             except ValueError:
                 return HttpResponseBadRequest('Invalid loan user')
-            loan_amt = float(loan_amt)
+            loan_amt = Decimal(loan_amt)
             if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
@@ -223,7 +224,7 @@ def friend_bill(request, friend_id, bill_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 
         if not name:
@@ -236,13 +237,13 @@ def friend_bill(request, friend_id, bill_id):
             return HttpResponseBadRequest('Invalid number of loans')
 
         actual_loans = {}
-        total_loan_amt = 0
+        total_loan_amt = Decimal(0)
         for loan_user_id, loan_amt in loans.items():
             try:
                 loan_user_id = uuid.UUID(loan_user_id)
             except ValueError:
                 return HttpResponseBadRequest('Invalid loan user')
-            loan_amt = float(loan_amt)
+            loan_amt = Decimal(loan_amt)
             if loan_user_id == initiator.id:
                 return HttpResponseBadRequest(
                     'Initiator cannot receive own loan')
@@ -269,13 +270,15 @@ def friend_bill(request, friend_id, bill_id):
 
 
 @ensure_authenticated
+@csrf_exempt
 def friend_payments(request, friend_id):
     current_user = get_user(request)
     friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
-        amount = float(request.POST.get('amount', -1))
+        req_json = json.loads(request.body)
+        amount = Decimal(req_json.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         payment = Payment.objects.create_payment(
@@ -308,7 +311,7 @@ def friend_payment(request, friend_id, payment_id):
 
     if request.method == 'PUT':
         req_json = json.loads(request.body)
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         new_payment = Payment.objects.update_payment(old_payment, amount)

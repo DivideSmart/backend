@@ -18,5 +18,5 @@ def get_client_with_credentials(email, password):
     client.post(LOGIN_URL, {
         'email_address': email,
         'password': password
-    })
+    }, content_type='application/json')
     return client

@@ -106,7 +106,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'id': self.id,
             'emailAddress': self.email_address,
             'username': self.username,
-            'dateJoined': self.date_joined,
+            # 'dateJoined': self.date_joined,
         }
         return user_json
 
@@ -115,30 +115,36 @@ class User(AbstractBaseUser, PermissionsMixin):
         user_json['balance'] = self.balance
         return user_json
 
-    def to_dict_for_others(self, for_user, for_group=None, show_debt=True):
+    def to_dict_for_others(self, for_user, show_debt=True):
         user_json = self.to_dict()
         if show_debt and for_user.id != self.id:
             debt_amount = Debt.objects.get(
-                user=for_user, other_user=self, group=for_group
+                user=for_user, other_user=self,
             ).amount
             user_json['debt'] = debt_amount
         return user_json
 
     @classmethod
-    def to_dicts_for_others(cls, users, for_user, for_group=None,
-                            show_debt=True):
-        return [u.to_dict_for_others(for_user, for_group, show_debt)
+    def to_dicts_for_others(cls, users, for_user, show_debt=True):
+        return [u.to_dict_for_others(for_user, show_debt)
                 for u in users]
 
     def has_friend_request(self, from_user_id):
         return self.received_friend_requests.filter(id=from_user_id).exists()
+
+    def has_sent_friend_reuqest(self, to_user_id):
+        return self.requested_friends.filter(id=to_user_id).exists()
+
+    def has_friend(self, user_id):
+        return self.friends.filter(id=user_id).exists()
 
     def send_friend_request(self, to_user):
         self.requested_friends.add(to_user)
         self.save()
 
     def accept_friend_request(self, from_user):
-        assert self.has_friend_request(from_user.id)
+        if not self.has_friend_request(from_user.id):
+            return
         self.received_friend_requests.remove(from_user)
         self.friends.add(from_user)
         Debt.objects.create_debt(self, from_user)
@@ -166,21 +172,14 @@ class Group(models.Model):
     creator = models.ForeignKey(
         User, related_name='groups_created', on_delete=models.CASCADE)
     users = models.ManyToManyField(User, related_name='joined_groups')
-    invited_users = models.ManyToManyField(User, related_name='group_invites')
 
     objects = GroupManager()
 
     def has_member(self, user):
         return self.users.filter(id=user.id).exists()
 
-    def has_invited_member(self, user):
-        return self.invited_users.filter(id=user.id).exists()
-
     def add_member(self, user):
-        if self.has_member(user) or not self.has_invited_member(user):
-            return
         self.users.add(user)
-        self.invited_users.remove(user)
         self.save()
         Debt.objects.create_debt_for_group(user=user, group=self)
 
@@ -200,17 +199,22 @@ class Group(models.Model):
 
 class DebtManager(models.Manager):
 
-    def create_debt(self, user, other_user, group=None):
+    def create_debt(self, user, other_user):
         if user.id == other_user.id:
             return
-        Debt.objects.create(group=group, user=user, other_user=other_user)
-        Debt.objects.create(group=group, user=other_user, other_user=user)
+        Debt.objects.create(user=user, other_user=other_user)
+        Debt.objects.create(user=other_user, other_user=user)
 
     def create_debt_for_group(self, user, group):
-        members = group.users.all()
-        for member in members:
-            self.create_debt(user, member, group)
-
+        for member in group.users.all():
+            if user.id == member.id:
+                continue
+            user.accept_friend_request(member)
+            member.accept_friend_request(user)
+            if user.has_friend(member.id):
+                continue
+            user.send_friend_request(member)
+            member.accept_friend_request(user)
 
 class Debt(models.Model):
     """
@@ -223,7 +227,6 @@ class Debt(models.Model):
     objects = DebtManager()
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='debt_source', on_delete=models.CASCADE)
     other_user = models.ForeignKey(
@@ -238,9 +241,9 @@ class Entry(PolymorphicModel):
     in a sorted order by date created
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
     group = models.ForeignKey(
         Group, null=True, related_name='entries', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
     creator = models.ForeignKey(
         User, related_name='entries_created', on_delete=models.CASCADE)
     initiator = models.ForeignKey(
@@ -304,12 +307,8 @@ class PaymentManager(PolymorphicManager):
         payee_part.save()
 
         # Update debts
-        payer_debt = Debt.objects.get(
-            group=group, user=creator, other_user=receiver
-        )
-        payee_debt = Debt.objects.get(
-            group=group, user=receiver, other_user=creator
-        )
+        payer_debt = Debt.objects.get(user=creator, other_user=receiver)
+        payee_debt = Debt.objects.get(user=receiver, other_user=creator)
         payer_debt.amount += Decimal(amount)
         payee_debt.amount -= Decimal(amount)
         payer_debt.save()
@@ -330,13 +329,13 @@ class PaymentManager(PolymorphicManager):
     def delete_payment(self, payment):
         # Update debts for payer and payee
         payer_debt = Debt.objects.get(
-            group=payment.group, user=payment.creator, other_user=payment.receiver
+            user=payment.creator, other_user=payment.receiver
         )
         payee_debt = Debt.objects.get(
-            group=payment.group, user=payment.receiver, other_user=payment.creator
+            user=payment.receiver, other_user=payment.creator
         )
-        payer_debt.amount -= payment.amount
-        payee_debt.amount += payment.amount
+        payer_debt.amount -= Decimal(payment.amount)
+        payee_debt.amount += Decimal(payment.amount)
         payer_debt.save()
         payee_debt.save()
 
@@ -369,6 +368,7 @@ class BillManager(PolymorphicManager):
 
     def create_bill(self, name, group, creator, initiator, amount, loans,
                     date_created=None):
+        assert type(amount) is Decimal
         # loans is a list of tuples [(loan_user, loan_amount), ...]
         # Assumes that this data is sane
         # (e.g. creator is in group, loaner in group)
@@ -377,7 +377,7 @@ class BillManager(PolymorphicManager):
             name=name,
             creator=creator,
             initiator=initiator,
-            amount=amount
+            amount=Decimal(amount)
         )
         if date_created:
             bill.date_created = date_created
@@ -386,25 +386,22 @@ class BillManager(PolymorphicManager):
         if not group:
             assert len(loans) == 1
 
-        loaner_gets_back = 0
+        loaner_gets_back = Decimal(0)
         # Handle loanees
         for loan_user, loan_amt in loans.items():
-            loaner_gets_back += loan_amt
+            assert type(loan_amt) is Decimal
+            loaner_gets_back += Decimal(loan_amt)
             bill_participation = EntryParticipation(
-                participant=loan_user,
-                entry=bill,
-                amount=Decimal(-loan_amt),
+                participant=loan_user, entry=bill, amount=-Decimal(loan_amt),
             )
             bill_participation.save()
 
             # Update debts
             loaner_debt = (
-                Debt.objects
-                .get(group=group, user=initiator, other_user=loan_user)
+                Debt.objects.get(user=initiator, other_user=loan_user)
             )
             receiver_debt = (
-                Debt.objects
-                .get(group=group, user=loan_user, other_user=initiator)
+                Debt.objects.get(user=loan_user, other_user=initiator)
             )
             loaner_debt.amount += Decimal(loan_amt)
             receiver_debt.amount -= Decimal(loan_amt)
@@ -415,7 +412,7 @@ class BillManager(PolymorphicManager):
             Loan.objects.create(
                 bill=bill,
                 receiver=loan_user,
-                amount=loan_amt
+                amount=Decimal(loan_amt)
             )
 
         # Handle loaner
@@ -451,18 +448,15 @@ class BillManager(PolymorphicManager):
 
             # Update debts
             loaner_debt = (
-                Debt.objects
-                .get(group=bill.group, user=bill.initiator,
-                     other_user=participation.participant)
+                Debt.objects.get(user=bill.initiator, other_user=participation.participant)
             )
             receiver_debt = (
                 Debt.objects
-                .get(group=bill.group, user=participation.participant,
-                     other_user=bill.initiator)
+                .get(user=participation.participant, other_user=bill.initiator)
             )
             # participation amount is < 0 in receiver's perspective
-            loaner_debt.amount += participation.amount
-            receiver_debt.amount -= participation.amount
+            loaner_debt.amount += Decimal(participation.amount)
+            receiver_debt.amount -= Decimal(participation.amount)
             loaner_debt.save()
             receiver_debt.save()
 
