@@ -16,6 +16,7 @@ import FloatingButton from './components/material/material_float_btn.jsx'
 import { FriendList } from './components/tabs/friend_list.jsx'
 import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import {GroupCreate} from './components/group_create.jsx'
+import {AddFriend} from './components/add_friend.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { LocaleProvider } from 'antd-mobile';
 import React from 'react'
@@ -48,6 +49,8 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken'
     axios.get('/api/user').then(response => {
       this.props.setCurrentUser(response.data)
       this.setState({
@@ -138,7 +141,6 @@ class App extends React.Component {
                         <UserTab
                           match={match}
                           location={location}
-
                         />
                         <FloatingButton />
                       </div>
@@ -160,6 +162,18 @@ class App extends React.Component {
                     render={ ({match, location}) =>
                       <div style={{ top: '6vh', position: 'relative' }}>
                         <CreateForm
+                          match={match}
+                          location={location}
+                        />
+                      </div>
+                    }
+                  />
+
+                  <Route
+                    path={'/addFriend'}
+                    render={ ({match, location}) =>
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                        <AddFriend
                           match={match}
                           location={location}
                         />

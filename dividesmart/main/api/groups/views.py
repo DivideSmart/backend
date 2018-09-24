@@ -10,12 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from main.forms import CreateGroupForm
 from main.models import (
-    Group, User, Entry, Bill,
+    Group, User, Bill,
 )
 from main.utils import (
     ensure_authenticated
 )
-from decimal import Decimal
 
 
 @ensure_authenticated
@@ -97,6 +96,7 @@ def group_entries(request, group_id):
             'entries': [e.to_dict_for_user(current_user, None, True) for e in entries]
         })
     return HttpResponse()
+<<<<<<< HEAD
 
 @ensure_authenticated
 def view_bill(request, group_id, bill_id):
@@ -248,3 +248,5 @@ def group_bill(request, group_id, bill_id):
         Bill.objects.delete_bill(old_bill)
         return HttpResponse('Bill deleted')
     return HttpResponseBadRequest('Invalid request')
+=======
+>>>>>>> d9177131c39318dfdc735838407bd6238eb55cbc

@@ -294,8 +294,7 @@ class PaymentManager(PolymorphicManager):
 
         # Create participations
         payer_part = EntryParticipation(
-            participant=creator, entry=payment,
-            amount=0  # we don't really need this value if im not wrong
+            participant=creator, entry=payment, amount=0  # we don't really need this value if im not wrong
         )
         payee_part = EntryParticipation(
             participant=receiver, entry=payment, amount=0
@@ -380,8 +379,8 @@ class BillManager(PolymorphicManager):
             bill.date_created = date_created
         bill.save()
 
-        if not group:
-            assert len(loans) == 1
+        # if not group:
+        #     assert len(loans) == 1
 
         loaner_gets_back = Decimal(0)
         # Handle loanees
@@ -445,7 +444,8 @@ class BillManager(PolymorphicManager):
 
             # Update debts
             loaner_debt = (
-                Debt.objects.get(user=bill.initiator, other_user=participation.participant)
+                Debt.objects.get(user=bill.initiator,
+                                 other_user=participation.participant)
             )
             receiver_debt = (
                 Debt.objects

@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime'
+import '../style/index.less'
 
 import {
   Badge,
@@ -9,23 +10,58 @@ import {
   Icon,
   InputItem,
   List,
+  Modal,
   Radio,
   Result,
   Tabs,
+  TextareaItem,
   WhiteSpace,
   WingBlank,
-  TextareaItem,
 } from 'antd-mobile'
 
+import AddIcon from '@material-ui/icons/Add';
+import AttachMoney from '@material-ui/icons/AttachMoney';
+import Avatar from '@material-ui/core/Avatar';
+import CommentIcon from '@material-ui/icons/Comment';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import {Link} from "react-router-dom";
 import ListItem from 'antd-mobile/lib/list/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import MButton from '@material-ui/core/Button';
+import MCheckbox from '@material-ui/core/Checkbox';
+import MList from '@material-ui/core/List';
+import MListItem from '@material-ui/core/ListItem';
+import MListItemIcon from '@material-ui/core/ListItemIcon';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import PersonIcon from '@material-ui/icons/Person';
+import PersonOutline from '@material-ui/icons/PersonOutline';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
+import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
+import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import Typography from '@material-ui/core/Typography';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { createForm } from 'rc-form';
-import '../style/index.less'
+import { withStyles } from '@material-ui/core/styles';
+import { FriendList } from './tabs/friend_list.jsx'
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem
-import MButton from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -37,41 +73,7 @@ const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${sr
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 
-import MList from '@material-ui/core/List';
-import MListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import MCheckbox from '@material-ui/core/Checkbox';
-import Avatar from '@material-ui/core/Avatar';
-import AddIcon from '@material-ui/icons/Add';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import {Link} from "react-router-dom";
-import PersonIcon from '@material-ui/icons/Person';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
-import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Select from '@material-ui/core/Select';
-import MListItemIcon from '@material-ui/core/ListItemIcon';
-import AttachMoney from '@material-ui/icons/AttachMoney';
-import PersonOutline from '@material-ui/icons/PersonOutline';
-import Typography from '@material-ui/core/Typography';
 
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -85,34 +87,31 @@ const tabs = [
   { title: 'Split Unequally', sub: '2' },
 ];
 
-
-
-const emails = ['Harry', 'Oscar'];
-
-
 class H5NumberInputExample extends React.Component {
   constructor(props) {
     super()
     this.state = {
-      type: 'money',
-      data: [],
-
-      value: 0,
-      value2: 0,
-      value3: 0,
-      value4: 0,
+      totalAmount: 0,
+      splitMode: 'equally',
+      payer: undefined,
+      splitters: [{
+        uuid: '1',
+        username: 'Bob',
+      }, {
+        uuid: '2',
+        username: 'Alice'
+      }, {
+        uuid: '3',
+        username: 'Test'
+      }],
+      showAddSplittersModal: false,
     }
 
-    this.onChange = () => {
-
-    }
-
-    this.onChange2 = (value) => {
-      console.log('checkbox');
+    this.handleAmountChange = (e) => {
       this.setState({
-        value2: value,
-      });
-    };
+        totalAmount: e.target.value,
+      })
+    }
 
     this.updateReceipt = (content) => {
       this.setState({
@@ -126,13 +125,8 @@ class H5NumberInputExample extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { getFieldProps } = this.props.form;
-    const { type } = this.state;
     return (
       <div>
-        {/*<WhiteSpace size="lg" />*/}
-
         <List className={'divide-list'} renderHeader={() => (
           <span>
             <span>Pay by</span>
@@ -161,8 +155,9 @@ class H5NumberInputExample extends React.Component {
               <ListItemSecondaryAction>
                 <Input
                   id="adornment-amount"
-                  // value={this.state.amount}
-                  // onChange={this.handleChange('amount')}
+                  type='number'
+                  value={this.state.totalAmount}
+                  onChange={this.handleAmountChange}
                   style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 />
@@ -198,7 +193,7 @@ class H5NumberInputExample extends React.Component {
                     {/*<Avatar alt="Remy Sharp" style={{width: 38, height: 38}} src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*/}
                     {/*<ListItemText primary={`Line item ${value + 1}`} />*/}
                     {/*<ListItemSecondaryAction>*/}
-        
+
                       {/*<Input*/}
                         {/*id="adornment-amount"*/}
                         {/*// value={this.state.amount}*/}
@@ -206,7 +201,7 @@ class H5NumberInputExample extends React.Component {
                         {/*style={{width: '16vw'}}*/}
                         {/*startAdornment={<InputAdornment position="start">$</InputAdornment>}*/}
                       {/*/>*/}
-        
+
                     {/*</ListItemSecondaryAction>*/}
                   {/*</MListItem>*/}
                 {/*</div>*/}
@@ -265,33 +260,36 @@ class H5NumberInputExample extends React.Component {
         </List>
         <Tabs tabs={tabs}
           initialPage={0}
-          onChange={(tab, index) => { console.log('onChange', index, tab); }}
-          onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+          onChange={(tab, index) => {
+            console.log('onChange', index, tab);
+            this.setState({
+              splitMode: tab.sub == '1' ? 'equally' : 'unequally'
+            })
+          }}
         >
           <div>
             <Paper elevation={0}>
               <MList>
-                {emails.map(email => (
-                  <MListItem button key={email} style={{marginBottom: 8}}>
+                {this.state.splitters.map(splitter => (
+                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}}  primary={email} />
+                    <ListItemText style={{float: 'right'}} primary={splitter.username} />
                     <ListItemSecondaryAction>
-                      <Input
-                        id="adornment-amount"
-                        // value={this.state.amount}
-                        // onChange={this.handleChange('amount')}
-                        style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                      />
+                      <span className={'other-owe-amount'}>
+                        { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(3) }
+                      </span>
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>
                 ))}
-                <MListItem button >
+                <MListItem
+                  onClick={() => this.setState({showAddSplittersModal: true})}
+                  button
+                >
                   <ListItemAvatar>
                     <Avatar>
                       <AddIcon />
@@ -305,16 +303,22 @@ class H5NumberInputExample extends React.Component {
           <div>
             <Paper elevation={0}>
               <MList>
-                {emails.map(email => (
-                  <MListItem button key={email} style={{marginBottom: 8}}>
+                {this.state.splitters.map(splitter => (
+                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}}  primary={email} />
+                    <ListItemText style={{float: 'right'}}  primary={splitter.username} />
                     <ListItemSecondaryAction>
-                      <span className={'other-owe-amount'}>$15</span>
+                      <Input
+                        id="adornment-amount"
+                        // value={this.state.amount}
+                        // onChange={this.handleChange('amount')}
+                        style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
+                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                      />
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>
@@ -425,6 +429,23 @@ class H5NumberInputExample extends React.Component {
           </Card>
           <WhiteSpace size="lg" />
         </WingBlank> */}
+
+
+        <Modal
+          visible={this.state.showAddSplittersModal}
+          transparent
+          maskClosable={true}
+          onClose={() => this.setState({ showAddSplittersModal: false })}
+          title="Settle up"
+          // footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
+          wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+        >
+          <div >
+            <FriendList mode='multi-select' users={this.state.friends} updateUsers = {this.updateFriends} alreadyAddedUsers={this.state.users} />
+            test
+            <WhiteSpace />
+          </div>
+        </Modal>
       </div>
     );
   }

@@ -1,58 +1,47 @@
-import 'regenerator-runtime/runtime'
-import './style/index.less'
-import 'typeface-roboto'
-import 'antd-mobile/dist/antd-mobile.css'
-
-import React, { Component } from 'react'
+import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
+const Item = List.Item
+import axios from 'axios'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Home from '@material-ui/icons/Home'
+import { Icon, NavBar } from 'antd-mobile'
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
 import store from './redux/store';
-import Home from '@material-ui/icons/Home'
-import { Icon, NavBar, Popover } from 'antd-mobile'
-
 import { LocaleProvider } from 'antd-mobile';
-import QrReader from 'react-qr-reader'
-import ReactDOM from 'react-dom'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-import { TopBar } from './components/topbar.jsx'
-import { Tabs } from './components/tabs.jsx'
+import QRCode from 'qrcode.react'
 
-class App extends Component {
-  constructor(props){
-    super(props)
+class Code extends React.Component {
+  constructor(props) {
+    super()
     this.state = {
-      delay: 80,
-      result: 'No result',
-    }
-    this.handleScan = this.handleScan.bind(this)
+      user: {},
+      userID: '',
+    };  
   }
 
-  handleScan(data) {
-    if (data) {
+  componentWillMount() {
+    axios.get('/api/user').then(response => {
       this.setState({
-        result: data,
+        user: response.data,
+        userID: response.data.id
       })
-      window.location.href = '/addfriend/' + data
-    }
-  }
-
-  handleError(err){
-    console.error(err)
+    })
   }
 
   render() {
-    return(
-      <div>
-        <QrReader
-          delay={this.state.delay}
-          onError={this.handleError}
-          onScan={this.handleScan}
-        />
-      </div>
+    return (
+      <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: '27.5%', marginTop: '5%'}}
+        value={this.state.userID} //API request --> something like api/addnewfriend?userId=xxxx
+        size={512}
+        bgColor={"#ffffff"}
+        fgColor={"#000000"}
+        level={"L"}
+      />
     )
   }
 }
-
 
 ReactDOM.render(
   <Provider store={store}>
@@ -64,7 +53,7 @@ ReactDOM.render(
             icon={
               <Link className='topbar-btn' onClick={() => {window.location.href='/';}} to='/'>
                 <Home
-                  style={{width: '28px', height: '28px',}}
+                  style={{width: '28px', height: '28px', color: 'black'}}
                 />
               </Link>
             }
@@ -81,7 +70,7 @@ ReactDOM.render(
 
 ReactDOM.render(
   <LocaleProvider locale={enUS}>
-    <App />
+    <Code />
   </LocaleProvider>,
-  document.getElementById('qr-scanner')
+  document.getElementById('qr-code')
 )

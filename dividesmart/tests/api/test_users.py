@@ -9,6 +9,7 @@ from decimal import Decimal
 class UserEntriesTest(TestCase):
 
     FRIEND_URL = '/api/user/friends/%s/'
+    BILLS_URL = '/api/bills/'
     SUB_URL = '%s%s/'
 
     @classmethod
@@ -30,12 +31,10 @@ class UserEntriesTest(TestCase):
 
         cls.JOHNS_FRIEND_URL = cls.FRIEND_URL % str(cls.JANE.id)
         cls.JOHN_ENTRIES_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'entries')
-        cls.JOHN_BILLS_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'bills')
         cls.JOHN_PAYMENTS_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'payments')
 
         cls.JANE_FRIEND_URL = cls.FRIEND_URL % str(cls.JOHN.id)
         cls.JANE_ENTRIES_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'entries')
-        cls.JANE_BILLS_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'bills')
         cls.JANE_PAYMENTS_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'payments')
 
         # Test bill
@@ -45,7 +44,7 @@ class UserEntriesTest(TestCase):
                 cls.JANE: Decimal('3.56'),
             }
         )
-        cls.JOHN_BILL_URL = cls.JOHN_BILLS_URL + str(cls.FRIEND_BILL.id) + '/'
+        cls.BILL_URL = cls.BILLS_URL + str(cls.FRIEND_BILL.id) + '/'
 
     def test_get_entries(self):
         # Get John's entry perspective
@@ -75,8 +74,9 @@ class UserEntriesTest(TestCase):
         assert res_json['debt'] == '-3.56'
 
     def test_add_bill(self):
-        response = self.JOHN_CLIENT.post(self.JOHN_BILLS_URL, {
+        response = self.JOHN_CLIENT.post(self.BILLS_URL, {
             'name': 'Hat',
+            'groupId': None,
             'initiator': str(self.JANE.id),
             'amount': '30.59',
             'loans': {
@@ -87,17 +87,16 @@ class UserEntriesTest(TestCase):
         res_json = response.json()
         del res_json['id']
         del res_json['dateCreated']
-        # import pdb; pdb.set_trace()
         assert res_json == {
             'type': 'bill',
+            'group': None,
             'name': 'Hat',
             'initiator': str(self.JANE.id),
             'creator': str(self.JOHN.id),
             'billAmount': '30.59',
             'loans': {
                 str(self.JOHN.id): '18.76',
-            },
-            'userAmount': '-18.76'
+            }
         }
 
         # Get John's entry perspective
@@ -129,7 +128,7 @@ class UserEntriesTest(TestCase):
         assert res_json['debt'] == '15.20'
 
     def test_delete_bill(self):
-        response = self.JOHN_CLIENT.delete(self.JOHN_BILL_URL)
+        response = self.JOHN_CLIENT.delete(self.BILL_URL)
         assert response.status_code == 200
 
         # Get John's entry perspective
@@ -157,8 +156,9 @@ class UserEntriesTest(TestCase):
         assert res_json['debt'] == '0.00'
 
     def test_edit_bill(self):
-        response = self.JOHN_CLIENT.put(self.JOHN_BILL_URL, {
+        response = self.JOHN_CLIENT.put(self.BILL_URL, {
             'name': 'Hat 3',
+            'groupId': None,
             'initiator': str(self.JOHN.id),
             'amount': '13.27',
             'loans': {

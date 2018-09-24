@@ -95,7 +95,7 @@ class MultiSelectFriend extends React.Component {
   // createSubmitAddFriend()
 
   render() {
-    return (  
+    return (
       <div>
           {/* { this.updateUsers() } */}
           <div style={{display: this.state.addFriendAlready ? 'block' : 'none'}}>
