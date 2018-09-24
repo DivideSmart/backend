@@ -69,10 +69,9 @@ class MultiSelectFriend extends React.Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
       axios.get('/api/user').then(responseA => {
-        var currentUser = responseA.data.id;
-        axios.get('/api/users/' + currentUser + '/friends').then(responseB => {
+        axios.get('/api/user/friends').then(responseB => {
           var friends = responseB.data.friends;
           friends = friends.map(friend => {
                                    friend.pk = friend.id;
@@ -86,13 +85,27 @@ class MultiSelectFriend extends React.Component {
 
         })
       })
+      this.findFriendList(this.props.group_id);
   }
 
+  findFriendList(groupID) {
+    axios.get('/api/groups/' + groupID + '/members').then(response => {
+
+      console.log("re");
+      this.setState({
+        users: response.data.members
+      })
+      console.log(this.state.users);
+
+    })
+  }
+
+  // createSubmitAddFriend()
 
   render() {
     return (  
       <div>
-          
+          {/* { this.updateUsers() } */}
           <div style={{display: this.state.addFriendAlready ? 'block' : 'none'}}>
             <div style={{ marginLeft: '20px', marginRight: '20px'}}>
               <FriendList mode='display' users={this.state.users} hideSearch={true} />
@@ -108,9 +121,11 @@ class MultiSelectFriend extends React.Component {
           </div>
 
           <div style={{display: this.state.addFriendAlready ? 'none' : 'block'}}>
-            <FriendList mode='multi-select' users={this.state.friends} updateUsers = {this.updateFriends}/>
+            <FriendList mode='multi-select' users={this.state.friends} updateUsers = {this.updateFriends} alreadyAddedUsers={this.state.users} />
             {/* <Button onClick={this.handleChooseFriends}> Submit </Button> */}
           </div>
+
+          {/* { this.createSubmitAddFriend } */}
       </div>
 
     )

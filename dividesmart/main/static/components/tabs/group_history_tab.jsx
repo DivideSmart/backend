@@ -7,6 +7,9 @@ import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
 import axios from 'axios'
 import store from '../../redux/store.js'
+import {
+  Link,
+} from 'react-router-dom'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -84,6 +87,23 @@ class GroupHistoryTab extends React.Component {
             + dateObj.getFullYear().toString();
   }
 
+  formatLink(entry, currentUser) {
+    if(entry.type == 'bill') {
+      console.log("HEEEE");
+      return (
+        <Link to="/u/123" style={{ color: 'black' }}>
+          {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
+        </Link>
+      )
+    } else {
+      return (                      
+        <div style={{ color: 'black' }}>
+          {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
+        </div>
+      )
+    }
+  } 
+
   render() {
     return (
       <div>
@@ -110,9 +130,7 @@ class GroupHistoryTab extends React.Component {
                       multipleLine={true}
                       extra={<span className={'other-owe-amount'}>${ entry.amount }</span>}
                     >
-                      <div style={{ color: 'black' }}>
-                        {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
-                      </div>
+                      {this.formatLink(entry, currentUser)}
                     </Item>
                     )
                   }

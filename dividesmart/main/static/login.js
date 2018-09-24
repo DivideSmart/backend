@@ -39,36 +39,36 @@ class LoginPage extends React.Component {
     alert(error);
   }
 
-  handleClick(event) {
-    var apiBaseUrl = "http://localhost:4000/api/";
+  handleClick(event, username, password) {
+    var apiBaseUrl = "http://localhost:8000/api/";
     var self = this;
     var payload={
-    "email":this.state.username,
-    "password":this.state.password
+    "email_address": this.state.username,
+    "password": this.state.password
     }
-    axios.post(apiBaseUrl+'login', payload)
+
+    console.log("payload")
+    console.log(payload);
+    axios.post(apiBaseUrl+'login/', payload)
     .then(function (response) {
-    console.log(response);
-    if(response.data.code == 200){
-    console.log("Login successfull");
-    var uploadScreen=[];
-    uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
-    self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-    }
-    else if(response.data.code == 204){
-    console.log("Username password do not match");
-    alert("username password do not match")
-    }
-    else{
-    console.log("Username does not exists");
-    alert("Username does not exist");
-    }
-    })
+      console.log(response);
+      if(response.status == 200){
+        alert("Login successful");
+        window.location.replace("http://localhost:8000/");
+      }
+      else if(response.status == 400){
+        alert("username password do not match")
+      }
+      else{
+        alert("Username does not exist");
+      }
+      })
     .catch(function (error) {
-    console.log(error);
+      console.log(error);
     });
   }
 
+  // updateUserN
   render() {
     return (
       <div>
@@ -84,7 +84,8 @@ class LoginPage extends React.Component {
            hintText="Enter your Username"
            floatingLabelText="Username"
            label="Username"
-           onChange = {(event,newValue) => this.setState({username:newValue})}
+           onChange = {(event) => { console.log(event.target.value)
+             this.setState({username: event.target.value})}}
         />
         <br></br>
         <TextField style={{ marginLeft: '45%', marginTop: 20}}
@@ -92,10 +93,10 @@ class LoginPage extends React.Component {
            hintText="Enter your Password"
            floatingLabelText="Password"
            label="Password"
-           onChange = {(event,newValue) => this.setState({password:newValue})}
+           onChange = {(event) => this.setState({ password: event.target.value })}
         />
         <br></br>
-        <Button primary={true} style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event)}>
+        <Button primary={true} style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
         {'  '}Submit
         </Button>
         <br></br>
