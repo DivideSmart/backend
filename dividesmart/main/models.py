@@ -444,7 +444,8 @@ class BillManager(PolymorphicManager):
 
             # Update debts
             loaner_debt = (
-                Debt.objects.get(user=bill.initiator, other_user=participation.participant)
+                Debt.objects.get(user=bill.initiator,
+                                 other_user=participation.participant)
             )
             receiver_debt = (
                 Debt.objects

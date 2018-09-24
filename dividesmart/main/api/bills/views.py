@@ -41,14 +41,14 @@ def bills(request):
     amount = Decimal(req_json.get('amount', -1))
     loans = req_json.get('loans', {})
 
-    group = current_user.groups.filter(id=group_id).first()
+    group = current_user.joined_groups.filter(id=group_id).first()
     if group_id and not group:
         return HttpResponseBadRequest('Invalid group')
 
-    must_be_in_set = set([str(m.id) for m in group.members]) \
-        if group else set([str(f.id) for f in current_user.friends])
+    must_be_in_set = set([str(m.id) for m in group.users.all()]) \
+        if group else set([str(f.id) for f in current_user.friends.all()])
 
-    users_involved = [initiator_id]
+    users_involved = [str(initiator_id)]
     users_involved.extend(loans.keys())
 
     for u in users_involved:
@@ -72,8 +72,8 @@ def bills(request):
         if loan_user_id == initiator.id:
             return HttpResponseBadRequest(
                 'Initiator cannot receive own loan')
-        if loan_user_id not in must_be_in_set:
-            return HttpResponseBadRequest('Invalid loan user involved')
+        # if loan_user_id not in must_be_in_set:
+        #     return HttpResponseBadRequest('Invalid loan user involved')
         loan_amt = Decimal(loan_amt)
         total_loan_amt += loan_amt
         loan_user = User.objects.get(id=loan_user_id)
@@ -83,18 +83,80 @@ def bills(request):
         return HttpResponseBadRequest(
             'Loan sums do not make sense with total amount')
 
+    # import pdb; pdb.set_trace()
     bill = Bill.objects.create_bill(
         name, group, creator, initiator, amount, actual_loans
     )
     return JsonResponse(bill.to_dict_for_user(current_user))
 
 
+@ensure_authenticated
 def bill(request, bill_id):
-    # if request.method == 'GET':
-    #     pass
+    current_user = get_user(request)
+
+    old_bill = Bill.objects.filter(id=bill_id).first()
+    if not old_bill:
+        return HttpResponseBadRequest('Invalid bill')
+
+    if not old_bill.participants.filter(id=current_user.id).exists():
+        return HttpResponseBadRequest('Not authorized to view bill')
+
     # if request.method == 'PUT':
-    #     pass
+    #     # Copied from POST bill
+    #     # Changed content-type: application/json
+    #     # Now we need to load the json object in the request
+    #     if not request.body:
+    #         return HttpResponseBadRequest('Invalid request')
+    #     req_json = json.loads(request.body)
+    #     group_member_ids = set(m.id for m in group.users.all())
+    #     try:
+    #         initiator_id = uuid.UUID(req_json.get('initiator', None))
+    #     except ValueError:
+    #         return HttpResponseBadRequest('Invalid initiator')
     #
-    # if request.method == 'DELETE':
-    #     pass
-    return HttpResponseNotFound('Invalid Request')
+    #     if not initiator_id or initiator_id not in group_member_ids:
+    #         return HttpResponseBadRequest('Invalid initiator')
+    #     initiator = User.objects.get(id=initiator_id)
+    #     name = req_json.get('name', None)
+    #     amount = Decimal(req_json.get('amount', -1))
+    #     loans = req_json.get('loans', {})
+    #
+    #     if not name:
+    #         return HttpResponseBadRequest('Invalid name')
+    #     if not amount or amount <= 0:
+    #         return HttpResponseBadRequest('Invalid amount')
+    #     if not loans:
+    #         return HttpResponseBadRequest('Invalid loans')
+    #
+    #     actual_loans = {}
+    #     total_loan_amt = 0
+    #     for loan_user_id, loan_amt in loans.items():
+    #         try:
+    #             loan_user_id = uuid.UUID(loan_user_id)
+    #         except ValueError:
+    #             return HttpResponseBadRequest('Invalid loan user id')
+    #         if loan_user_id == initiator.id:
+    #             return HttpResponseBadRequest(
+    #                 'Initiator cannot receive own loan')
+    #         if loan_user_id not in group_member_ids:
+    #             return HttpResponseBadRequest(
+    #                 'Invalid loan user not in group')
+    #         loan_amt = Decimal(loan_amt)
+    #         total_loan_amt += loan_amt
+    #         loan_user = User.objects.get(id=loan_user_id)
+    #         actual_loans[loan_user] = loan_amt
+    #
+    #     if total_loan_amt > amount:
+    #         return HttpResponseBadRequest(
+    #             'Loan sums do not make sense with total amount')
+    #
+    #     bill = Bill.objects.update_bill(
+    #         old_bill, new_name=name,
+    #         new_initiator=initiator, new_amount=amount,
+    #         new_loans=actual_loans
+    #     )
+    #     return JsonResponse(bill.to_dict_for_user(current_user))
+    if request.method == 'DELETE':
+        Bill.objects.delete_bill(old_bill)
+        return HttpResponse('Bill deleted')
+    return HttpResponseBadRequest('Invalid request')
