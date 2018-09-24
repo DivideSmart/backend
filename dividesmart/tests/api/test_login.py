@@ -22,12 +22,12 @@ class LoginTest(TestCase):
         response = self.client.post(LOGIN_URL, {
             'email_address': self.BAD_EMAIL,
             'password': self.BAD_PASSWORD
-        }, content_type='application/json')
+        })
         assert response.status_code == 400
 
     def test_login_real_acc_success(self):
         response = self.client.post(LOGIN_URL, {
             'email_address': self.TEST_EMAIL,
             'password': self.TEST_PASSWORD
-        }, content_type='application/json')
+        })
         assert response.status_code == 200
