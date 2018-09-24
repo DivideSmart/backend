@@ -7,7 +7,7 @@ from tests.api.test_utils import get_client_with_credentials
 
 class UserEntriesTest(TestCase):
 
-    FRIEND_URL = '/api/users/%s/friends/%s/'
+    FRIEND_URL = '/api/user/friends/%s/'
     SUB_URL = '%s%s/'
 
     @classmethod
@@ -27,13 +27,12 @@ class UserEntriesTest(TestCase):
         cls.JOHN.send_friend_request(cls.JANE)
         cls.JANE.accept_friend_request(cls.JOHN)
 
-        cls.JOHNS_FRIEND_URL = cls.FRIEND_URL % (str(cls.JOHN.id),
-                                                str(cls.JANE.id))
+        cls.JOHNS_FRIEND_URL = cls.FRIEND_URL % str(cls.JANE.id)
         cls.JOHN_ENTRIES_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'entries')
         cls.JOHN_BILLS_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'bills')
         cls.JOHN_PAYMENTS_URL = cls.SUB_URL % (cls.JOHNS_FRIEND_URL, 'payments')
-        cls.JANE_FRIEND_URL = cls.FRIEND_URL % (str(cls.JANE.id),
-                                                str(cls.JOHN.id))
+
+        cls.JANE_FRIEND_URL = cls.FRIEND_URL % str(cls.JOHN.id)
         cls.JANE_ENTRIES_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'entries')
         cls.JANE_BILLS_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'bills')
         cls.JANE_PAYMENTS_URL = cls.SUB_URL % (cls.JANE_FRIEND_URL, 'payments')
@@ -248,7 +247,6 @@ class UserEntriesTest(TestCase):
         res_json = response.json()
         assert response.status_code == 200
         assert res_json['debt'] == '-2.33'
-
 
         # Delete payment
         response = self.JANE_CLIENT.delete(PAYMENT_URL)
