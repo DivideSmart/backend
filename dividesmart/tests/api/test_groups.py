@@ -271,7 +271,7 @@ class GroupEntriesTest(TestCase):
     def test_add_bill(self):
         response = self.JOHN_CLIENT.post(self.BILLS_URL, {
             'name': 'Lunch',
-            'group_id': str(self.JOHNS_GROUP.id),
+            'groupId': str(self.JOHNS_GROUP.id),
             'initiator': str(self.TRUMP.id),
             'amount': '43.57',
             'loans': {
@@ -279,7 +279,6 @@ class GroupEntriesTest(TestCase):
                 str(self.JANE.id): '14.99'
             }
         }, content_type='application/json')
-        # import pdb; pdb.set_trace()
         assert response.status_code == 200
 
         # Get John's entry perspective

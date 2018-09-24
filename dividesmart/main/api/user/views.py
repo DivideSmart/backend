@@ -56,6 +56,7 @@ def get_all_friends(current_user):
 
 
 @ensure_authenticated
+@csrf_exempt
 def friends(request):
     current_user = get_user(request)
     if request.method == 'GET':
@@ -64,17 +65,12 @@ def friends(request):
         # Request friendship with this user id
         # Or accept friendship with this user id
         req_json = json.loads(request.body)
-        try:
-            friend_email = req_json.get('friend_email', None)
-            other_user = User.objects.filter(email_address=friend_email).first()
-        except ValueError:
-            return HttpResponseBadRequest('Invalid email address')
+        friend_email = req_json.get('friendEmail', None)
+        other_user = User.objects.filter(email_address=friend_email).first()
 
         if not other_user:
             return HttpResponseNotFound('No such user')
-        print(other_user)
         received_fr = current_user.has_friend_request(from_user_id=other_user.id)
-        print(received_fr)
         if received_fr:
             current_user.accept_friend_request(from_user=other_user)
             return HttpResponse('Friend request accepted')

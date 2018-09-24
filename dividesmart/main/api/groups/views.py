@@ -62,7 +62,7 @@ def group_members(request, group_id):
         # Invite a new user
         req_json = json.loads(request.body)
         try:
-            invited_user_id = uuid.UUID(req_json.get('user_id', None))
+            invited_user_id = uuid.UUID(req_json.get('userId', None))
         except ValueError:
             return HttpResponseBadRequest('Invalid user id')
 
