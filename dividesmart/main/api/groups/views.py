@@ -63,7 +63,7 @@ def group_members(request, group_id):
         req_json = json.loads(request.body)
         print("RES FORM")
         ids = req_json.get('ids')
-    
+
         for id in ids:
             try:
                 invited_user_id = uuid.UUID(id)
@@ -96,7 +96,6 @@ def group_entries(request, group_id):
             'entries': [e.to_dict_for_user(current_user, None, True) for e in entries]
         })
     return HttpResponse()
-<<<<<<< HEAD
 
 @ensure_authenticated
 def view_bill(request, group_id, bill_id):
@@ -248,5 +247,3 @@ def group_bill(request, group_id, bill_id):
         Bill.objects.delete_bill(old_bill)
         return HttpResponse('Bill deleted')
     return HttpResponseBadRequest('Invalid request')
-=======
->>>>>>> d9177131c39318dfdc735838407bd6238eb55cbc
