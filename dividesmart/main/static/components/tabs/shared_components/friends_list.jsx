@@ -28,7 +28,16 @@ class FriendsList extends React.Component {
   render() {
     return (
       <div>
-        <List renderHeader={() => 'Friends owe you'} className="my-list">
+        <List renderHeader={() => (
+          <span>
+            Friends owe you
+            <span style={{float: 'right'}}>
+              total: <span className={'other-owe-amount'}>
+                $100
+              </span>
+            </span>
+          </span>
+        )} className="my-list">
         {
           this.state.friends.friendsOweYou.map(friend => {
             return (
@@ -60,7 +69,16 @@ class FriendsList extends React.Component {
         </List>
 
 
-        <List renderHeader={() => 'Friends you owe'} className="my-list">
+        <List renderHeader={() => (
+          <span>
+            Friends you owe
+            <span style={{float: 'right'}}>
+              total: <span className={'owe-other-amount'}>
+                $100
+              </span>
+            </span>
+          </span>
+        )} className="my-list">
           {/* <Item arrow="horizontal" multipleLine onClick={() => {}}>
             Title <Brief>subtitle</Brief>
           </Item>
