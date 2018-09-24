@@ -1,12 +1,26 @@
 import 'regenerator-runtime/runtime'
 
-import { Button, Card, Checkbox, Flex, Icon, InputItem, List, Radio, Result, Tabs, WhiteSpace, WingBlank } from 'antd-mobile';
+import {
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Flex,
+  Icon,
+  InputItem,
+  List,
+  Radio,
+  Result,
+  Tabs,
+  WhiteSpace,
+  WingBlank,
+} from 'antd-mobile'
 
 import ListItem from 'antd-mobile/lib/list/ListItem';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import { createForm } from 'rc-form';
-
+import '../style/index.less'
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
 
@@ -15,6 +29,26 @@ const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${sr
 
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+
+import MList from '@material-ui/core/List';
+import MListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import MCheckbox from '@material-ui/core/Checkbox';
+import Avatar from '@material-ui/core/Avatar';
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+
+
 let moneyKeyboardWrapProps;
 if (isIPhone) {
   moneyKeyboardWrapProps = {
@@ -72,6 +106,41 @@ class H5NumberInputExample extends React.Component {
     return (
       <div>
         <WhiteSpace size="lg" />
+
+
+        <div >
+          <Paper elevation={0}>
+          <MList>
+            {[0, 1, 2].map(value => (
+              <div key={value}>
+              <MListItem key={value} dense button>
+                <Avatar alt="Remy Sharp" style={{width: 38, height: 38}} src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+                <ListItemText primary={`Line item ${value + 1}`} />
+                <ListItemSecondaryAction>
+
+                  <Input
+                    id="adornment-amount"
+                    // value={this.state.amount}
+                    // onChange={this.handleChange('amount')}
+                    style={{width: '16vw'}}
+                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  />
+
+                </ListItemSecondaryAction>
+              </MListItem>
+                </div>
+            ))}
+          </MList>
+          </Paper>
+        </div>
+
+
+
+
+
+
+
+
         <WhiteSpace size="lg" />
 
         <List>
@@ -97,17 +166,23 @@ class H5NumberInputExample extends React.Component {
           </div>
         </Tabs> */}
 
-        <List>
-          <InputItem
-            {...getFieldProps('money3')}
-            type={type}
-            defaultValue={100}
-            placeholder="start from left"
-            clear
-            moneyKeyboardAlign="left"
-            moneyKeyboardWrapProps={moneyKeyboardWrapProps}
-            extra="$"
-          >Amount</InputItem>
+        <List className={'divide-list'}>
+            {[0, 1, 2].map(value => (
+              <InputItem
+                key={value}
+                {...getFieldProps('money3')}
+                type={type}
+                defaultValue={100}
+                placeholder="start from left"
+                clear
+                moneyKeyboardAlign="left"
+                moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                extra="$"
+              >
+                <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+              </InputItem>
+            ))}
+
         </List>
 
         <WhiteSpace size="lg" />

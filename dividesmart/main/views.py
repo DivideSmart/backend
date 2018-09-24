@@ -27,8 +27,8 @@ def register(request):
 
 
 def display_login(request):
-    form = LoginForm()
-    return render(request, 'main/login.html', {'form': form})
+    # form = LoginForm()
+    return render(request, 'main/login.html')
 
 
 def display_index(request):
