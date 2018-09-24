@@ -85,10 +85,10 @@ def group_entries(request, group_id):
     if request.method == 'GET':
         # TODO: Add pagination
         entries = (
-            Entry.objects.filter(group=group).order_by('-date_created').all()
+            Bill.objects.filter(group=group).order_by('-date_created').all()
         )
         return JsonResponse({
-            'entries': [e.to_dict_for_user(current_user) for e in entries]
+            'entries': [e.to_dict_for_user(current_user, None, True) for e in entries]
         })
     return HttpResponse()
 

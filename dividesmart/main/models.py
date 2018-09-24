@@ -242,8 +242,6 @@ class Entry(PolymorphicModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    group = models.ForeignKey(
-        Group, null=True, related_name='entries', on_delete=models.CASCADE)
     creator = models.ForeignKey(
         User, related_name='entries_created', on_delete=models.CASCADE)
     initiator = models.ForeignKey(
@@ -259,7 +257,7 @@ class Entry(PolymorphicModel):
     def to_dict(self):
         raise RuntimeError('Implement me')
 
-    def to_dict_for_user(self, user):
+    def to_dict_for_user(self, user, friend=None, is_group=False):
         return self.to_dict()
 
 
@@ -281,11 +279,10 @@ class EntryParticipation(models.Model):
 class PaymentManager(PolymorphicManager):
     use_in_migrations = True
 
-    def create_payment(self, group, creator, amount, receiver,
+    def create_payment(self, creator, amount, receiver,
                        date_created=None):
         assert creator.id != receiver.id
         payment = Payment(
-            group=group,
             creator=creator,
             initiator=creator,
             amount=amount,
@@ -319,7 +316,7 @@ class PaymentManager(PolymorphicManager):
     def update_payment(self, old_payment, new_amount):
         # Lazy way to updating...
         new_payment = self.create_payment(
-            old_payment.group, creator=old_payment.creator, amount=new_amount,
+            creator=old_payment.creator, amount=new_amount,
             receiver=old_payment.receiver,
             date_created=old_payment.date_created
         )
@@ -469,10 +466,14 @@ class Bill(Entry):
 
     objects = BillManager()
 
+    group = models.ForeignKey(
+        Group, null=True, related_name='entries', on_delete=models.CASCADE)
+
     def to_dict(self):
         bill_json = {
             'type': 'bill',
             'id': self.id,
+            'group': self.group.id if self.group else None,
             'name': self.name,
             'creator': self.creator.id,
             'initiator': self.initiator.id,
@@ -487,12 +488,19 @@ class Bill(Entry):
         assert bill_json['loans']
         return bill_json
 
-    def to_dict_for_user(self, user):
+    def to_dict_for_user(self, user, friend=None, is_group=False):
         assert self.participants.filter(id=user.id).exists()
         bill_json = self.to_dict()
-        bill_json['userAmount'] = EntryParticipation.objects.get(
-            participant=user, entry=self
-        ).amount
+        if is_group:
+            bill_json['userAmount'] = EntryParticipation.objects.get(
+                participant=user, entry=self
+            ).amount
+        else:
+            loaner = friend if self.initiator.id == user.id else user
+            bill_json['userAmount'] = self.loans.get(receiver__id=loaner.id).amount
+            if user.id == loaner.id:
+                bill_json['userAmount'] *= -1
+
         return bill_json
 
 
