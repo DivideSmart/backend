@@ -99,6 +99,7 @@ class H5NumberInputExample extends React.Component {
       value3: 0,
       value4: 0,
     }
+
     this.onChange = () => {
 
     }
@@ -109,6 +110,7 @@ class H5NumberInputExample extends React.Component {
         value2: value,
       });
     };
+
     this.updateReceipt = (content) => {
       this.setState({
         data: [
@@ -148,6 +150,15 @@ class H5NumberInputExample extends React.Component {
                 <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
               </InputItem>
             ))}
+
+<InputItem
+            type={type}
+            placeholder="start from right"
+            clear
+            onChange={(v) => { console.log('onChange', v); }}
+            onBlur={(v) => { console.log('onBlur', v); }}
+            moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+          >光标在右</InputItem>
         </List>
         {/*<div >*/}
           {/*<Paper elevation={0}>*/}
@@ -223,74 +234,74 @@ class H5NumberInputExample extends React.Component {
           </span>
         )}>
         </List>
-  <Tabs tabs={tabs}
-      initialPage={1}
-      onChange={(tab, index) => { console.log('onChange', index, tab); }}
-      onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
-    >
-      <div>
-        <Paper elevation={0}>
-          <MList>
-            {emails.map(email => (
-              <MListItem button key={email}>
-                <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
-                </ListItemAvatar>
-                <ListItemText style={{float: 'right'}}  primary={email} />
-                <ListItemSecondaryAction>
-                  <Input
-                    id="adornment-amount"
-                    // value={this.state.amount}
-                    // onChange={this.handleChange('amount')}
-                    style={{width: '16vw', marginRight: '6vw', bottom: '6px'}}
-                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                  />
-                  <IconButton aria-label="Comments">
-                    <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </MListItem>
-            ))}
-            <MListItem button >
-              <ListItemAvatar>
-                <Avatar>
-                  <AddIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Add people" />
-            </MListItem>
-          </MList>
-        </Paper>
-      </div>
-      <div>
-        <Paper elevation={0}>
-          <MList>
-            {emails.map(email => (
-              <MListItem button key={email}>
-                <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
-                </ListItemAvatar>
-                <ListItemText style={{float: 'right'}}  primary={email} />
-                <ListItemSecondaryAction>
-                  <span className={'other-owe-amount'}>$15</span>
-                  <IconButton aria-label="Comments">
-                    <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </MListItem>
-            ))}
-            <MListItem button >
-              <ListItemAvatar>
-                <Avatar>
-                  <AddIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Add people" />
-            </MListItem>
-          </MList>
-        </Paper>
-      </div>
-    </Tabs>
+        <Tabs tabs={tabs}
+          initialPage={1}
+          onChange={(tab, index) => { console.log('onChange', index, tab); }}
+          onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+        >
+          <div>
+            <Paper elevation={0}>
+              <MList>
+                {emails.map(email => (
+                  <MListItem button key={email}>
+                    <ListItemAvatar>
+                      <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+                    </ListItemAvatar>
+                    <ListItemText style={{float: 'right'}}  primary={email} />
+                    <ListItemSecondaryAction>
+                      <Input
+                        id="adornment-amount"
+                        // value={this.state.amount}
+                        // onChange={this.handleChange('amount')}
+                        style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
+                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                      />
+                      <IconButton aria-label="Comments">
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </MListItem>
+                ))}
+                <MListItem button >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <AddIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Add people" />
+                </MListItem>
+              </MList>
+            </Paper>
+          </div>
+          <div>
+            <Paper elevation={0}>
+              <MList>
+                {emails.map(email => (
+                  <MListItem button key={email}>
+                    <ListItemAvatar>
+                      <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+                    </ListItemAvatar>
+                    <ListItemText style={{float: 'right'}}  primary={email} />
+                    <ListItemSecondaryAction>
+                      <span className={'other-owe-amount'}>$15</span>
+                      <IconButton aria-label="Comments">
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </MListItem>
+                ))}
+                <MListItem button >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <AddIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Add people" />
+                </MListItem>
+              </MList>
+            </Paper>
+          </div>
+        </Tabs>
 
 
         {/* <Tabs tabs={tabs}
@@ -364,7 +375,7 @@ class H5NumberInputExample extends React.Component {
         >
           <MButton
             variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
-            <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Settle Up
+            <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Save
           </MButton>
         </div>
 
