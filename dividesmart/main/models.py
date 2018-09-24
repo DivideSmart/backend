@@ -173,14 +173,10 @@ class Group(models.Model):
     def has_member(self, user):
         return self.users.filter(id=user.id).exists()
 
-    def has_invited_member(self, user):
-        return self.invited_users.filter(id=user.id).exists()
-
     def add_member(self, user):
-        if self.has_member(user) or not self.has_invited_member(user):
+        if self.has_member(user):
             return
         self.users.add(user)
-        self.invited_users.remove(user)
         self.save()
         Debt.objects.create_debt_for_group(user=user, group=self)
 

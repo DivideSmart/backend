@@ -68,8 +68,7 @@ def group_members(request, group_id):
         invited_friend = current_user.friends.filter(id=invited_user_id).first()
         if not invited_friend:
             return HttpResponseNotFound('Invalid user id')
-        group.invited_users.add(invited_friend)
-        group.save()
+        group.add_member(invited_friend)
         return HttpResponse('user invited')
 
     return HttpResponseNotFound('Invalid request')
