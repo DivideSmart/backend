@@ -29,6 +29,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Tabs2 } from './components/tabs2.jsx'
+import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
 library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle, faLandmark])
 
@@ -52,7 +53,7 @@ class App extends React.Component {
       this.setState({
         user: response.data
       })
-      axios.get('/api/users/{0}/friends'.format(this.state.user.id)).then(response => {
+      axios.get('/api/user/friends').then(response => {
         this.setState({
           friends: response.data
         })
@@ -118,9 +119,14 @@ class App extends React.Component {
                   <Route
                     path={'/u/:group_id/friend_list'}
                     render={ ({match, location}) => {
-                        this.findFriendList(match.params.group_id);
-                        console.log(this.state.users);
-                        return (<FriendList isCreateGroup={false} users={this.state.users}/>)
+                        // this.findFriendList(match.params.group_id);
+                        // console.log(this.state.users);
+                        // return (<FriendList isCreateGroup={false} users={this.state.users}/>)
+                        return (
+                          <div style={{top: '6vh', position: 'relative'}}>
+                            <MultiSelectFriend group_id={match.params.group_id} isAddGroup={true}/>
+                          </div>
+                        )
                       }
                     }
                   />
@@ -177,7 +183,7 @@ class App extends React.Component {
                     render={ ({match, location}) => {
                         this.updateGroupInfo(match.params.gPk);
                         return (
-                          <div>
+                          <div style={{ top: '6vh', position: 'relative'}}>
                             <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
                             <WhiteSpace size="xl"/>
 

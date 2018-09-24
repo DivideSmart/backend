@@ -67,28 +67,6 @@ class Tabs2 extends React.Component {
           prerenderingSiblingsNumber={0}
         >
           <TabBar.Item
-            title="Summary"
-            key="Summary"
-            icon={
-              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
-            }
-            selectedIcon={
-              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
-            }
-            selected={this.state.selectedTab === 'blueTab'}
-            // badge={1}
-            onPress={() => {
-              this.setState({
-                selectedTab: 'blueTab',
-              });
-            }}
-            data-seed="logId"
-          >
-            <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
-            <FriendsList friends={this.state.members}/>
-          </TabBar.Item>
-
-          <TabBar.Item
             icon={
               <FontAwesomeIcon icon='landmark' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }

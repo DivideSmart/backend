@@ -98,6 +98,22 @@ def group_entries(request, group_id):
         })
     return HttpResponse()
 
+@ensure_authenticated
+def view_bill(request, group_id, bill_id):
+    current_user = get_user(request)
+    group = Group.objects.filter(id=group_id).first()
+    if not group or not group.has_member(current_user):
+        return HttpResponseForbidden('Unauthorized to view this group')
+    if request.method == 'GET':
+        entries = (
+            Bill.objects.filter(group=group, id=bill_id).all()
+        )
+        return JsonResponse({
+            'entries': [e.to_dict_for_user(current_user, None, True) for e in entries]
+        })
+    return HttpResponse()
+
+
 
 # @ensure_authenticated
 # def group_bills(request, group_id):

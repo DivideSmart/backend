@@ -29,12 +29,14 @@ class FriendList extends React.Component {
     this.state = {
       disabled: false,
       added_users: [],
-      remove_ids: []
+      remove_ids: [],
+      users: []
     }
     this.added_keys = [];
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+    // this.fetch = this.fetch.bind(this);
   }
 
   
@@ -82,20 +84,20 @@ class FriendList extends React.Component {
    }
   }
 
-  shouldComponentUpdate(nextProp, nextState) {
-    // if(JSON.stringify(this.props.alreadyAddedUsers) != JSON.stringify(nextProp.alreadyAddedUsers) ) {
-    //   console.log("AHA HERE");
-    // }
-    // return true;
-    if(JSON.stringify(this.props) == JSON.stringify(nextProp) && JSON.stringify(this.state) == nextState) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  // shouldComponentUpdate(nextProp, nextState) {
+  //   // if(JSON.stringify(this.props.alreadyAddedUsers) != JSON.stringify(nextProp.alreadyAddedUsers) ) {
+  //   //   console.log("AHA HERE");
+  //   // }
+  //   // return true;
+  //   if(JSON.stringify(this.props) == JSON.stringify(nextProp) && JSON.stringify(this.state) == nextState) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   componentWillReceiveProps(nextProp) {
-    if(nextProp.alreadyAddedUsers) {
+    if(nextProp.alreadyAddedUsers && nextProp.isAddGroup) {
       var IDs = [];
       nextProp.alreadyAddedUsers.forEach(person => {
         IDs.push(person.id);
@@ -104,11 +106,28 @@ class FriendList extends React.Component {
         remove_ids: IDs
       })
     }
+    this.setState({
+      users: nextProp.users
+    })
+  }
+
+  componentDidMount() {
+    this.setState({
+      users: this.props.users
+    })
   }
 
   filterOut(users) {
     return users.filter(user => !user.id in this.state.remove_ids);
   }
+
+  // fetch(users) {
+  //   console.log("COME HERE")
+  //   console.log(users)
+  //   return (
+      
+  //   )
+  // }
 
   render() {
     return (
@@ -117,12 +136,18 @@ class FriendList extends React.Component {
           <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
         </div>
         <List renderHeader={() => 'Friends'} className="my-list">
+        {console.log(this.state.users)}
         {
-          this.props.users.map(friend => {
+          this.state.users.map(friend => {
             console.log("ABC");
+            
             console.log(friend.id);
             console.log(this.state.remove_ids);
-            if (this.props.mode == 'multi-select' && (this.state.remove_ids.length > 0) && !(this.state.remove_ids.includes(friend.id))) {
+            console.log(this.props.mode);
+
+            if (this.props.mode == 'multi-select' && !(this.state.remove_ids.includes(friend.id))) {
+              console.log(friend.id);
+              console.log(this.state.remove_ids);
               return (
                 <Item
                   ref={friend.pk}
@@ -142,10 +167,12 @@ class FriendList extends React.Component {
                   // onClick={() => { window.location.href = '/u/1'}}
                   extra={<span style={{ color: '#00b894' }}> <Checkbox name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
                 >
-                  {friend.username} <Brief>8/31/18</Brief>
+                  {friend.username} <Brief>{friend.emailAddress}</Brief>
                 </Item>
               )
             } else if(this.props.mode == 'display') {
+              console.log('display')
+              console.log(friend);
               return (
                   <Link to='u/1'>
                     <Item
@@ -163,7 +190,7 @@ class FriendList extends React.Component {
                       multipleLine
                       // onClick={() => { window.location.href = '/u/1'}}
                     >
-                      {friend.username} <Brief>8/31/18</Brief>
+                      {friend.username} <Brief>{friend.emailAddress}</Brief>
                     </Item>
                   </Link>
               )
@@ -186,7 +213,7 @@ class FriendList extends React.Component {
                   // onClick={() => { window.location.href = '/u/1'}}
                   extra={<span style={{ color: '#00b894' }}> <Radio name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
                 >
-                  {friend.username} <Brief>8/31/18</Brief>
+                  {friend.username} <Brief>{friend.emailAddress}</Brief>
                 </Item>
               )
             }

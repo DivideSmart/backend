@@ -71,12 +71,11 @@ class GroupHistoryTab extends React.Component {
     var result = "";
 
     if(entry.initiator == currentUser) {
-      result = ": You -> " + entry.receiverName;
+      result = "You -> " + entry.receiverName;
     } else {
-      result = ": " + entry.initiatorName + " -> You";
+      result = entry.initiatorName + " -> You";
     }
 
-    result = entry.type.toUpperCase() + result;
     return result;
   }
 
@@ -91,7 +90,7 @@ class GroupHistoryTab extends React.Component {
     if(entry.type == 'bill') {
       console.log("HEEEE");
       return (
-        <Link to="/u/123" style={{ color: 'black' }}>
+        <Link to={"/bill/" + entry.id} style={{ color: 'black' }}>
           {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
         </Link>
       )
