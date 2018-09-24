@@ -14,6 +14,7 @@ import {
   Tabs,
   WhiteSpace,
   WingBlank,
+  TextareaItem,
 } from 'antd-mobile'
 
 import ListItem from 'antd-mobile/lib/list/ListItem';
@@ -68,7 +69,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import MListItemIcon from '@material-ui/core/ListItemIcon';
-
+import AttachMoney from '@material-ui/icons/AttachMoney';
+import PersonOutline from '@material-ui/icons/PersonOutline';
+import Typography from '@material-ui/core/Typography';
 
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -135,31 +138,57 @@ class H5NumberInputExample extends React.Component {
             <span>Pay by</span>
           </span>
         )}>
-            {[2].map(value => (
-              <InputItem
-                key={value}
-                {...getFieldProps('money3')}
-                type={type}
-                defaultValue={100}
-                placeholder="start from left"
-                clear
-                moneyKeyboardAlign="left"
-                moneyKeyboardWrapProps={moneyKeyboardWrapProps}
-                extra="$"
-              >
-                <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
-              </InputItem>
-            ))}
-
-<InputItem
-            type={type}
-            placeholder="start from right"
-            clear
-            onChange={(v) => { console.log('onChange', v); }}
-            onBlur={(v) => { console.log('onBlur', v); }}
-            moneyKeyboardWrapProps={moneyKeyboardWrapProps}
-          >光标在右</InputItem>
+          {/*<InputItem*/}
+            {/*{...getFieldProps('money3')}*/}
+            {/*type={type}*/}
+            {/*defaultValue={100}*/}
+            {/*placeholder="start from left"*/}
+            {/*clear*/}
+            {/*moneyKeyboardWrapProps={moneyKeyboardWrapProps}*/}
+            {/*extra="$"*/}
+          {/*>*/}
+            {/*<span style={{bottom: 8}}>Amount</span>*/}
+            {/*/!*<Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*!/*/}
+          {/*</InputItem>*/}
         </List>
+        <Paper elevation={0}>
+          <MList>
+            <MListItem button style={{marginBottom: 6}}>
+              <ListItemAvatar>
+                <AttachMoney />
+              </ListItemAvatar>
+              <ListItemText primary="Total Amount" />
+              <ListItemSecondaryAction>
+                <Input
+                  id="adornment-amount"
+                  // value={this.state.amount}
+                  // onChange={this.handleChange('amount')}
+                  style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                />
+              </ListItemSecondaryAction>
+            </MListItem>
+
+            <MListItem button >
+              <ListItemAvatar>
+                <PersonOutline />
+              </ListItemAvatar>
+              <ListItemText primary="Pay by" />
+              <Avatar
+                alt="Remy Sharp"
+                style={{height: 28, width: 28}}
+                src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif"
+              />
+              <span
+                style={{marginRight: '8vw', marginLeft: '2vw'}}
+              >
+                <Typography variant="caption">
+                  Oscar
+                </Typography>
+              </span>
+            </MListItem>
+          </MList>
+        </Paper>
         {/*<div >*/}
           {/*<Paper elevation={0}>*/}
             {/*<MList>*/}
@@ -235,7 +264,7 @@ class H5NumberInputExample extends React.Component {
         )}>
         </List>
         <Tabs tabs={tabs}
-          initialPage={1}
+          initialPage={0}
           onChange={(tab, index) => { console.log('onChange', index, tab); }}
           onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
         >
@@ -243,7 +272,7 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {emails.map(email => (
-                  <MListItem button key={email}>
+                  <MListItem button key={email} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
@@ -277,7 +306,7 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {emails.map(email => (
-                  <MListItem button key={email}>
+                  <MListItem button key={email} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
