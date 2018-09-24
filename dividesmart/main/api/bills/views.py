@@ -29,7 +29,7 @@ def bills(request):
     req_json = json.loads(request.body)
     try:
         initiator_id = uuid.UUID(req_json.get('initiator', None))
-        req_group_id = req_json.get('group_id', None)
+        req_group_id = req_json.get('groupId', None)
         group_id = uuid.UUID(req_group_id) if req_group_id else None
     except TypeError:
         return HttpResponseBadRequest('Invalid request')
@@ -53,8 +53,6 @@ def bills(request):
     users_involved = [str(initiator_id)]
     users_involved.extend(loans.keys())
 
-    # import pdb; pdb.set_trace()
-
     for u in users_involved:
         if u not in must_be_in_set:
             return HttpResponseBadRequest('Invalid user involved in bill')
@@ -76,8 +74,6 @@ def bills(request):
         if loan_user_id == initiator.id:
             return HttpResponseBadRequest(
                 'Initiator cannot receive own loan')
-        # if loan_user_id not in must_be_in_set:
-        #     return HttpResponseBadRequest('Invalid loan user involved')
         loan_amt = Decimal(loan_amt)
         total_loan_amt += loan_amt
         loan_user = User.objects.get(id=loan_user_id)
@@ -87,7 +83,6 @@ def bills(request):
         return HttpResponseBadRequest(
             'Loan sums do not make sense with total amount')
 
-    # import pdb; pdb.set_trace()
     bill = Bill.objects.create_bill(
         name, group, creator, initiator, amount, actual_loans
     )

@@ -379,8 +379,8 @@ class BillManager(PolymorphicManager):
             bill.date_created = date_created
         bill.save()
 
-        if not group:
-            assert len(loans) == 1
+        # if not group:
+        #     assert len(loans) == 1
 
         loaner_gets_back = Decimal(0)
         # Handle loanees
