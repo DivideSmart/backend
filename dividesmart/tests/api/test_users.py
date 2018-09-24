@@ -181,7 +181,7 @@ class UserEntriesTest(TestCase):
         # Add payment
         response = self.JANE_CLIENT.post(self.JANE_PAYMENTS_URL, {
             'amount': '3.56',
-        })
+        }, content_type='application/json')
         PAYMENT_URL = self.JOHN_PAYMENTS_URL + response.json()['id'] + '/'
         assert response.status_code == 200
 

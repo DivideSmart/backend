@@ -12,6 +12,7 @@ from main.utils import (
 )
 import ujson as json
 import uuid
+from django.views.decorators.csrf import csrf_exempt
 
 
 def user(request):
@@ -269,13 +270,15 @@ def friend_bill(request, friend_id, bill_id):
 
 
 @ensure_authenticated
+@csrf_exempt
 def friend_payments(request, friend_id):
     current_user = get_user(request)
     friend_user = current_user.friends.filter(id=friend_id).first()
     if not friend_user:
         return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
-        amount = float(request.POST.get('amount', -1))
+        req_json = json.loads(request.body)
+        amount = float(req_json.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         payment = Payment.objects.create_payment(
