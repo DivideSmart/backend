@@ -16,7 +16,7 @@ class RegistrationTest(TestCase):
         response = self.client.post(LOGIN_URL, {
             'email_address': self.TEST_EMAIL,
             'password': self.TEST_PASSWORD
-        })
+        }, content_type='application/json')
         assert response.status_code == 400
 
         # register this account
@@ -35,5 +35,5 @@ class RegistrationTest(TestCase):
         response = self.client.post(LOGIN_URL, {
             'email_address': self.TEST_EMAIL,
             'password': self.TEST_PASSWORD
-        })
+        }, content_type='application/json')
         assert response.status_code == 200

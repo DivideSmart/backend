@@ -106,7 +106,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'id': self.id,
             'emailAddress': self.email_address,
             'username': self.username,
-            'dateJoined': self.date_joined,
+            # 'dateJoined': self.date_joined,
         }
         return user_json
 

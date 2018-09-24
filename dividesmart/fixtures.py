@@ -1,7 +1,6 @@
 import os
 import django
 
-from collections import namedtuple
 
 os.environ.setdefault(
     'DJANGO_SETTINGS_MODULE', 'dividesmart.settings'

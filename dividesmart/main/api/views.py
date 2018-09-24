@@ -15,7 +15,8 @@ import ujson as json
 def handle_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')
-    form = LoginForm(request.POST)
+    req_json = json.loads(request.body)
+    form = LoginForm(req_json)
     if not form.is_valid():
         return HttpResponseNotFound('Invalid request')
     user = authenticate(
