@@ -15,6 +15,7 @@ import uuid
 from django.views.decorators.csrf import csrf_exempt
 from decimal import Decimal
 
+
 def user(request):
     current_user = get_user(request)
     if not current_user.is_authenticated:
@@ -22,32 +23,36 @@ def user(request):
     return JsonResponse(current_user.to_dict_for_self())
 
 
+def get_all_friends(current_user):
+    return JsonResponse({
+        'friends': User.to_dicts_for_others(
+            users=current_user.friends.all(), for_user=current_user,
+            show_debt=True
+        ),
+        'invites': {
+            'sent': User.to_dicts_for_others(
+                users=current_user.requested_friends.all(),
+                for_user=current_user, show_debt=False
+            ),
+            'received': User.to_dicts_for_others(
+                users=current_user.received_friend_requests.all(),
+                for_user=current_user, show_debt=False
+            ),
+        }
+    })
+
+
 @ensure_authenticated
 def friends(request):
     current_user = get_user(request)
     if request.method == 'GET':
-        return JsonResponse({
-            'friends': User.to_dicts_for_others(
-                users=current_user.friends.all(), for_user=current_user,
-                show_debt=True
-            ),
-            'invites': {
-                'sent': User.to_dicts_for_others(
-                    users=current_user.requested_friends.all(),
-                    for_user=current_user, show_debt=False
-                ),
-                'received': User.to_dicts_for_others(
-                    users=current_user.received_friend_requests.all(),
-                    for_user=current_user, show_debt=False
-                ),
-            }
-        })
-
+        return get_all_friends(current_user)
     if request.method == 'POST':
         # Request friendship with this user id
         # Or accept friendship with this user id
+        req_json = json.loads(request.body())
         try:
-            friend_id = uuid.UUID(request.POST.get('friend_id', None))
+            friend_id = uuid.UUID(req_json.get('friend_id', None))
             other_user = User.objects.filter(id=friend_id).first()
         except ValueError:
             return HttpResponseBadRequest('Invalid friend id')
@@ -92,15 +97,10 @@ def groups(request):
         # get all groups for this user
         return JsonResponse({
             'groups': Group.to_dicts(current_user.joined_groups.all()),
-            # 'invites': Group.to_dicts(current_user.group_invites.all())
         })
     if request.method == 'POST':
         return HttpResponse('nice POST')
     return HttpResponseNotFound('Invalid request')
-
-
-def group(request, user_id, group_id):
-    pass
 
 
 @ensure_authenticated
@@ -113,7 +113,6 @@ def friend_entries(request, friend_id):
         # TODO: Add pagination
         entries = (
             Entry.objects
-            .filter(group=None)
             .filter(participants__id=current_user.id)
             .filter(participants__id=friend_id)
             .order_by('-date_created', 'name')
@@ -122,7 +121,7 @@ def friend_entries(request, friend_id):
         return JsonResponse({
             'entries': [e.to_dict_for_user(current_user) for e in entries]
         })
-    return HttpResponse()
+    return HttpResponseBadRequest('Invalid Request')
 
 
 @ensure_authenticated

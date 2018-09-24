@@ -473,6 +473,7 @@ class Bill(Entry):
         bill_json = {
             'type': 'bill',
             'id': self.id,
+            'group': self.group.id,
             'name': self.name,
             'creator': self.creator.id,
             'initiator': self.initiator.id,

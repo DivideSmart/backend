@@ -70,7 +70,7 @@ Bill.objects.create_bill(
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='Bill\'s bill 2',
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
@@ -79,7 +79,7 @@ Bill.objects.create_bill(
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='Bill\'s bill 3',
     group=TEST_GROUP,
     creator=JOHN,
     initiator=JOHN,
