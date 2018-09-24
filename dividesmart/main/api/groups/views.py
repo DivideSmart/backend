@@ -62,18 +62,24 @@ def group_members(request, group_id):
     if request.method == 'POST':
         # Invite a new user
         req_json = json.loads(request.body)
-        try:
-            invited_user_id = uuid.UUID(req_json.get('user_id', None))
-        except ValueError:
-            return HttpResponseBadRequest('Invalid user id')
+        print("RES FORM")
+        ids = req_json.get('ids')
+    
+        for id in ids:
+            try:
+                invited_user_id = uuid.UUID(id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid user id')
 
-        invited_friend = current_user.friends.filter(id=invited_user_id).first()
-        if not invited_friend:
-            return HttpResponseNotFound('Invalid user id')
-        group.add_member(invited_friend)
-        return HttpResponse('user invited')
+            invited_friend = current_user.friends.filter(id=invited_user_id).first()
+            # if not invited_friend:
+            #     return HttpResponseNotFound('Invalid user id')
+            group.add_member(invited_friend)
+            print("Just ADD")
+            print(invited_friend)
+            return HttpResponse('user invited')
 
-    return HttpResponseNotFound('Invalid request')
+        return HttpResponseNotFound('Invalid request')
 
 
 @ensure_authenticated
