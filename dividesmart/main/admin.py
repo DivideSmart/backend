@@ -19,7 +19,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 class DebtModelAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'amount', 'group', 'user', 'other_user']
+    list_display = ['pk', 'amount', 'user', 'other_user']
 
 
 class GroupModelAdmin(admin.ModelAdmin):

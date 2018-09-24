@@ -29,16 +29,16 @@ def friends(request):
         return JsonResponse({
             'friends': User.to_dicts_for_others(
                 users=current_user.friends.all(), for_user=current_user,
-                for_group=None, show_debt=True
+                show_debt=True
             ),
             'invites': {
                 'sent': User.to_dicts_for_others(
                     users=current_user.requested_friends.all(),
-                    for_user=current_user, for_group=None, show_debt=False
+                    for_user=current_user, show_debt=False
                 ),
                 'received': User.to_dicts_for_others(
                     users=current_user.received_friend_requests.all(),
-                    for_user=current_user, for_group=None, show_debt=False
+                    for_user=current_user, show_debt=False
                 ),
             }
         })
@@ -72,8 +72,7 @@ def friend(request, friend_id):
         return HttpResponseNotFound('No such friend')
     if request.method == 'GET':
         return JsonResponse(
-            friend_user.to_dict_for_others(
-                current_user, for_group=None, show_debt=True)
+            friend_user.to_dict_for_others(current_user, show_debt=True)
         )
     if request.method == 'DELETE':
         # Delete friendship / request with this user id
@@ -93,7 +92,7 @@ def groups(request):
         # get all groups for this user
         return JsonResponse({
             'groups': Group.to_dicts(current_user.joined_groups.all()),
-            'invites': Group.to_dicts(current_user.group_invites.all())
+            # 'invites': Group.to_dicts(current_user.group_invites.all())
         })
     if request.method == 'POST':
         return HttpResponse('nice POST')

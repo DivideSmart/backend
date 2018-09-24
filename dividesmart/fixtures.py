@@ -46,15 +46,10 @@ JANE.accept_friend_request(JOHN)
 
 JOHN.send_friend_request(BILL)
 BILL.accept_friend_request(JOHN)
-TEST_GROUP.users.add(JOHN)
 
-TEST_GROUP.users.add(BILL)
-Debt.objects.create_debt_for_group(user=BILL, group=TEST_GROUP)
-
-TEST_GROUP.users.add(TRUMP)
-Debt.objects.create_debt_for_group(user=TRUMP, group=TEST_GROUP)
-
-TEST_GROUP.invited_users.add(JANE)
+TEST_GROUP.add_member(JOHN)
+TEST_GROUP.add_member(BILL)
+TEST_GROUP.add_member(TRUMP)
 
 Bill.objects.create_bill(
     name='Test bill',
