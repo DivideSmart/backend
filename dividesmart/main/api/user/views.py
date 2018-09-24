@@ -1,8 +1,14 @@
+import ujson as json
+import uuid
+from decimal import Decimal
+from functools import wraps
+
 from django.contrib.auth import get_user
 from django.http import (
     HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse,
     HttpResponseBadRequest
 )
+from django.views.decorators.csrf import csrf_exempt
 
 from main.models import (
     User, Group, Entry, Bill, Payment
@@ -10,10 +16,17 @@ from main.models import (
 from main.utils import (
     ensure_authenticated,
 )
-import ujson as json
-import uuid
-from django.views.decorators.csrf import csrf_exempt
-from decimal import Decimal
+
+
+def ensure_friends(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        request, friend_id = args[0], args[1]
+        current_user = get_user(request)
+        if not current_user.friends.filter(id=friend_id).exists():
+            return HttpResponseNotFound('No such friend')
+        return f(*args, **kwargs)
+    return wrapper
 
 
 def user(request):
@@ -125,12 +138,10 @@ def friend_entries(request, friend_id):
 
 
 @ensure_authenticated
+@ensure_friends
 @csrf_exempt
 def friend_bills(request, friend_id):
     current_user = get_user(request)
-    friend_user = current_user.friends.filter(id=friend_id).first()
-    if not friend_user:
-        return HttpResponseNotFound('No such friend')
     if request.method == 'POST':
         # Changed content-type: application/json
         # Now we need to load the json object in the request
@@ -189,12 +200,9 @@ def friend_bills(request, friend_id):
 
 
 @ensure_authenticated
+@ensure_friends
 def friend_bill(request, friend_id, bill_id):
     current_user = get_user(request)
-    friend_user = current_user.friends.filter(id=friend_id).first()
-    if not friend_user:
-        return HttpResponseNotFound('No such friend')
-
     old_bill = Bill.objects.filter(id=bill_id).first()
     if not old_bill or old_bill.group:
         return HttpResponseBadRequest('No such bill')
@@ -269,12 +277,11 @@ def friend_bill(request, friend_id, bill_id):
 
 
 @ensure_authenticated
+@ensure_friends
 @csrf_exempt
 def friend_payments(request, friend_id):
     current_user = get_user(request)
-    friend_user = current_user.friends.filter(id=friend_id).first()
-    if not friend_user:
-        return HttpResponseNotFound('No such friend')
+    friend_user = current_user.friends.get(id=friend_id)
     if request.method == 'POST':
         req_json = json.loads(request.body)
         amount = Decimal(req_json.get('amount', -1))
@@ -292,12 +299,9 @@ def friend_payments(request, friend_id):
 
 
 @ensure_authenticated
+@ensure_friends
 def friend_payment(request, friend_id, payment_id):
     current_user = get_user(request)
-    friend_user = current_user.friends.filter(id=friend_id).first()
-    if not friend_user:
-        return HttpResponseNotFound('No such friend')
-
     old_payment = Payment.objects.filter(id=payment_id).first()
     if not old_payment or old_payment.group:
         return HttpResponseBadRequest('No such payment')
