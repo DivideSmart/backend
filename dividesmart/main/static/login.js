@@ -40,32 +40,32 @@ class LoginPage extends React.Component {
   }
 
   handleClick(event) {
-    var apiBaseUrl = "http://localhost:4000/api/";
+    var apiBaseUrl = "http://localhost:8000/api/";
     var self = this;
-    var payload={
-    "email":this.state.username,
-    "password":this.state.password
+    var payload= {
+      "username": this.state.username,
+      "password": this.state.password
     }
     axios.post(apiBaseUrl+'login', payload)
     .then(function (response) {
-    console.log(response);
-    if(response.data.code == 200){
-    console.log("Login successfull");
-    var uploadScreen=[];
-    uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
-    self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-    }
-    else if(response.data.code == 204){
-    console.log("Username password do not match");
-    alert("username password do not match")
-    }
-    else{
-    console.log("Username does not exists");
-    alert("Username does not exist");
-    }
-    })
-    .catch(function (error) {
-    console.log(error);
+      console.log(response);
+      if(response.data.code == 200){
+      console.log("Login successfull");
+      var uploadScreen=[];
+      uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
+      self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+      }
+      else if(response.data.code == 204){
+      console.log("Username password do not match");
+      alert("username password do not match")
+      }
+      else{
+      console.log("Username does not exists");
+      alert("Username does not exist");
+      }
+      })
+      .catch(function (error) {
+      console.log(error);
     });
   }
 
@@ -80,22 +80,18 @@ class LoginPage extends React.Component {
             Name of the Appp
           </NavBar>
         </div>
-        <TextField style={{ marginLeft: '45%', marginTop: '10%'}}
-           hintText="Enter your Username"
-           floatingLabelText="Username"
-           label="Username"
+        <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
+           label="Email"
            onChange = {(event,newValue) => this.setState({username:newValue})}
         />
         <br></br>
-        <TextField style={{ marginLeft: '45%', marginTop: 20}}
+        <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
            type="password"
-           hintText="Enter your Password"
-           floatingLabelText="Password"
            label="Password"
            onChange = {(event,newValue) => this.setState({password:newValue})}
         />
         <br></br>
-        <Button primary={true} style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event)}>
+        <Button primary={true} style={{marginLeft: '48%', marginTop: '2%'}} onClick={(event) => this.handleClick(event)}>
         {'  '}Submit
         </Button>
         <br></br>
@@ -110,7 +106,7 @@ class LoginPage extends React.Component {
         </Button>
         <br></br>
         <Button
-          style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: 20 , color: 'white' }}
+          style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: '2%' , color: 'white' }}
           className='login-form-button'
           htmlType='button'
           id='facebook-login'

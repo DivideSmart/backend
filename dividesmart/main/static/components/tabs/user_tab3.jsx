@@ -1,12 +1,27 @@
 import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
-
+const Item = List.Item
+import axios from 'axios'
 import React from 'react'
-
 import QRCode from 'qrcode.react'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 
 class UserTab extends React.Component {
-  constructor() {
+  constructor(props) {
     super()
+    this.state = {
+      pendingRequests: [],
+      sentRequests: []
+    };  
+  }
+
+  componentWillMount() {
+    axios.get('/api/user/friends/').then(response => {
+      this.setState({
+        pendingRequests: response.data.invites.received,
+        sentRequests: response.data.invites.sent
+      })
+    })
   }
 
   render() {
@@ -71,14 +86,37 @@ class UserTab extends React.Component {
             />
           </List.Item> */}
         </List>
-
-        <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: 'auto', marginRight: 'auto'}}
-          value={"http://picturesofpeoplescanningqrcodes.tumblr.com/"} //API request --> something like api/addnewfriend?userId=xxxx
-          size={256}
-          bgColor={"#ffffff"}
-          fgColor={"#000000"}
-          level={"L"}
-        />
+        <List renderHeader={() => 'Pending Requests'} className="email-list">
+          { 
+            this.state.pendingRequests.map(request => {
+              return (
+                <Item
+                  key = {request.id}
+                  extra={<Checkbox 
+                    name={request.username} 
+                    onClick={this.acceptRequest}
+                    icon={<IconButton><CheckCircleIcon/></IconButton>} >
+                  </Checkbox>}
+                >
+                  {request.username}
+                </Item>
+              )
+            })
+          }
+        </List>
+        <List renderHeader={() => 'Sent requests'} className="email-list">
+          { 
+            this.state.sentRequests.map(request => {
+              return (
+                <Item
+                  key = {request.id}
+                >
+                  {request.username}
+                </Item>
+              )
+            })
+          }
+        </List>
         {/* <WhiteSpace />
         <WhiteSpace />
         <WingBlank>

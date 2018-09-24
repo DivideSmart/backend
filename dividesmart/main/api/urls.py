@@ -7,7 +7,7 @@ urlpatterns = [
     path('user/', include('main.api.user.urls')),
 
     path('groups/', include('main.api.groups.urls')),
-
+    
     path('login/', views.handle_login),
 
     path('register/', views.handle_register),

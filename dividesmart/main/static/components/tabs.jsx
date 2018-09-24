@@ -84,7 +84,7 @@ class Tabs extends React.Component {
               });
             }}
           >
-            <UserTab />
+            <UserTab/>
           </TabBar.Item>
         </TabBar>
       </div>

@@ -42,6 +42,9 @@ def display_form(request):
 def display_qr_scanner(request):
     return render(request, 'main/qr_scanner.html')
 
+def display_qr_code(request):
+    return render(request, 'main/qr_code.html')
+
 
 def display_new_user(request, pk):
     return render(request, 'main/user.html')

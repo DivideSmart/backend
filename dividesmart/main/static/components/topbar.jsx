@@ -32,7 +32,9 @@ function PopOver(props) {
         </Item>),
 
         (<Item key="help" value="button ct" icon={<PersonAdd style={{ width: 18, height: 18 }} />}>
-          <span style={{ marginRight: 5 }}>Add Friend</span>
+          <Link to='/addFriend'>
+            <span style={{ marginRight: 5, color: 'black'}}>Add Friend</span>
+          </Link>
         </Item>),
 
         <Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' style={{ width: 18, height: 18 }} />}>
@@ -73,6 +75,8 @@ class TopBar extends React.Component {
     this.onSelect = (opt) => {
       if (opt.key == 'scan')
         window.location.href = '/qr'
+      else if(opt.key == 'qr')
+        window.location.href = '/code'
       this.setState({
         visible: false,
         selected: opt.props.value,
