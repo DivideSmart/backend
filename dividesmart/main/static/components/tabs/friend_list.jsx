@@ -9,6 +9,7 @@ import {
 import React from 'react'
 import Close from '@material-ui/icons/Close';
 import Checkbox from '@material-ui/core/Checkbox';
+import Radio from '@material-ui/core/Radio';
 const Item = List.Item
 const Brief = Item.Brief
 
@@ -33,10 +34,24 @@ class FriendList extends React.Component {
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+    
+    
   }
 
-  renderButton(isCreateGroup, updateUsers) {
-    if(isCreateGroup) {
+  
+
+  // shouldComponentUpdate() {
+  //   if(this.props.isClickable == false) {
+  //     console.log("AO");
+  //     console.log(this.props.users);
+  //     this.setState({
+  //       users: this.props.users
+  //     })
+  //   }
+  // }
+
+  renderButton(mode, updateUsers) {
+    if(mode == 'multi-select' || mode == 'single-select') {
       return (
         <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
       )
@@ -77,8 +92,7 @@ class FriendList extends React.Component {
         <List renderHeader={() => 'Friends'} className="my-list">
         {
           this.props.users.map(friend => {
-            console.log(friend.id);
-            if (this.props.isCreateGroup) {
+            if (this.props.mode == 'multi-select') {
               return (
                 <Item
                   key={friend.id}
@@ -101,7 +115,7 @@ class FriendList extends React.Component {
                 </Item>
               )
 
-            } else {
+            } else if(this.props.mode == 'display') {
 
               return (
                   <Link to='u/1'>
@@ -124,12 +138,12 @@ class FriendList extends React.Component {
                     </Item>
                   </Link>
               )
-            }
+            } 
           })
         }
 
         {/* {console.log(this.props.updateUsers)} */}
-        { this.renderButton(this.props.isCreateGroup, this.props.updateUsers) }
+        { this.renderButton(this.props.mode, this.props.updateUsers) }
 
         </List>
 

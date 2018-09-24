@@ -23,7 +23,8 @@ import { createForm } from 'rc-form';
 import '../style/index.less'
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem
-
+import MButton from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -57,6 +58,16 @@ import FormControl from '@material-ui/core/FormControl';
 import {Link} from "react-router-dom";
 import PersonIcon from '@material-ui/icons/Person';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Select from '@material-ui/core/Select';
+import MListItemIcon from '@material-ui/core/ListItemIcon';
 
 
 let moneyKeyboardWrapProps;
@@ -66,34 +77,12 @@ if (isIPhone) {
   };
 }
 
-const data2 = [
-  { value: 0, label: 'divide equally', extra: 'details' },
-  { value: 1, label: 'specify amount', extra: 'details' },
-];
-
 const tabs = [
-  { title: 'Type ' },
-  { title: 'Scan Receipt' },
+  { title: 'Split Equally', sub: '1' },
+  { title: 'Split Unequally', sub: '2' },
 ];
 
-  var friendsYouOwe = [
-    {
-      key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      key: '2',
-      name: 'Charlie',
-      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
-      acc: 20.66,
-    }, {
-      key: '3',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-  ]
+
 
 const emails = ['Harry', 'Oscar'];
 
@@ -132,13 +121,34 @@ class H5NumberInputExample extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     const { getFieldProps } = this.props.form;
     const { type } = this.state;
     return (
       <div>
-        <WhiteSpace size="lg" />
+        {/*<WhiteSpace size="lg" />*/}
 
-
+        <List className={'divide-list'} renderHeader={() => (
+          <span>
+            <span>Pay by</span>
+          </span>
+        )}>
+            {[2].map(value => (
+              <InputItem
+                key={value}
+                {...getFieldProps('money3')}
+                type={type}
+                defaultValue={100}
+                placeholder="start from left"
+                clear
+                moneyKeyboardAlign="left"
+                moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                extra="$"
+              >
+                <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+              </InputItem>
+            ))}
+        </List>
         {/*<div >*/}
           {/*<Paper elevation={0}>*/}
             {/*<MList>*/}
@@ -194,20 +204,31 @@ class H5NumberInputExample extends React.Component {
           {/*</List>*/}
         {/*</div>*/}
 
-        <List>
-          <InputItem
-            {...getFieldProps('inputtitle2')}
-            placeholder="Enter names, emails or phones"
-          >
-            <div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
-          </InputItem>
-        </List>
+        {/*<List>*/}
+          {/*<InputItem*/}
+            {/*{...getFieldProps('inputtitle2')}*/}
+            {/*placeholder="Enter names, emails or phones"*/}
+          {/*>*/}
+            {/*<div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />*/}
+          {/*</InputItem>*/}
+        {/*</List>*/}
+
+        {/*<WhiteSpace size="lg" />*/}
 
         <WhiteSpace size="lg" />
 
-        <WhiteSpace size="lg" />
-        <List renderHeader={() => 'Split by'}>
+        <List renderHeader={() => (
+          <span>
+            <span>Split by</span>
+          </span>
+        )}>
         </List>
+  <Tabs tabs={tabs}
+      initialPage={1}
+      onChange={(tab, index) => { console.log('onChange', index, tab); }}
+      onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+    >
+      <div>
         <Paper elevation={0}>
           <MList>
             {emails.map(email => (
@@ -221,9 +242,12 @@ class H5NumberInputExample extends React.Component {
                     id="adornment-amount"
                     // value={this.state.amount}
                     // onChange={this.handleChange('amount')}
-                    style={{width: '16vw', marginRight: '6vw'}}
+                    style={{width: '16vw', marginRight: '6vw', bottom: '6px'}}
                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
                   />
+                  <IconButton aria-label="Comments">
+                    <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                  </IconButton>
                 </ListItemSecondaryAction>
               </MListItem>
             ))}
@@ -233,10 +257,40 @@ class H5NumberInputExample extends React.Component {
                   <AddIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary="add people" />
+              <ListItemText primary="Add people" />
             </MListItem>
           </MList>
         </Paper>
+      </div>
+      <div>
+        <Paper elevation={0}>
+          <MList>
+            {emails.map(email => (
+              <MListItem button key={email}>
+                <ListItemAvatar>
+                  <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+                </ListItemAvatar>
+                <ListItemText style={{float: 'right'}}  primary={email} />
+                <ListItemSecondaryAction>
+                  <span className={'other-owe-amount'}>$15</span>
+                  <IconButton aria-label="Comments">
+                    <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </MListItem>
+            ))}
+            <MListItem button >
+              <ListItemAvatar>
+                <Avatar>
+                  <AddIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Add people" />
+            </MListItem>
+          </MList>
+        </Paper>
+      </div>
+    </Tabs>
 
 
         {/* <Tabs tabs={tabs}
@@ -268,53 +322,51 @@ class H5NumberInputExample extends React.Component {
                 {/*<Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*/}
               {/*</InputItem>*/}
             {/*))}*/}
-
         {/*</List>*/}
 
-        <WhiteSpace size="lg" />
-        <List>
-          {data2.map(i => (
-            <RadioItem key={i.value} checked={this.state.value2 === i.value} onChange={() => this.onChange2(i.value)}>
-              {i.label}<List.Item.Brief>{i.extra}</List.Item.Brief>
-            </RadioItem>
-          ))}
-        </List>
 
 
 
-        <div>
-          <List renderHeader={() => 'CheckboxItem demo'}>
-            {this.state.data.map(i => (
-              <CheckboxItem key={i.value}
-                onChange={() => this.onChange(i.value)}
-                extra={'$' + i.price}
-              >
-                {i.label}
-              </CheckboxItem>
-            ))}
-            <CheckboxItem
-              key="disabled"
-              data-seed="logId" disabled defaultChecked multipleLine>
-              Undergraduate
-              <List.Item.Brief>Auxiliary text</List.Item.Brief>
-            </CheckboxItem>
-          </List>
+        {/*<div>*/}
+          {/*<List renderHeader={() => 'CheckboxItem demo'}>*/}
+            {/*{this.state.data.map(i => (*/}
+              {/*<CheckboxItem key={i.value}*/}
+                {/*onChange={() => this.onChange(i.value)}*/}
+                {/*extra={'$' + i.price}*/}
+              {/*>*/}
+                {/*{i.label}*/}
+              {/*</CheckboxItem>*/}
+            {/*))}*/}
+            {/*<CheckboxItem*/}
+              {/*key="disabled"*/}
+              {/*data-seed="logId" disabled defaultChecked multipleLine>*/}
+              {/*Undergraduate*/}
+              {/*<List.Item.Brief>Auxiliary text</List.Item.Brief>*/}
+            {/*</CheckboxItem>*/}
+          {/*</List>*/}
+        {/*</div>*/}
+
+
+        {/*<div className="sub-title">to be settled up</div>*/}
+        {/*<Result*/}
+          {/*img={myImg('HWuSTipkjJRfTWekgTUG')}*/}
+          {/*// title="等待处理"*/}
+          {/*message="to be settled up"*/}
+        {/*/>*/}
+
+        {/*<WhiteSpace size="lg" />*/}
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '8vh'
+          }}
+        >
+          <MButton
+            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
+            <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Settle Up
+          </MButton>
         </div>
-
-
-        <div className="sub-title">to be settled up</div>
-        <Result
-          img={myImg('HWuSTipkjJRfTWekgTUG')}
-          // title="等待处理"
-          message="to be settled up"
-        />
-
-        <WhiteSpace />
-        <WhiteSpace />
-        <WhiteSpace />
-        <WingBlank>
-          <Button type="primary">SAVE</Button>
-        </WingBlank>
 
 
         <ReceiptButton updateReceipt={this.updateReceipt}/>
