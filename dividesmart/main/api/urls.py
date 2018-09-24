@@ -8,6 +8,8 @@ urlpatterns = [
 
     path('groups/', include('main.api.groups.urls')),
     
+    path('bills/', include('main.api.bills.urls')),
+
     path('login/', views.handle_login),
 
     path('register/', views.handle_register),

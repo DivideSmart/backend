@@ -39,36 +39,36 @@ class LoginPage extends React.Component {
     alert(error);
   }
 
-  handleClick(event) {
+  handleClick(event, username, password) {
     var apiBaseUrl = "http://localhost:8000/api/";
     var self = this;
-    var payload= {
-      "username": this.state.username,
-      "password": this.state.password
+    var payload={
+    "email_address": this.state.username,
+    "password": this.state.password
     }
-    axios.post(apiBaseUrl+'login', payload)
+
+    console.log("payload")
+    console.log(payload);
+    axios.post(apiBaseUrl+'login/', payload)
     .then(function (response) {
       console.log(response);
-      if(response.data.code == 200){
-      console.log("Login successfull");
-      var uploadScreen=[];
-      uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
-      self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+      if(response.status == 200){
+        alert("Login successful");
+        window.location.replace("http://localhost:8000/");
       }
-      else if(response.data.code == 204){
-      console.log("Username password do not match");
-      alert("username password do not match")
+      else if(response.status == 400){
+        alert("username password do not match")
       }
       else{
-      console.log("Username does not exists");
-      alert("Username does not exist");
+        alert("Username does not exist");
       }
       })
-      .catch(function (error) {
+    .catch(function (error) {
       console.log(error);
     });
   }
 
+  // updateUserN
   render() {
     return (
       <div>
@@ -80,18 +80,21 @@ class LoginPage extends React.Component {
             Name of the Appp
           </NavBar>
         </div>
-        <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
-           label="Email"
-           onChange = {(event,newValue) => this.setState({username:newValue})}
+        <TextField style={{ marginLeft: '45%', marginTop: '10%'}}
+           hintText="Enter your Username"
+           floatingLabelText="Username"
+           label="Username"
+           onChange = {(event) => { console.log(event.target.value)
+             this.setState({username: event.target.value})}}
         />
         <br></br>
         <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
            type="password"
            label="Password"
-           onChange = {(event,newValue) => this.setState({password:newValue})}
+           onChange = {(event) => this.setState({ password: event.target.value })}
         />
         <br></br>
-        <Button primary={true} style={{marginLeft: '48%', marginTop: '2%'}} onClick={(event) => this.handleClick(event)}>
+        <Button primary={true} style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
         {'  '}Submit
         </Button>
         <br></br>

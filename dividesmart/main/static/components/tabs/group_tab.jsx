@@ -39,8 +39,7 @@ class GroupTab extends React.Component {
       this.setState({
         groups: []
       });
-      var userid = store.getState().auth.user.id;
-      axios.get('/api/users/' + userid + "/groups").then(response => {
+      axios.get('/api/user/groups').then(response => {
 
         response.data.groups.map(group_entry => {
           var group_id = group_entry.id;

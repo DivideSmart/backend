@@ -90,10 +90,10 @@ class Tabs2 extends React.Component {
 
           <TabBar.Item
             icon={
-              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='landmark' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             selectedIcon={
-              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='landmark' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
             }
             title="History"
             key="History"

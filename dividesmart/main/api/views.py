@@ -11,11 +11,12 @@ from main.models import User
 from django.views.decorators.csrf import csrf_exempt
 import ujson as json
 
-
+@csrf_exempt
 def handle_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')
-    form = LoginForm(request.POST)
+    req_json = json.loads(request.body)
+    form = LoginForm(req_json)
     if not form.is_valid():
         return HttpResponseNotFound('Invalid request')
     user = authenticate(

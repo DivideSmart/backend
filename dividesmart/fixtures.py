@@ -1,7 +1,6 @@
 import os
 import django
 
-from collections import namedtuple
 
 os.environ.setdefault(
     'DJANGO_SETTINGS_MODULE', 'dividesmart.settings'
@@ -46,56 +45,51 @@ JOHN.send_friend_request(JANE)
 JANE.accept_friend_request(JOHN)
 
 JOHN.send_friend_request(BILL)
-TEST_GROUP.users.add(JOHN)
+BILL.accept_friend_request(JOHN)
 
-TEST_GROUP.users.add(BILL)
-Debt.objects.create_debt_for_group(user=BILL, group=TEST_GROUP)
-
-TEST_GROUP.users.add(TRUMP)
-Debt.objects.create_debt_for_group(user=TRUMP, group=TEST_GROUP)
-
-TEST_GROUP.invited_users.add(JANE)
+TEST_GROUP.add_member(JOHN)
+TEST_GROUP.add_member(BILL)
+TEST_GROUP.add_member(TRUMP)
 
 Bill.objects.create_bill(
-    name='Test bill',
+    name='John Jane Bill',
     group=None,
     creator=JOHN,
     initiator=JOHN,
-    amount=12.34,
-    loans=dict([(JANE, 12.34)])
+    amount=Decimal('12.34'),
+    loans=dict([(JANE, Decimal('12.34'))])
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='Bill\'s Group bill',
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
-    amount=34.56,
-    loans=dict([(JOHN, 12.34), (TRUMP, 22.22)])
+    amount=Decimal('34.56'),
+    loans=dict([(JOHN, Decimal('12.34')), (TRUMP, Decimal('22.22'))])
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='Bill\'s Group bill 2',
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
-    amount=54.76,
-    loans=dict([(JOHN, 32.54), (TRUMP, 22.22)])
+    amount=Decimal('54.76'),
+    loans=dict([(JOHN, Decimal('32.54')), (TRUMP, Decimal('22.22'))])
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='JOHN GROUP BILL WITH BILL AND TRUMP',
     group=TEST_GROUP,
     creator=JOHN,
     initiator=JOHN,
-    amount=34.56,
-    loans=dict([(BILL, 12.34), (TRUMP, 22.22)])
+    amount=Decimal('34.56'),
+    loans=dict([(BILL, Decimal('12.34')), (TRUMP, Decimal('22.22'))])
 )
 
 Payment.objects.create_payment(
-    group=TEST_GROUP,
     creator=JOHN,
-    amount=12.34,
+    amount=Decimal('12.34'),
     receiver=BILL
 )
 

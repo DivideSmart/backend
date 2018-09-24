@@ -8,7 +8,7 @@ import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
-import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
 import {CreateForm} from './components/create_form.jsx'
@@ -31,8 +31,7 @@ import store from './redux/store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Tabs2 } from './components/tabs2.jsx'
 
-library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
-
+library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle, faLandmark])
 
 class App extends React.Component {
   constructor() {
@@ -113,6 +112,7 @@ class App extends React.Component {
         <Route render={({ location }) => (
           <div>
             <TopBar />
+
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
@@ -178,6 +178,8 @@ class App extends React.Component {
                     path={'/g/create'}
                     render={ ({match, location}) =>
                       <div>
+                          <WhiteSpace />
+
                         <GroupCreate users = {this.state.users} />
                       </div>
                     }
