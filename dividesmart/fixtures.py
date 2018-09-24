@@ -52,7 +52,7 @@ TEST_GROUP.add_member(BILL)
 TEST_GROUP.add_member(TRUMP)
 
 Bill.objects.create_bill(
-    name='Test bill',
+    name='John Jane Bill',
     group=None,
     creator=JOHN,
     initiator=JOHN,
@@ -61,7 +61,7 @@ Bill.objects.create_bill(
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill',
+    name='Bill\'s Group bill',
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
@@ -70,7 +70,7 @@ Bill.objects.create_bill(
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill 2',
+    name='Bill\'s Group bill 2',
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
@@ -79,7 +79,7 @@ Bill.objects.create_bill(
 )
 
 Bill.objects.create_bill(
-    name='Bill\'s bill 3',
+    name='JOHN GROUP BILL WITH BILL AND TRUMP',
     group=TEST_GROUP,
     creator=JOHN,
     initiator=JOHN,
@@ -88,7 +88,6 @@ Bill.objects.create_bill(
 )
 
 Payment.objects.create_payment(
-    group=TEST_GROUP,
     creator=JOHN,
     amount=Decimal('12.34'),
     receiver=BILL

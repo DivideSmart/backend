@@ -126,13 +126,14 @@ def friend_entries(request, friend_id):
         # TODO: Add pagination
         entries = (
             Entry.objects
+            .filter(initiator__id__in=[current_user.id, friend_id])
             .filter(participants__id=current_user.id)
             .filter(participants__id=friend_id)
             .order_by('-date_created', 'name')
             .all()
         )
         return JsonResponse({
-            'entries': [e.to_dict_for_user(current_user) for e in entries]
+            'entries': [e.to_dict_for_user(current_user, friend_user) for e in entries]
         })
     return HttpResponseBadRequest('Invalid Request')
 
@@ -288,7 +289,6 @@ def friend_payments(request, friend_id):
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         payment = Payment.objects.create_payment(
-            group=None,
             creator=current_user,
             amount=amount,
             receiver=friend_user
