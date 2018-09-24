@@ -255,41 +255,40 @@ const { classes } = this.props;
             </div>
 
             <br />
-            You pay xxx
-            <br />
+            You pay Harry
+            <br /><br />
 
-            <FormControl >
+            <FormControl style={{ marginBottom: 18 }}>
               <InputLabel htmlFor="adornment-amount">Amount</InputLabel>
               <Input
                 id="adornment-amount"
+                type='number'
                 // value={this.state.amount}
                 // onChange={this.handleChange('amount')}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
               />
             </FormControl>
 
-                <br />
+            {/* <br />
             <TextField
               id="outlined-adornment-amount"
               className={classNames(classes.margin, classes.textField)}
               variant="outlined"
+              type='number'
               label="Amount"
               // value={this.state.amount}
               // onChange={this.handleChange('amount')}
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
-            />
-            <br />
-
+            /> */}
             <br/>
-            <MButton variant="contained" color="primary" size="medium" style={{ width: '80%' }}>
-              Default
+            <br/>
+            <MButton variant="contained" color="primary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
+              Record Payment
             </MButton>
-            <br />
-            <br />
-            <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%' }}>
-              Default
+            <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
+              Pay With PayPal
             </MButton>
 
             <WhiteSpace />
