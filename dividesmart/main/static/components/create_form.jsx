@@ -153,7 +153,7 @@ class H5NumberInputExample extends React.Component {
         </List>
         <Paper elevation={0}>
           <MList>
-            <MListItem button >
+            <MListItem button style={{marginBottom: 6}}>
               <ListItemAvatar>
                 <AttachMoney />
               </ListItemAvatar>
@@ -163,7 +163,7 @@ class H5NumberInputExample extends React.Component {
                   id="adornment-amount"
                   // value={this.state.amount}
                   // onChange={this.handleChange('amount')}
-                  style={{width: '24vw', marginRight: '8vw', bottom: '6px'}}
+                  style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 />
               </ListItemSecondaryAction>
@@ -264,7 +264,7 @@ class H5NumberInputExample extends React.Component {
         )}>
         </List>
         <Tabs tabs={tabs}
-          initialPage={1}
+          initialPage={0}
           onChange={(tab, index) => { console.log('onChange', index, tab); }}
           onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
         >
@@ -272,7 +272,7 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {emails.map(email => (
-                  <MListItem button key={email}>
+                  <MListItem button key={email} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
@@ -306,7 +306,7 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {emails.map(email => (
-                  <MListItem button key={email}>
+                  <MListItem button key={email} style={{marginBottom: 8}}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
                     </ListItemAvatar>
