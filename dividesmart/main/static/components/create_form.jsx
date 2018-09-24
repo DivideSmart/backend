@@ -94,25 +94,17 @@ class H5NumberInputExample extends React.Component {
   constructor(props) {
     super()
     this.state = {
-      type: 'money',
-      data: [],
-
-      value: 0,
-      value2: 0,
-      value3: 0,
-      value4: 0,
+      totalAmount: 0,
+      splitMode: 'Equally',
+      payerUUID: undefined,
+      splittersUUIDs: [],
     }
 
-    this.onChange = () => {
-
-    }
-
-    this.onChange2 = (value) => {
-      console.log('checkbox');
+    this.handleAmountChange = (e) => {
       this.setState({
-        value2: value,
-      });
-    };
+        totalAmount: e.target.value,
+      })
+    }
 
     this.updateReceipt = (content) => {
       this.setState({
@@ -126,13 +118,8 @@ class H5NumberInputExample extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { getFieldProps } = this.props.form;
-    const { type } = this.state;
     return (
       <div>
-        {/*<WhiteSpace size="lg" />*/}
-
         <List className={'divide-list'} renderHeader={() => (
           <span>
             <span>Pay by</span>
@@ -161,8 +148,9 @@ class H5NumberInputExample extends React.Component {
               <ListItemSecondaryAction>
                 <Input
                   id="adornment-amount"
-                  // value={this.state.amount}
-                  // onChange={this.handleChange('amount')}
+                  type='number'
+                  value={this.state.totalAmount}
+                  onChange={this.handleAmountChange}
                   style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 />
@@ -198,7 +186,7 @@ class H5NumberInputExample extends React.Component {
                     {/*<Avatar alt="Remy Sharp" style={{width: 38, height: 38}} src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*/}
                     {/*<ListItemText primary={`Line item ${value + 1}`} />*/}
                     {/*<ListItemSecondaryAction>*/}
-        
+
                       {/*<Input*/}
                         {/*id="adornment-amount"*/}
                         {/*// value={this.state.amount}*/}
@@ -206,7 +194,7 @@ class H5NumberInputExample extends React.Component {
                         {/*style={{width: '16vw'}}*/}
                         {/*startAdornment={<InputAdornment position="start">$</InputAdornment>}*/}
                       {/*/>*/}
-        
+
                     {/*</ListItemSecondaryAction>*/}
                   {/*</MListItem>*/}
                 {/*</div>*/}
@@ -266,7 +254,7 @@ class H5NumberInputExample extends React.Component {
         <Tabs tabs={tabs}
           initialPage={0}
           onChange={(tab, index) => { console.log('onChange', index, tab); }}
-          onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+          // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
         >
           <div>
             <Paper elevation={0}>
@@ -278,15 +266,9 @@ class H5NumberInputExample extends React.Component {
                     </ListItemAvatar>
                     <ListItemText style={{float: 'right'}}  primary={email} />
                     <ListItemSecondaryAction>
-                      <Input
-                        id="adornment-amount"
-                        // value={this.state.amount}
-                        // onChange={this.handleChange('amount')}
-                        style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                      />
+                      <span className={'other-owe-amount'}>$15</span>
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>
@@ -312,9 +294,15 @@ class H5NumberInputExample extends React.Component {
                     </ListItemAvatar>
                     <ListItemText style={{float: 'right'}}  primary={email} />
                     <ListItemSecondaryAction>
-                      <span className={'other-owe-amount'}>$15</span>
+                      <Input
+                        id="adornment-amount"
+                        // value={this.state.amount}
+                        // onChange={this.handleChange('amount')}
+                        style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
+                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                      />
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 16, height: 16}} />
+                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>

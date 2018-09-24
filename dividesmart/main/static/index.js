@@ -135,7 +135,6 @@ class App extends React.Component {
                         <UserTab
                           match={match}
                           location={location}
-
                         />
                         <FloatingButton />
                       </div>
