@@ -3,6 +3,7 @@ from main.models import (
     User, Bill
 )
 from tests.api.test_utils import get_client_with_credentials
+from decimal import Decimal
 
 
 class UserEntriesTest(TestCase):
@@ -40,8 +41,8 @@ class UserEntriesTest(TestCase):
         # Test bill
         cls.FRIEND_BILL = Bill.objects.create_bill(
             'Shirt', group=None, creator=cls.JOHN,
-            initiator=cls.JOHN, amount=8.13, loans={
-                cls.JANE: 3.56,
+            initiator=cls.JOHN, amount=Decimal('8.13'), loans={
+                cls.JANE: Decimal('3.56'),
             }
         )
         cls.JOHN_BILL_URL = cls.JOHN_BILLS_URL + str(cls.FRIEND_BILL.id) + '/'
@@ -83,6 +84,21 @@ class UserEntriesTest(TestCase):
             }
         }, content_type='application/json')
         assert response.status_code == 200
+        res_json = response.json()
+        del res_json['id']
+        del res_json['dateCreated']
+        # import pdb; pdb.set_trace()
+        assert res_json == {
+            'type': 'bill',
+            'name': 'Hat',
+            'initiator': str(self.JANE.id),
+            'creator': str(self.JOHN.id),
+            'billAmount': '30.59',
+            'loans': {
+                str(self.JOHN.id): '18.76',
+            },
+            'userAmount': '-18.76'
+        }
 
         # Get John's entry perspective
         response = self.JOHN_CLIENT.get(self.JOHN_ENTRIES_URL)

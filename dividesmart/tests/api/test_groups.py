@@ -5,6 +5,7 @@ from main.models import (
 from tests.api.test_utils import (
     get_client_with_credentials, jsonify
 )
+from decimal import Decimal
 
 
 class GroupTest(TestCase):
@@ -228,9 +229,9 @@ class GroupEntriesTest(TestCase):
         # Test bill
         bill = Bill.objects.create_bill(
             'Breakfast', group=cls.JOHNS_GROUP, creator=cls.JOHN,
-            initiator=cls.JOHN, amount=25.59, loans={
-                cls.JANE: 7.12,
-                cls.TRUMP: 8.38,
+            initiator=cls.JOHN, amount=Decimal('25.59'), loans={
+                cls.JANE: Decimal('7.12'),
+                cls.TRUMP: Decimal('8.38'),
             }
         )
 

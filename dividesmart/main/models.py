@@ -335,8 +335,8 @@ class PaymentManager(PolymorphicManager):
         payee_debt = Debt.objects.get(
             group=payment.group, user=payment.receiver, other_user=payment.creator
         )
-        payer_debt.amount -= payment.amount
-        payee_debt.amount += payment.amount
+        payer_debt.amount -= Decimal(payment.amount)
+        payee_debt.amount += Decimal(payment.amount)
         payer_debt.save()
         payee_debt.save()
 
@@ -369,6 +369,7 @@ class BillManager(PolymorphicManager):
 
     def create_bill(self, name, group, creator, initiator, amount, loans,
                     date_created=None):
+        assert type(amount) is Decimal
         # loans is a list of tuples [(loan_user, loan_amount), ...]
         # Assumes that this data is sane
         # (e.g. creator is in group, loaner in group)
@@ -377,7 +378,7 @@ class BillManager(PolymorphicManager):
             name=name,
             creator=creator,
             initiator=initiator,
-            amount=amount
+            amount=Decimal(amount)
         )
         if date_created:
             bill.date_created = date_created
@@ -386,14 +387,15 @@ class BillManager(PolymorphicManager):
         if not group:
             assert len(loans) == 1
 
-        loaner_gets_back = 0
+        loaner_gets_back = Decimal(0)
         # Handle loanees
         for loan_user, loan_amt in loans.items():
-            loaner_gets_back += loan_amt
+            assert type(loan_amt) is Decimal
+            loaner_gets_back += Decimal(loan_amt)
             bill_participation = EntryParticipation(
                 participant=loan_user,
                 entry=bill,
-                amount=Decimal(-loan_amt),
+                amount=-Decimal(loan_amt),
             )
             bill_participation.save()
 
@@ -415,7 +417,7 @@ class BillManager(PolymorphicManager):
             Loan.objects.create(
                 bill=bill,
                 receiver=loan_user,
-                amount=loan_amt
+                amount=Decimal(loan_amt)
             )
 
         # Handle loaner
@@ -461,8 +463,8 @@ class BillManager(PolymorphicManager):
                      other_user=bill.initiator)
             )
             # participation amount is < 0 in receiver's perspective
-            loaner_debt.amount += participation.amount
-            receiver_debt.amount -= participation.amount
+            loaner_debt.amount += Decimal(participation.amount)
+            receiver_debt.amount -= Decimal(participation.amount)
             loaner_debt.save()
             receiver_debt.save()
 
