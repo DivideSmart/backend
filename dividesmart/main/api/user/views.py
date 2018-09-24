@@ -242,11 +242,11 @@ def friend_payments(request, friend_id):
 def friend_payment(request, friend_id, payment_id):
     current_user = get_user(request)
     old_payment = Payment.objects.filter(id=payment_id).first()
-    if not old_payment or old_payment.group:
+    if not old_payment:
         return HttpResponseBadRequest('No such payment')
     is_friend_payment = (
-        set(current_user.id, friend_id)
-        == set(old_payment.creator.id, old_payment.receiver.id)
+        set([current_user.id, friend_id])
+        == set([old_payment.creator.id, old_payment.receiver.id])
     )
     if not is_friend_payment:
         return HttpResponseBadRequest('No such payment')

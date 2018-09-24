@@ -29,8 +29,9 @@ def bills(request):
     req_json = json.loads(request.body)
     try:
         initiator_id = uuid.UUID(req_json.get('initiator', None))
-        group_id = uuid.UUID(req_json.get('group_id', None))
-    except ValueError:
+        req_group_id = req_json.get('group_id', None)
+        group_id = uuid.UUID(req_group_id) if req_group_id else None
+    except TypeError:
         return HttpResponseBadRequest('Invalid request')
 
     initiator = User.objects.filter(id=initiator_id).first()
@@ -46,10 +47,13 @@ def bills(request):
         return HttpResponseBadRequest('Invalid group')
 
     must_be_in_set = set([str(m.id) for m in group.users.all()]) \
-        if group else set([str(f.id) for f in current_user.friends.all()])
+        if group else set([str(f.id) for f in current_user.friends.all()]
+                          + [str(current_user.id)])
 
     users_involved = [str(initiator_id)]
     users_involved.extend(loans.keys())
+
+    # import pdb; pdb.set_trace()
 
     for u in users_involved:
         if u not in must_be_in_set:
