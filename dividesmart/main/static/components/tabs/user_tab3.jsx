@@ -1,9 +1,10 @@
-import { Badge, List, WhiteSpace, WingBlank } from 'antd-mobile';
+import { Badge, List, WhiteSpace, WingBlank, Checkbox } from 'antd-mobile';
+import IconButton from '@material-ui/core/IconButton';
 const Item = List.Item
 import axios from 'axios'
 import React from 'react'
 import QRCode from 'qrcode.react'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Done from '@material-ui/icons/Done';
 
 
 class UserTab extends React.Component {
@@ -95,7 +96,7 @@ class UserTab extends React.Component {
                   extra={<Checkbox 
                     name={request.username} 
                     onClick={this.acceptRequest}
-                    icon={<IconButton><CheckCircleIcon/></IconButton>} >
+                    icon={<IconButton><Done/></IconButton>} >
                   </Checkbox>}
                 >
                   {request.username}

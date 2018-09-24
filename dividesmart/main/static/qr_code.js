@@ -3,12 +3,14 @@ const Item = List.Item
 import axios from 'axios'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Home from '@material-ui/icons/Home'
+import { Icon, NavBar } from 'antd-mobile'
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { Provider, connect } from 'react-redux';
+import store from './redux/store';
 import { LocaleProvider } from 'antd-mobile';
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import QRCode from 'qrcode.react'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { TopBar } from './components/topbar.jsx'
-import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 class Code extends React.Component {
   constructor(props) {
@@ -30,32 +32,45 @@ class Code extends React.Component {
 
   render() {
     return (
-      <Router basename={''}>
-        <Route render={({ location }) => (
-          <div>
-            <TopBar />
-            <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: '30%', marginTop: 10}}
-              value={this.state.userID} //API request --> something like api/addnewfriend?userId=xxxx
-              size={512}
-              bgColor={"#ffffff"}
-              fgColor={"#00bfff"}
-              level={"L"}
-            />
-        {/* <WhiteSpace />
-        <WhiteSpace />
-        <WingBlank>
-          <Button>Create Debt</Button>
-        </WingBlank> */}
-          </div>
-        )} />
-      </Router>
+      <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: '27.5%', marginTop: '5%'}}
+        value={this.state.userID} //API request --> something like api/addnewfriend?userId=xxxx
+        size={512}
+        bgColor={"#ffffff"}
+        fgColor={"#000000"}
+        level={"L"}
+      />
     )
   }
 }
 
 ReactDOM.render(
+  <Provider store={store}>
+    <Router basename={''}>
+      <Route render={({ location }) => (
+        <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
+          <NavBar
+            style={{height: '100%'}}
+            icon={
+              <Link className='topbar-btn' onClick={() => {window.location.href='/';}} to='/'>
+                <Home
+                  style={{width: '28px', height: '28px', color: 'black'}}
+                />
+              </Link>
+            }
+            mode="light"
+            >
+            Name of the Appp
+          </NavBar>
+        </div>
+      )} />
+    </Router>
+  </Provider>,
+  document.getElementById('topbar')
+)
+
+ReactDOM.render(
   <LocaleProvider locale={enUS}>
     <Code />
   </LocaleProvider>,
-  document.getElementById('main')
+  document.getElementById('qr-code')
 )

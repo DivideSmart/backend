@@ -29,14 +29,14 @@ class LoginPage extends React.Component {
   constructor(props) {
       super();
       this.state = { isAuthenticated: false, username: '', password: '', token: ''};
+      redirectIfAuthenticated()
   }
 
-  logout = () => {
-      this.setState({isAuthenticated: false, token: '', username: '', password: ''})
-  };
-
-  onFailure = (error) => {
-    alert(error);
+  redirectIfAuthenticated() {
+    console.log(store.getState().auth.user)
+    if(store.getState().auth.user === undefined) {
+      window.location.replace("http://localhost:8000/");
+    }
   }
 
   handleClick(event, username, password) {
@@ -94,14 +94,13 @@ class LoginPage extends React.Component {
            onChange = {(event) => this.setState({ password: event.target.value })}
         />
         <br></br>
-        <Button primary={true} style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
+        <Button primary style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
         {'  '}Submit
         </Button>
         <br></br>
         <Button
           style={{ backgroundColor:'#DD4B39', borderColor:'#DD4B39', marginLeft: '45%', marginTop: '5%', color: 'white' }}
           className='login-form-button'
-          htmlType='button'
           id='google-login'
         >
         <i className='fa fa-google' aria-hidden='true'></i>
@@ -111,7 +110,6 @@ class LoginPage extends React.Component {
         <Button
           style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: '2%' , color: 'white' }}
           className='login-form-button'
-          htmlType='button'
           id='facebook-login'
           onClick={this.facebookLogin}
           loading={this.state.fbLoginButtonLoading}

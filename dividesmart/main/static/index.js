@@ -48,6 +48,8 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken'
     axios.get('/api/user').then(response => {
       this.props.setCurrentUser(response.data)
       this.setState({

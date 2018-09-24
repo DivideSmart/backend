@@ -53,10 +53,6 @@ class App extends Component {
   }
 }
 
-function redirectToHome() {
-  window.location.href='/';
-}
-
 
 ReactDOM.render(
   <Provider store={store}>
@@ -66,7 +62,7 @@ ReactDOM.render(
           <NavBar
             style={{height: '100%'}}
             icon={
-              <Link className='topbar-btn' onClick={redirectToHome} to='/'>
+              <Link className='topbar-btn' onClick={() => {window.location.href='/';}} to='/'>
                 <Home
                   style={{width: '28px', height: '28px',}}
                 />

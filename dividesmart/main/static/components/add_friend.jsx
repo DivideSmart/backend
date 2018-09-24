@@ -23,6 +23,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const Item = List.Item
 
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
 import {
   Link,
 } from 'react-router-dom';
@@ -162,9 +165,17 @@ class AddFriendForm extends React.Component {
 
   addFriends(event) {
     this.state.entered.forEach(email => {
-      axios.post('http://localhost:8000/api/friends', {
-
-      })  
+      var payload={
+        "friend_email": email.email,
+      }
+      axios.post('http://localhost:8000/api/user/friends/', payload)
+      .then((res, err) => {
+        if(err) {
+          console.log(err)
+        } else {
+          console.log(res)
+        }
+      })
     })
     this.setState({
       requestsSent: true,
@@ -251,6 +262,7 @@ class AddFriendForm extends React.Component {
               this.state.entered.map(email => {
                 return (
                   <Item
+                    style={{width: '100%'}}
                     key = {email.key}
                     extra={<Checkbox 
                       name={email.email} 
@@ -263,7 +275,7 @@ class AddFriendForm extends React.Component {
                 )
               })
             }
-            <Button onClick={ () => this.addFriends() }> Add all </Button>
+            <Button style={{width: '100%'}} onClick={ () => this.addFriends() }> Add all </Button>
           </List>
           <Snackbar anchorOrigin={{
               vertical: 'bottom',
