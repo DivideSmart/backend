@@ -23,8 +23,8 @@ def register(request):
 
 
 def display_login(request):
-    # form = LoginForm()
-    return render(request, 'main/login.html')
+    form = LoginForm()
+    return render(request, 'main/login.html', {'form': form})
 
 
 def display_index(request):
