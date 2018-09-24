@@ -294,8 +294,7 @@ class PaymentManager(PolymorphicManager):
 
         # Create participations
         payer_part = EntryParticipation(
-            participant=creator, entry=payment,
-            amount=0  # we don't really need this value if im not wrong
+            participant=creator, entry=payment, amount=0  # we don't really need this value if im not wrong
         )
         payee_part = EntryParticipation(
             participant=receiver, entry=payment, amount=0
