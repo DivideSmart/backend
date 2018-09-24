@@ -59,6 +59,7 @@
     "webpack": "^4.16.1"
   },
   "dependencies": {
+    "antd": "^3.9.3",
     "qrcode.react": "^0.8.0",
     "react-facebook-login": "^4.1.0",
     "react-google-login": "^3.2.1"
