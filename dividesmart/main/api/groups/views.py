@@ -15,6 +15,7 @@ from main.models import (
 from main.utils import (
     ensure_authenticated
 )
+from decimal import Decimal
 
 
 @ensure_authenticated
@@ -177,7 +178,7 @@ def group_bills(request, group_id):
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
         creator = current_user
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 
         if not name:
@@ -199,7 +200,7 @@ def group_bills(request, group_id):
                     'Initiator cannot receive own loan')
             if loan_user_id not in group_member_ids:
                 return HttpResponseBadRequest('Invalid loan user not in group')
-            loan_amt = float(loan_amt)
+            loan_amt = Decimal(loan_amt)
             total_loan_amt += loan_amt
             loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt
@@ -208,6 +209,7 @@ def group_bills(request, group_id):
             return HttpResponseBadRequest(
                 'Loan sums do not make sense with total amount')
 
+        # import pdb; pdb.set_trace()
         bill = Bill.objects.create_bill(
             name, group, creator, initiator, amount, actual_loans
         )
@@ -243,7 +245,7 @@ def group_bill(request, group_id, bill_id):
             return HttpResponseBadRequest('Invalid initiator')
         initiator = User.objects.get(id=initiator_id)
         name = req_json.get('name', None)
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         loans = req_json.get('loans', {})
 
         if not name:
@@ -266,7 +268,7 @@ def group_bill(request, group_id, bill_id):
             if loan_user_id not in group_member_ids:
                 return HttpResponseBadRequest(
                     'Invalid loan user not in group')
-            loan_amt = float(loan_amt)
+            loan_amt = Decimal(loan_amt)
             total_loan_amt += loan_amt
             loan_user = User.objects.get(id=loan_user_id)
             actual_loans[loan_user] = loan_amt
@@ -294,7 +296,7 @@ def group_payments(request, group_id):
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
     if request.method == 'POST':
-        amount = float(request.POST.get('amount', -1))
+        amount = Decimal(request.POST.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
 
@@ -328,7 +330,7 @@ def group_payment(request, group_id, payment_id):
         return HttpResponseBadRequest('No such payment')
     if request.method == 'PUT':
         req_json = json.loads(request.body)
-        amount = float(req_json.get('amount', -1))
+        amount = Decimal(req_json.get('amount', -1))
         if amount <= 0:
             return HttpResponseBadRequest('Invalid payment amount')
         new_payment = Payment.objects.update_payment(old_payment, amount)

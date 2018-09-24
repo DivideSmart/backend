@@ -60,8 +60,8 @@ Bill.objects.create_bill(
     group=None,
     creator=JOHN,
     initiator=JOHN,
-    amount=12.34,
-    loans=dict([(JANE, 12.34)])
+    amount=Decimal('12.34'),
+    loans=dict([(JANE, Decimal('12.34'))])
 )
 
 Bill.objects.create_bill(
@@ -69,8 +69,8 @@ Bill.objects.create_bill(
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
-    amount=34.56,
-    loans=dict([(JOHN, 12.34), (TRUMP, 22.22)])
+    amount=Decimal('34.56'),
+    loans=dict([(JOHN, Decimal('12.34')), (TRUMP, Decimal('22.22'))])
 )
 
 Bill.objects.create_bill(
@@ -78,8 +78,8 @@ Bill.objects.create_bill(
     group=TEST_GROUP,
     creator=BILL,
     initiator=BILL,
-    amount=54.76,
-    loans=dict([(JOHN, 32.54), (TRUMP, 22.22)])
+    amount=Decimal('54.76'),
+    loans=dict([(JOHN, Decimal('32.54')), (TRUMP, Decimal('22.22'))])
 )
 
 Bill.objects.create_bill(
@@ -87,14 +87,14 @@ Bill.objects.create_bill(
     group=TEST_GROUP,
     creator=JOHN,
     initiator=JOHN,
-    amount=34.56,
-    loans=dict([(BILL, 12.34), (TRUMP, 22.22)])
+    amount=Decimal('34.56'),
+    loans=dict([(BILL, Decimal('12.34')), (TRUMP, Decimal('22.22'))])
 )
 
 Payment.objects.create_payment(
     group=TEST_GROUP,
     creator=JOHN,
-    amount=12.34,
+    amount=Decimal('12.34'),
     receiver=BILL
 )
 
