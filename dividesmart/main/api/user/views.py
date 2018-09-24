@@ -72,9 +72,7 @@ def friends(request):
 
         if not other_user:
             return HttpResponseNotFound('No such user')
-        print(other_user)
         received_fr = current_user.has_friend_request(from_user_id=other_user.id)
-        print(received_fr)
         if received_fr:
             current_user.accept_friend_request(from_user=other_user)
             return HttpResponse('Friend request accepted')
