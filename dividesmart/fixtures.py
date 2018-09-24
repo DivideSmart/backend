@@ -45,6 +45,7 @@ JOHN.send_friend_request(JANE)
 JANE.accept_friend_request(JOHN)
 
 JOHN.send_friend_request(BILL)
+BILL.accept_friend_request(JOHN)
 TEST_GROUP.users.add(JOHN)
 
 TEST_GROUP.users.add(BILL)

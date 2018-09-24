@@ -43,11 +43,10 @@ class FlaoatingButton extends React.Component {
     };
 
     this.onClick = () => {
-        const BUTTONS = ['Take photo', 'Select photo', 'Cancel'];
+        const BUTTONS = ['Take photo of receipt', 'Select photo of receipt', 'Cancel'];
         ActionSheet.showActionSheetWithOptions({
           options: BUTTONS,
           cancelButtonIndex: BUTTONS.length - 1,
-          // destructiveButtonIndex: BUTTONS.length - 2,
           maskClosable: true,
           'data-seed': 'logId',
           wrapProps,
