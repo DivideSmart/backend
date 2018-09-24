@@ -63,16 +63,18 @@ def friends(request):
     if request.method == 'POST':
         # Request friendship with this user id
         # Or accept friendship with this user id
-        req_json = json.loads(request.body())
+        req_json = json.loads(request.body)
         try:
-            friend_id = uuid.UUID(req_json.get('friend_id', None))
-            other_user = User.objects.filter(id=friend_id).first()
+            friend_email = req_json.get('friend_email', None)
+            other_user = User.objects.filter(email_address=friend_email).first()
         except ValueError:
-            return HttpResponseBadRequest('Invalid friend id')
+            return HttpResponseBadRequest('Invalid email address')
 
         if not other_user:
             return HttpResponseNotFound('No such user')
-        received_fr = current_user.has_friend_request(from_user_id=friend_id)
+        print(other_user)
+        received_fr = current_user.has_friend_request(from_user_id=other_user.id)
+        print(received_fr)
         if received_fr:
             current_user.accept_friend_request(from_user=other_user)
             return HttpResponse('Friend request accepted')
