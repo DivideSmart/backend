@@ -45,34 +45,16 @@ def group(request, group_id):
 
 @ensure_authenticated
 def group_members(request, group_id):
-    if request.method != 'GET':
-        return HttpResponseNotFound('Invalid request')
+    current_user = get_user(request)
     # must be a member of this group to view other members
-    current_user = get_user(request)
     group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
-    return JsonResponse({
-        'members': User.to_dicts_for_others(
-            users=group.users.all(), for_user=current_user, for_group=group,
-            show_debt=True
-        )
-    })
-
-
-@ensure_authenticated
-def group_invites(request, group_id):
-    current_user = get_user(request)
-    group = Group.objects.filter(id=group_id).first()
-    if not group or not group.has_member(current_user):
-        return HttpResponseForbidden('Unauthorized to view this group')
-
     if request.method == 'GET':
-        # Get all invited users
         return JsonResponse({
-            'invites': User.to_dicts_for_others(
-                users=group.invited_users.all(), for_user=current_user,
-                for_group=group, show_debt=False
+            'members': User.to_dicts_for_others(
+                users=group.users.all(), for_user=current_user, for_group=group,
+                show_debt=True
             )
         })
 
@@ -83,57 +65,13 @@ def group_invites(request, group_id):
         except ValueError:
             return HttpResponseBadRequest('Invalid user id')
 
-        invite_user = User.objects.filter(id=invited_user_id).first()
-        if not invite_user:
+        invited_friend = current_user.friends.filter(id=invited_user_id).first()
+        if not invited_friend:
             return HttpResponseNotFound('Invalid user id')
-        group.invited_users.add(invite_user)
+        group.invited_users.add(invited_friend)
         group.save()
         return HttpResponse('user invited')
 
-    return HttpResponseNotFound('Invalid request')
-
-
-@ensure_authenticated
-def group_invite(request, group_id, invite_id):
-    current_user = get_user(request)
-    group = Group.objects.filter(id=group_id).first()
-    if not group or not group.has_member(current_user):
-        return HttpResponseForbidden('Unauthorized to view this group')
-    if request.method == 'DELETE':
-        # Delete an invited user
-        invited_user = group.invited_users.filter(id=invite_id).first()
-        if not invited_user:
-            return HttpResponseNotFound('No such invited user')
-        group.invited_users.remove(invited_user)
-        group.save()
-        return HttpResponse('Invite deleted')
-    return HttpResponseNotFound('Invalid request')
-
-
-@ensure_authenticated
-def group_accept(request, group_id):
-    # Accept group invite
-    current_user = get_user(request)
-    group = Group.objects.filter(id=group_id).first()
-    if not group or not group.has_invited_member(current_user):
-        return HttpResponseForbidden('Unauthorized to view this group')
-    if request.method == 'POST':
-        group.add_member(current_user)
-        return HttpResponse('Joined group')
-    return HttpResponseNotFound('Invalid request')
-
-
-@ensure_authenticated
-def group_decline(request, group_id):
-    # Decline group invite
-    current_user = get_user(request)
-    group = Group.objects.filter(id=group_id).first()
-    if not group or not group.has_invited_member(current_user):
-        return HttpResponseForbidden('Unauthorized to view this group')
-    if request.method == 'POST':
-        group.invited_users.remove(current_user)
-        group.save()
-        return HttpResponse('Declined group invite')
     return HttpResponseNotFound('Invalid request')
 
 
