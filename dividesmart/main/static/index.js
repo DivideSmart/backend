@@ -8,7 +8,7 @@ import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
-import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
+import { faMoneyBillAlt, faHandHoldingUsd, faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
 import {CreateForm} from './components/create_form.jsx'
@@ -32,7 +32,13 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Tabs2 } from './components/tabs2.jsx'
 import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
-library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle, faLandmark])
+library.add([
+  faMoneyBillAlt,
+  faHandHoldingUsd,
+  faDollarSign,
+  faReceipt, faHome, faChevronLeft,
+  faUsers, faUserCircle, faLandmark
+])
 
 class App extends React.Component {
   constructor() {
@@ -71,7 +77,7 @@ class App extends React.Component {
 
 
   shouldComponentUpdate(nextProp, nextState) {
-    if(JSON.stringify(nextProp) === JSON.stringify(this.props) &&
+    if (JSON.stringify(nextProp) === JSON.stringify(this.props) &&
       JSON.stringify(nextState) === JSON.stringify(this.state)) {
       return false;
     } else {
