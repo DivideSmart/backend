@@ -72,12 +72,8 @@ class LoginPage extends React.Component {
         "password": this.state.password
       }
 
-      console.log("payload")
-      console.log(payload);
-
       axios.post(apiBaseUrl + '/login/', payload)
       .then(function (response) {
-        console.log(response);
         if(response.status == 200){
           alert("Login successful");
           window.location.replace("http://localhost:8000/");
@@ -152,7 +148,6 @@ class LoginPage extends React.Component {
             label="Username"
             value={this.state.username}
             onChange = {(event) => {
-              console.log(event.target.value)
               this.setState({username: event.target.value})
             }}
           />

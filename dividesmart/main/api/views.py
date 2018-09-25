@@ -8,7 +8,6 @@ from main.forms import (
     LoginForm, RegistrationForm
 )
 from main.models import User
-from django.views.decorators.csrf import csrf_exempt
 import ujson as json
 
 
@@ -17,8 +16,6 @@ def handle_login(request):
         return HttpResponseNotFound('Invalid request')
 
     req_json = json.loads(request.body)
-    print()
-
     user = authenticate(
         email_address=req_json['email_address'],
         password=req_json['password']
