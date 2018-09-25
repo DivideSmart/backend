@@ -15,7 +15,7 @@ User.objects.create_superuser(
     password='a'
 )
 
-JOHN = User.objects.create_user(
+JOHN = User.objects.create_superuser(
     username='John Smith',
     email_address='johnsmith@gmail.com',
     password='johnsmith123'
