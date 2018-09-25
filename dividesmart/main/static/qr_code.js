@@ -32,9 +32,9 @@ class Code extends React.Component {
 
   render() {
     return (
-      <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: '27.5%', marginTop: '5%'}}
+      <QRCode
         value={this.state.userID} //API request --> something like api/addnewfriend?userId=xxxx
-        size={512}
+        size={360}
         bgColor={"#ffffff"}
         fgColor={"#000000"}
         level={"L"}
