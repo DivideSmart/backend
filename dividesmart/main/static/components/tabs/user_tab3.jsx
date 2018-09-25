@@ -5,6 +5,8 @@ import axios from 'axios'
 import React from 'react'
 import QRCode from 'qrcode.react'
 import Done from '@material-ui/icons/Done';
+import Snackbar from '@material-ui/core/Snackbar';
+import { MySnackbarContentWrapper } from '../alert_message.jsx'
 
 
 class UserTab extends React.Component {
@@ -15,10 +17,18 @@ class UserTab extends React.Component {
       myEmailAddress: '',
       myAvatarUrl: '',
       pendingRequests: [],
-      sentRequests: []
+      sentRequests: [],
+      open: false
     };  
     this.acceptRequest = this.acceptRequest.bind(this)
   }
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({ open: false });
+  };
 
   componentWillMount() {
     axios.get('/api/user/').then(response => {
@@ -44,8 +54,13 @@ class UserTab extends React.Component {
       if(err) {
         throw err
       } else {
+        console.log(request);
         this.setState({
-          pendingRequest: this.state.pendingRequests.filter(r => r.email != request.email)
+          pendingRequests: this.state.pendingRequests.filter(r => {
+            console.log(r);
+            return r.emailAddress !== request.emailAddress;
+          }),
+          open: true
         })
       }
     })
@@ -140,6 +155,20 @@ class UserTab extends React.Component {
             })
           }
         </List>
+        <Snackbar anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+        >
+          <MySnackbarContentWrapper
+            onClose={this.handleClose}
+            variant="success"
+            message="Accepted request"
+          />
+        </Snackbar>
         {/* <WhiteSpace />
         <WhiteSpace />
         <WingBlank>

@@ -124,14 +124,33 @@ class LoginPage extends React.Component {
     }
 
 
-    var auth2 = undefined
-    gapi.load('auth2', function(){
-      auth2 = gapi.auth2.init({
-        client_id: 'some value',  // TODO:
-        cookiepolicy: 'single_host_origin',
-      })
-      attachSignin(document.getElementById('google-login'))
-    })
+    // var auth2 = undefined
+    // function attachSignin(element) {
+    //   auth2.attachClickHandler(element, {},
+    //     function(googleUser) {
+    //       var data = new FormData()
+    //       data.append('csrfmiddlewaretoken', getCookie('csrftoken'))
+    //       data.append('id_token', googleUser.getAuthResponse().id_token)
+    //       axios.post('/api/signin/google', data).then((response) => {
+    //         window.location.href = '/'
+    //       }).catch(e => {
+    //         notification['warning']({
+    //           message: e.response == undefined ? '' : e.response.data,
+    //           duration: 1.8,
+    //         })
+    //       })
+    //     }, function(error) {
+    //       console.log(JSON.stringify(error, undefined, 2))
+    //     }
+    //   )
+    // }
+    // gapi.load('auth2', function(){
+    //   auth2 = gapi.auth2.init({
+    //     client_id: 'some value',  // TODO:
+    //     cookiepolicy: 'single_host_origin',
+    //   })
+    //   attachSignin(document.getElementById('google-login'))
+    // })
   }
 
 
