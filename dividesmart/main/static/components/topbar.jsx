@@ -110,7 +110,7 @@ class TopBar extends React.Component {
             />
           }
         >
-          Name of the Appp
+          Wishare
         </NavBar>
       </div>
     )

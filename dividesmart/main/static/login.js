@@ -73,15 +73,15 @@ class LoginPage extends React.Component {
           </NavBar>
         </div>
         <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
-           label="Username"
-           onChange = {(event) => { console.log(event.target.value)
-             this.setState({username: event.target.value})}}
+          label="Username"
+          onChange = {(event) => { console.log(event.target.value)
+          this.setState({username: event.target.value})}}
         />
         <br></br>
         <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
-           type="password"
-           label="Password"
-           onChange = {(event) => this.setState({ password: event.target.value })}
+          type="password"
+          label="Password"
+          onChange = {(event) => this.setState({ password: event.target.value })}
         />
         <br></br>
         <Button color="primary" style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
@@ -108,8 +108,7 @@ class LoginPage extends React.Component {
         {'  '}Log in with Facebook
         </Button>
       </div>
-      //   </MuiThemeProvider>
-      // </div>
+
     )
   }
 }
