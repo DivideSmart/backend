@@ -90,6 +90,50 @@ class LoginPage extends React.Component {
       });
     }
 
+    this.facebookLogin = () => {
+      FB.login(function(response) {
+        var data = new FormData()
+        var payload = {}
+        data.append('auth_response', JSON.stringify(response.authResponse))
+        axios.post('/api/login/facebook', data).then(() => {
+          window.location.href = '/'
+        }).catch(e => {
+          // TODO: notification
+        })
+      }, {scope: 'email'})  // TODO: get user' friends also
+    }
+  }
+
+  componentDidMount() {
+    const self = this
+    function loadFBSdk(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0]
+      if (d.getElementById(id)) return
+      js = d.createElement(s); js.id = id
+      js.src = 'https://connect.facebook.net/en_US/sdk.js'
+      fjs.parentNode.insertBefore(js, fjs)
+    }
+    loadFBSdk(document, 'script', 'facebook-jssdk')
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : 'some value',  // TODO:
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.0'
+      })
+      FB.AppEvents.logPageView()
+      self.setState({fbLoginButtonLoading: false})
+    }
+
+
+    var auth2 = undefined
+    gapi.load('auth2', function(){
+      auth2 = gapi.auth2.init({
+        client_id: 'some value',  // TODO:
+        cookiepolicy: 'single_host_origin',
+      })
+      attachSignin(document.getElementById('google-login'))
+    })
   }
 
 
