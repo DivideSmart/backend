@@ -36,14 +36,14 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Tabs2 } from './components/tabs2.jsx'
 import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
-library.add([
+library.add(
   faPenNib,
   faMoneyBillAlt,
   faHandHoldingUsd,
   faDollarSign,
   faReceipt, faHome, faChevronLeft,
   faUsers, faUserCircle, faLandmark
-])
+)
 
 class App extends React.Component {
   constructor() {

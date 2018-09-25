@@ -5,24 +5,50 @@ import 'util.js'
 
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { LocaleProvider, NavBar, Icon, WhiteSpace } from 'antd-mobile';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider, connect } from 'react-redux';
-import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
-import { LocaleProvider, NavBar } from 'antd-mobile';
+import FormControl from '@material-ui/core/FormControl';
+import MButton from '@material-ui/core/Button';
 import React from 'react'
 import ReactDOM from 'react-dom'
+import TextField from '@material-ui/core/TextField';
+
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+
+import {
+  faPenNib, faHandHoldingUsd, faMoneyBillAlt, faHome,
+  faReceipt, faUserCircle, faUsers, faLandmark,
+} from '@fortawesome/free-solid-svg-icons'
+
+import {
+  faFacebook, faGoogle
+} from '@fortawesome/free-brands-svg-icons'
+
+
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 
-library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle])
-
+library.add(faFacebook, faGoogle, faUsers)
 
 class LoginPage extends React.Component {
 
@@ -64,50 +90,113 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div>
-        <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
-          <NavBar
-            style={{height: '100%'}}
-            mode="light"
+
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <MButton
+            // onClick = {() => this.setState({ showSettleUpModal: true })}
+            variant="contained" size="small"
+            style={{ width: '66%', height: '6vh', backgroundColor:'#DD4B39', borderColor:'#DD4B39' }}
           >
-            Name of the Appp
-          </NavBar>
+            <FontAwesomeIcon icon={['fab', 'google']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
+            <span style={{color: 'white', fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+          </MButton>
         </div>
-        <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
-          label="Username"
-          onChange = {(event) => { console.log(event.target.value)
-          this.setState({username: event.target.value})}}
-        />
-        <br></br>
-        <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
-          type="password"
-          label="Password"
-          onChange = {(event) => this.setState({ password: event.target.value })}
-        />
-        <br></br>
-        <Button color="primary" style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
-        {'  '}Submit
-        </Button>
-        <br></br>
-        <Button
-          style={{ backgroundColor:'#DD4B39', borderColor:'#DD4B39', marginLeft: '45%', marginTop: '5%', color: 'white' }}
-          className='login-form-button'
-          id='google-login'
+
+
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-        <i className='fa fa-google' aria-hidden='true'></i>
-        {'  '}Log in with Google
-        </Button>
-        <br></br>
-        <Button
-          style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: '2%' , color: 'white' }}
-          className='login-form-button'
-          id='facebook-login'
-          onClick={this.facebookLogin}
-          loading={this.state.fbLoginButtonLoading}
+          <MButton
+            // onClick = {() => this.setState({ showSettleUpModal: true })}
+            variant="contained" color="primary" size="small"
+            style={{ width: '66%', height: '6vh', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
+          >
+            <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
+            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+            </MButton>
+        </div>
+
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-        <i className='fa fa-facebook-official' aria-hidden='true'></i>
-        {'  '}Log in with Facebook
-        </Button>
+          <MButton
+            // onClick = {() => this.setState({ showSettleUpModal: true })}
+            variant="outlined" color="primary" size="small"
+            style={{ width: '66%', height: '6vh' }}
+          >
+            <Icon type={'check-circle-o'} style={{ height: 28, marginRight: 8}}/>
+            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+          </MButton>
+        </div>
+
       </div>
+
+
+      // <div>
+      //   <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
+      //     <NavBar
+      //       style={{height: '100%'}}
+      //       mode="light"
+      //     >
+      //       Name of the Appp
+      //     </NavBar>
+      //   </div>
+      //   <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
+      //     label="Username"
+      //     onChange = {(event) => { console.log(event.target.value)
+      //     this.setState({username: event.target.value})}}
+      //   />
+      //   <br></br>
+      //   <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
+      //     type="password"
+      //     label="Password"
+      //     onChange = {(event) => this.setState({ password: event.target.value })}
+      //   />
+      //   <br></br>
+      //   <Button color="primary" style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
+      //   {'  '}Submit
+      //   </Button>
+      //   <br></br>
+      //   <Button
+      //     style={{ backgroundColor:'#DD4B39', borderColor:'#DD4B39', marginLeft: '45%', marginTop: '5%', color: 'white' }}
+      //     className='login-form-button'
+      //     id='google-login'
+      //   >
+      //   <i className='fa fa-google' aria-hidden='true'></i>
+      //   {'  '}Log in with Google
+      //   </Button>
+      //   <br></br>
+      //   <Button
+      //     style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: '2%' , color: 'white' }}
+      //     className='login-form-button'
+      //     id='facebook-login'
+      //     onClick={this.facebookLogin}
+      //     loading={this.state.fbLoginButtonLoading}
+      //   >
+      //   <i className='fa fa-facebook-official' aria-hidden='true'></i>
+      //   {'  '}Log in with Facebook
+      //   </Button>
+      // </div>
 
     )
   }

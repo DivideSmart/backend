@@ -110,7 +110,7 @@ class TopBar extends React.Component {
             />
           }
         >
-          Wishare
+          WeShare
         </NavBar>
       </div>
     )
