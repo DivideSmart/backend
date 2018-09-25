@@ -29,18 +29,18 @@ class MultiSelectFriend extends React.Component {
     });
   }
 
-  updateFriends(added_users) {
+  async updateFriends(added_users) {
     // const newStateA = this.state.addFriendAlready ? false : true;
     this.setState({
       addFriendAlready: true
     });
 
     if(this.props.isAddGroup) {
-      this.setState({
+      await this.setState({
         users: this.state.users.concat(added_users)
       })
     } else {
-      this.setState({
+      await this.setState({
         users: added_users
       })
     }
@@ -52,6 +52,12 @@ class MultiSelectFriend extends React.Component {
       var added_users_ids = added_users.map(x => x.id)
       axios.post('/api/groups/' + this.props.group_id + '/members/',
                 {ids: added_users_ids}).then(response => console.log(response))
+    }
+
+    if(this.props.updateUsers) {
+      console.log("HERE");
+      console.log(this.state.users);
+      this.props.updateUsers(this.state.users)
     }
   }
 
