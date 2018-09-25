@@ -91,12 +91,7 @@ class UserTabWithoutStyle extends React.Component {
             entry.amount = entry.initiator == current_user_id
                                 ? entry.loans[friendId]
                                 : entry.loans[current_user_id]
-            // console.log(friendId)
-            // console.log(current_user_id)
-            // console.log(entry.loans)
-            // console.log(entry.loans[friendId])
-            // console.log(entry.loans[current_user_id])
-            // console.log("STOP")
+
             entry.color = entry.initiator == current_user_id
                                 ? 'other-owe-amount'
                                 : 'owe-other-amount'

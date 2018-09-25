@@ -1,13 +1,14 @@
-import { Badge, List, WhiteSpace, WingBlank, Checkbox } from 'antd-mobile';
-import IconButton from '@material-ui/core/IconButton';
-const Item = List.Item
-import axios from 'axios'
-import React from 'react'
-import QRCode from 'qrcode.react'
-import Done from '@material-ui/icons/Done';
+import { Badge, Checkbox, List, WhiteSpace, WingBlank } from 'antd-mobile';
+
 import Close from '@material-ui/icons/Close';
-import Snackbar from '@material-ui/core/Snackbar';
+import Done from '@material-ui/icons/Done';
+import IconButton from '@material-ui/core/IconButton';
 import { MySnackbarContentWrapper } from '../alert_message.jsx'
+import QRCode from 'qrcode.react'
+import React from 'react'
+import Snackbar from '@material-ui/core/Snackbar';
+import axios from 'axios'
+const Item = List.Item
 
 
 class UserTab extends React.Component {
@@ -21,7 +22,7 @@ class UserTab extends React.Component {
       sentRequests: [],
       open: false,
       successMessage: ''
-    };  
+    };
     this.acceptRequest = this.acceptRequest.bind(this)
     this.rejectRequest = this.rejectRequest.bind(this)
   }
@@ -87,6 +88,9 @@ class UserTab extends React.Component {
   render() {
     return (
       <div>
+        <WhiteSpace />
+        <WhiteSpace />
+
         <List>
           <Item extra="extra content">
             <Badge>
@@ -143,7 +147,7 @@ class UserTab extends React.Component {
           </Item> */}
         </List>
         <List renderHeader={() => 'Pending Requests'} className="email-list">
-          { 
+          {
             this.state.pendingRequests.map(request => {
               return (
                 <Item
@@ -166,7 +170,7 @@ class UserTab extends React.Component {
           }
         </List>
         <List renderHeader={() => 'Sent requests'} className="email-list">
-          { 
+          {
             this.state.sentRequests.map(request => {
               return (
                 <Item
