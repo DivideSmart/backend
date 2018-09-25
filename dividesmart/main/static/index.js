@@ -75,14 +75,14 @@ class App extends React.Component {
 
     // Check for browser support of service worker
     if ('serviceWorker' in navigator) {
-     navigator.serviceWorker.register('./service-worker.js')
-     .then(function(registration) {
-       // Successful registration
-       console.log('Hooray. Registration successful, scope is:', registration.scope);
-     }).catch(function(err) {
-       // Failed registration, service worker won’t be installed
-       console.log('Whoops. Service worker registration failed, error:', error);
-     });
+      navigator.serviceWorker.register('./service-worker.js')
+      .then(function(registration) {
+        // Successful registration
+        console.log('Hooray. Registration successful, scope is:', registration.scope);
+      }).catch(function(err) {
+        // Failed registration, service worker won’t be installed
+        console.log('Whoops. Service worker registration failed, error:', error);
+      });
     }
   }
 
@@ -100,11 +100,9 @@ class App extends React.Component {
     })
   }
 
-
   updateUsers(added_users) {
     this.setState({ users: added_users})
   }
-
 
   shouldComponentUpdate(nextProp, nextState) {
     if (JSON.stringify(nextProp) === JSON.stringify(this.props) &&
@@ -115,7 +113,6 @@ class App extends React.Component {
     }
   }
 
-
   updateGroupInfo(groupID) {
     axios.get('/api/groups/' + groupID).then(response => {
       if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
@@ -124,7 +121,6 @@ class App extends React.Component {
         })
       }
     })
-
     axios.get('/api/groups/' + groupID + '/members').then(response => {
       var count_user = response.data.members.length;
       if(JSON.stringify(response.data) !== JSON.stringify(this.state.name)) {
@@ -134,7 +130,6 @@ class App extends React.Component {
       }
     } )
   }
-
 
   findFriendList(groupID) {
     axios.get('/api/groups/' + groupID + '/members').then(response => {
@@ -146,24 +141,21 @@ class App extends React.Component {
 
   findFriend(user_id) {
     axios.get('/api/user/friends/' + user_id + '/')
-         .then(response => {
-            this.setState({
-              splitters: [response.data]
-            })
-            console.log("TEST HERE TOO")
-            console.log(this.state.splitters)
-          })
+    .then(response => {
+      this.setState({
+        splitters: [response.data]
+      })
+    })
   }
 
   findGroupMembers(group_id) {
     axios.get('/api/groups/' + group_id + '/members/')
-         .then(response => {
-            // var newMembers = response.data.members.filter(friend => friend.id != this.state.user.id);
-            var newMembers = response.data.members;
-            this.setState({
-              groupMembers: newMembers
-            })
-          })
+    .then(response => {
+      var newMembers = response.data.members;
+      this.setState({
+        groupMembers: newMembers
+      })
+    })
   }
 
   render() {
@@ -191,9 +183,8 @@ class App extends React.Component {
                     }
                   />
 
-                                    
                   <Route
-                    path={'/u/:userPk/createBill/'}
+                    path={'/u/:userPk/create-bill/'}
                     render={ ({match, location}) =>
                       <div style={{ top: '6vh', position: 'relative' }}>
                         {this.findFriend(match.params.userPk)}
@@ -204,10 +195,10 @@ class App extends React.Component {
                         />
                       </div>
                     }
-                   />
+                  />
 
                   <Route
-                    path={'/g/:gPk/createBill'}
+                    path={'/g/:gPk/create-bill'}
                     render={ ({match, location}) =>
                       <div style={{ top: '6vh', position: 'relative' }}>
                         {this.findGroupMembers(match.params.gPk)}
@@ -220,7 +211,6 @@ class App extends React.Component {
                       </div>
                     }
                   />
-
 
                   <Route
                     path={'/u/:userPk'}
@@ -256,7 +246,7 @@ class App extends React.Component {
                       </div>
                     }
                   />
-                
+
                   <Route
                     path={'/addFriend'}
                     render={ ({match, location}) =>
@@ -292,7 +282,6 @@ class App extends React.Component {
                             <Tabs2 group_id={match.params.gPk}/>
                             {/* <FriendsTab /> */}
                             <FloatingButton user_id={match.params.gPk} prefix='/g/'/>
-
                           </div>
                         )
                       }

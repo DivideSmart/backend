@@ -53,7 +53,7 @@ class FlaoatingButton extends React.Component {
   }
 
   formatLink() {
-    return this.state.prefix ? this.props.prefix + this.props.user_id + '/createBill/'
+    return this.state.prefix ? this.props.prefix + this.props.user_id + '/create-bill/'
                              : '/create'
   }
 
