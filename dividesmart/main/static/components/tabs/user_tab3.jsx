@@ -11,6 +11,9 @@ class UserTab extends React.Component {
   constructor(props) {
     super()
     this.state = {
+      myName: '',
+      myEmailAddress: '',
+      myAvatarUrl: '',
       pendingRequests: [],
       sentRequests: []
     };  
@@ -18,10 +21,17 @@ class UserTab extends React.Component {
   }
 
   componentWillMount() {
-    axios.get('/api/user/friends/').then(response => {
+    axios.get('/api/user/').then(response => {
       this.setState({
-        pendingRequests: response.data.invites.received,
-        sentRequests: response.data.invites.sent
+        myName: response.data.username,
+        myEmailAddress: response.data.emailAddress,
+        myAvatarUrl: response.data.avatarUrl
+      })
+      axios.get('/api/user/friends/').then(response => {
+        this.setState({
+          pendingRequests: response.data.invites.received,
+          sentRequests: response.data.invites.sent
+        })
       })
     })
   }
@@ -51,11 +61,11 @@ class UserTab extends React.Component {
                 style={{
                   width: '60px',
                   height: '60px',
-                  background: 'url(https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg) center center /  60px 60px no-repeat',
+                  background: 'url(' + this.state.myAvatarUrl + ') center center /  60px 60px no-repeat',
                   display: 'inline-block' }}
               />
             </Badge>
-            <span style={{ marginLeft: 12 }}>Harry</span>
+            <span style={{ marginLeft: 12 }}>{this.state.myName}</span>
           </Item>
           {/* <Item
             thumb="https://zos.alipayobjects.com/rmsportal/faMhXAxhCzLvveJ.png"
@@ -70,12 +80,8 @@ class UserTab extends React.Component {
           <Item className="special-badge" extra={<Badge text={'促'} />}>
             Custom corner
           </Item> */}
-          <Item extra="12345678">
-            <Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>
-            {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
-          </Item>
 
-          <Item extra="test@test.com">
+          <Item extra={this.state.myEmailAddress}>
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </Item>

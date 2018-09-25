@@ -9,7 +9,40 @@ from main.forms import (
 )
 from main.models import User
 from django.views.decorators.csrf import csrf_exempt
+import facebook
+import requests
+
 import ujson as json
+
+
+def handle_fb_login(request):
+    if request.method != 'POST':
+        return HttpResponseNotFound('Invalid request')
+
+    try:
+        req_json = json.loads(request.body)
+        graph = facebook.GraphAPI(access_token=req_json['accessToken'], version=2.8)
+        user_response = graph.get_object(id=req_json['userID'], fields='email,picture,name')
+        email = user_response['email']
+        name = user_response['name']
+        portrait_url = user_response['picture']['data']['url']
+
+        if not User.objects.filter(email_address=email).exists():
+            new_user = User()
+            new_user.username = name
+            new_user.email_address = email
+            new_user.external_portrait_url = portrait_url
+            new_user.save()
+        user = User.objects.filter(email_address=email).first()
+        user.username = name
+        user.external_portrait_url = portrait_url
+        user.save()
+
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return HttpResponse(status=200)
+    except Exception:
+        return HttpResponse("Facebook login fail", status=400)
 
 
 def handle_login(request):
