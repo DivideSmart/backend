@@ -21,10 +21,26 @@ from main.utils import (
 def groups(request):
     if request.method == 'POST':
         current_user = get_user(request)
-        form = CreateGroupForm(request.POST)
-        if not form.is_valid():
-            return HttpResponseBadRequest('Invalid parameters')
-        Group.objects.create_group(form.cleaned_data['name'], current_user)
+        req_json = json.loads(request.body)
+        name = req_json.get('name', '')
+        if not name:
+            return HttpResponseBadRequest('Invalid name')
+        invited_members_ids = req_json.get('members', [])
+        if type(invited_members_ids) is not list:
+            return HttpResponseBadRequest('Invalid members')
+
+        invited_members = []
+        for member_id in invited_members_ids:
+            try:
+                invited_user_id = uuid.UUID(member_id)
+            except ValueError:
+                return HttpResponseBadRequest('Invalid member id')
+            invited_friend = current_user.friends.filter(id=invited_user_id).first()
+            if not invited_friend:
+                continue
+            invited_members.append(invited_friend)
+
+        Group.objects.create_group(name, current_user, invited_members)
         return HttpResponse('group created')
     return HttpResponseNotFound('Invalid request')
 

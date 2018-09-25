@@ -8,6 +8,7 @@ from main.forms import (
     LoginForm, RegistrationForm
 )
 from main.models import User
+from django.views.decorators.csrf import csrf_exempt
 import ujson as json
 
 
@@ -31,7 +32,8 @@ def handle_login(request):
 
 def handle_register(request):
     # TODO: Add email confirmation later
-    form = RegistrationForm(request.POST)
+    req_json = json.loads(request.body)
+    form = RegistrationForm(req_json)
     is_successful = False
     if form.is_valid():
         is_successful = True
