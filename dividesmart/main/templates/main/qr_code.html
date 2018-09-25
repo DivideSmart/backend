@@ -7,10 +7,25 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <title>Index</title>
+  <style>
+    canvas {
+      height: auto !important;
+      width: 100% !important;
+      max-width: 500px;
+    }
+    .center {
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 50%;
+    }
+  </style>
 </head>
 <body>
   <div id="topbar" style="width:100%; height:10%"></div>
-  <div id="qr-code" style="width:80%; height:80%; padding-left:10%; padding-top:5%;"></div>
+  <div id="qr-code" class="center"></div>
 </body>
 <script src="/static/bundle/main/qr_code.js"></script>
 

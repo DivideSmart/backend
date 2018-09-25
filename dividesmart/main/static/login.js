@@ -5,7 +5,7 @@ import 'util.js'
 
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import { LocaleProvider, NavBar, Icon, WhiteSpace } from 'antd-mobile';
+import { LocaleProvider, NavBar, Button, Icon, WhiteSpace } from 'antd-mobile';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider, connect } from 'react-redux';
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
@@ -92,10 +92,8 @@ class LoginPage extends React.Component {
 
     this.facebookLogin = () => {
       FB.login(function(response) {
-        var data = new FormData()
-        var payload = {}
-        data.append('auth_response', JSON.stringify(response.authResponse))
-        axios.post('/api/login/facebook', data).then(() => {
+        const payload = response.authResponse
+        axios.post('/api/login/fb/', payload).then((response) => {
           window.location.href = '/'
         }).catch(e => {
           // TODO: notification
@@ -116,7 +114,7 @@ class LoginPage extends React.Component {
     loadFBSdk(document, 'script', 'facebook-jssdk')
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : 'some value',  // TODO:
+        appId      : '749773275363427',  // TODO:
         cookie     : true,
         xfbml      : true,
         version    : 'v3.0'
@@ -126,14 +124,33 @@ class LoginPage extends React.Component {
     }
 
 
-    var auth2 = undefined
-    gapi.load('auth2', function(){
-      auth2 = gapi.auth2.init({
-        client_id: 'some value',  // TODO:
-        cookiepolicy: 'single_host_origin',
-      })
-      attachSignin(document.getElementById('google-login'))
-    })
+    // var auth2 = undefined
+    // function attachSignin(element) {
+    //   auth2.attachClickHandler(element, {},
+    //     function(googleUser) {
+    //       var data = new FormData()
+    //       data.append('csrfmiddlewaretoken', getCookie('csrftoken'))
+    //       data.append('id_token', googleUser.getAuthResponse().id_token)
+    //       axios.post('/api/signin/google', data).then((response) => {
+    //         window.location.href = '/'
+    //       }).catch(e => {
+    //         notification['warning']({
+    //           message: e.response == undefined ? '' : e.response.data,
+    //           duration: 1.8,
+    //         })
+    //       })
+    //     }, function(error) {
+    //       console.log(JSON.stringify(error, undefined, 2))
+    //     }
+    //   )
+    // }
+    // gapi.load('auth2', function(){
+    //   auth2 = gapi.auth2.init({
+    //     client_id: 'some value',  // TODO:
+    //     cookiepolicy: 'single_host_origin',
+    //   })
+    //   attachSignin(document.getElementById('google-login'))
+    // })
   }
 
 
@@ -175,10 +192,11 @@ class LoginPage extends React.Component {
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" color="primary" size="small"
             style={{ width: '66%', height: '6vh', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
+            onClick={this.facebookLogin}
           >
             <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
             <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Facebook</span>
-            </MButton>
+          </MButton>
         </div>
 
         <WhiteSpace size="lg" />

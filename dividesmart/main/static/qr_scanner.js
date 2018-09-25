@@ -16,6 +16,8 @@ import ReactDOM from 'react-dom'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { TopBar } from './components/topbar.jsx'
 import { Tabs } from './components/tabs.jsx'
+import Snackbar from '@material-ui/core/Snackbar';
+import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
 class App extends Component {
   constructor(props){
@@ -23,17 +25,35 @@ class App extends Component {
     this.state = {
       delay: 80,
       result: 'No result',
+      open: false
     }
     this.handleScan = this.handleScan.bind(this)
   }
 
-  handleScan(data) {
-    if (data) {
-      this.setState({
-        result: data,
-      })
-      window.location.href = '/addfriend/' + data
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
+    this.setState({ open: false });
+  };
+
+  handleScan(data) {
+    console.log(data)
+    this.setState({ 
+      result: data,
+      open: true
+    })
+    var payload={
+      "friendEmail": data,
+    }
+    axios.post('http://localhost:8000/api/user/friends/', payload)
+    .then((res, err) => {
+      if(err) {
+        console.log(err)
+      } else {
+        console.log(res)
+      }
+    })
   }
 
   handleError(err){
@@ -48,6 +68,20 @@ class App extends Component {
           onError={this.handleError}
           onScan={this.handleScan}
         />
+        <Snackbar anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+        >
+          <MySnackbarContentWrapper
+            onClose={this.handleClose}
+            variant="success"
+            message="Sending Request!"
+          />
+        </Snackbar>
       </div>
     )
   }

@@ -1,10 +1,13 @@
 from django.conf import settings
-from django.core.mail import EmailMessage  # for sending verification using e-mail
+from django.contrib.auth.models import AnonymousUser
+from django.core.mail import \
+    EmailMessage  # for sending verification using e-mail
 from django.http import HttpResponse
 from django.shortcuts import render
-from main.forms import RegistrationForm, LoginForm
-from main.models import User
 
+from main.forms import LoginForm, RegistrationForm
+from main.models import User
+from django.shortcuts import redirect
 
 def register(request):
     # TODO: Add email confirmation later
@@ -28,6 +31,8 @@ def display_login(request):
 
 
 def display_index(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect('/login/')
     return render(request, 'main/index.html')
 
 
@@ -44,4 +49,3 @@ def display_qr_code(request):
 
 def display_new_user(request, pk):
     return render(request, 'main/user.html')
-

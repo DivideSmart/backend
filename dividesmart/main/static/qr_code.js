@@ -13,32 +13,48 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import QRCode from 'qrcode.react'
 
 class Code extends React.Component {
+  
   constructor(props) {
     super()
     this.state = {
-      user: {},
+      user: {emailAddress: 'test@test.com'},
       userID: '',
+      width: 0,
+      height: 0
     };  
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   componentWillMount() {
     axios.get('/api/user').then(response => {
+      console.log(response)
       this.setState({
-        user: response.data,
-        userID: response.data.id
+        user: response.data
       })
     })
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
   }
 
   render() {
     return (
-      <QRCode style={{display: 'flex', justifyContent: 'center', marginLeft: '27.5%', marginTop: '5%'}}
-        value={this.state.userID} //API request --> something like api/addnewfriend?userId=xxxx
-        size={512}
-        bgColor={"#ffffff"}
-        fgColor={"#000000"}
-        level={"L"}
-      />
+      <div>
+        <QRCode
+          value={this.state.user.emailAddress} //API request --> something like api/addnewfriend?userId=xxxx
+          size={this.state.width < this.state.height ? this.state.width : this.state.height}
+          bgColor={"#ffffff"}
+          fgColor={"#000000"}
+          level={"L"}
+        />
+      </div>
     )
   }
 }

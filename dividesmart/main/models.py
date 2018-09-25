@@ -155,13 +155,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 class GroupManager(models.Manager):
     use_in_migrations = True
 
-    def create_group(self, name, user):
+    def create_group(self, name, user, invited_users=None):
         group = self.model(name=name)
         group.creator = user
         group.save(using=self._db)
-        group = Group.objects.get(id=group.id)
-        group.users.add(user)
-        group.save(using=self._db)
+        group.add_member(user)
+        if invited_users:
+            for invited_user in invited_users:
+                if group.has_member(invited_user):
+                    continue
+                group.add_member(invited_user)
         return group
 
 
