@@ -37,9 +37,7 @@ def group(request, group_id):
     group = Group.objects.filter(id=group_id).first()
     if not group or not group.has_member(current_user):
         return HttpResponseForbidden('Unauthorized to view this group')
-    return JsonResponse({
-        'name': group.name
-    })
+    return JsonResponse(group.to_dict())
 
 
 @ensure_authenticated

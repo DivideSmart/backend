@@ -11,7 +11,7 @@ from main.models import User
 from django.views.decorators.csrf import csrf_exempt
 import ujson as json
 
-
+@csrf_exempt
 def handle_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')

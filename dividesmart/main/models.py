@@ -107,13 +107,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             'id': self.id,
             'emailAddress': self.email_address,
             'username': self.username,
-            # 'dateJoined': self.date_joined,
         }
         return user_json
 
     def to_dict_for_self(self):
         user_json = self.to_dict()
-        user_json['balance'] = self.balance
         return user_json
 
     def to_dict_for_others(self, for_user, show_debt=True):
