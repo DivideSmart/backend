@@ -15,14 +15,21 @@ class FriendsList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      friends: props.friends
+      friends: props.friends,
+      total_other_owe: 0,
+      total_owe_other: 0
     }
   }
 
-  componentWillReceiveProps() {
+
+  componentWillReceiveProps(nextProp) {
+    var total_other_owe = nextProp.friends.friendsOweYou.reduce((a, b) => b.acc + a, 0);
+    var total_owe_other = nextProp.friends.friendsYouOwe.reduce((a, b) => b.acc + a, 0);
     this.setState({
-      friends: this.props.friends
-    });
+      total_other_owe: total_other_owe,
+      total_owe_other: total_owe_other,
+      friends: nextProp.friends
+    })
   }
 
   render() {
@@ -33,7 +40,7 @@ class FriendsList extends React.Component {
             Friends owe you
             <span style={{float: 'right'}}>
               total: <span className={'other-owe-amount'}>
-                $100
+                {this.state.total_other_owe}
               </span>
             </span>
           </span>
@@ -74,7 +81,7 @@ class FriendsList extends React.Component {
             Friends you owe
             <span style={{float: 'right'}}>
               total: <span className={'owe-other-amount'}>
-                $100
+                {this.state.total_owe_other}
               </span>
             </span>
           </span>

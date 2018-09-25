@@ -1,39 +1,11 @@
-import {Badge, Button, Checkbox, List, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Checkbox, List, Icon, WhiteSpace, WingBlank} from 'antd-mobile';
 
 import React from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FriendList } from './friend_list.jsx';
+import MButton from '@material-ui/core/Button'
 
-var sampleData = [
-  {
-    pk: '1',
-    username: 'Harry',
-    avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-    acc: 10.28,
-  }, {
-    pk: '2',
-    username: 'Oscar',
-    avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-    acc: 8.6,
-  },
-  {
-    pk: '3',
-    username: 'Hieu',
-    avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-    acc: 10.28,
-  }, {
-    pk: '4',
-    username: 'Yuyang',
-    avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
-    acc: 20.66,
-  }, {
-    pk: '5',
-    username: 'Sipanis',
-    avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-    acc: 8.6,
-  }
-]
 const Item = List.Item;
 const Brief = Item.Brief;
 
@@ -63,41 +35,59 @@ class MultiSelectFriend extends React.Component {
       addFriendAlready: true
     });
 
-    this.setState({
-      users: added_users
-    })
+    if(this.props.isAddGroup) {
+      this.setState({
+        users: this.state.users.concat(added_users)
+      })
+    } else {
+      this.setState({
+        users: added_users
+      })
+    }
+
+    console.log("ADDED");
+
+    if(this.props.isAddGroup) {
+      console.log(added_users);
+      var added_users_ids = added_users.map(x => x.id)
+      axios.post('/api/groups/' + this.props.group_id + '/members/',
+                {ids: added_users_ids}).then(response => console.log(response))
+    }
   }
 
 
   componentDidMount() {
-      axios.get('/api/user').then(responseA => {
-        axios.get('/api/user/friends').then(responseB => {
-          var friends = responseB.data.friends;
-          friends = friends.map(friend => {
-                                   friend.pk = friend.id;
-                                   friend.avatarUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
-                                   return friend;
-                                })
-          this.setState({
-            friends: friends
-          })
-          // this.props.users = friends;
-
-        })
+    axios.get('/api/user/friends').then(responseB => {
+      var friends = responseB.data.friends;
+      friends = friends.map(friend => {
+        friend.pk = friend.id;
+        friend.avatarUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+        return friend;
       })
+      this.setState({
+        friends: friends
+      })
+      console.log("friends")
+      console.log(this.state.friends);
+    })
+
+    if(this.props.isAddGroup) {
       this.findFriendList(this.props.group_id);
+    }
   }
 
   findFriendList(groupID) {
-    axios.get('/api/groups/' + groupID + '/members').then(response => {
+    if(this.props.isAddGroup) {
+      axios.get('/api/groups/' + groupID + '/members').then(response => {
 
-      console.log("re");
-      this.setState({
-        users: response.data.members
+        console.log("re");
+        this.setState({
+          users: response.data.members
+        })
+        console.log(this.state.users);
+
       })
-      console.log(this.state.users);
-
-    })
+    }
   }
 
   // createSubmitAddFriend()
@@ -105,27 +95,32 @@ class MultiSelectFriend extends React.Component {
   render() {
     return (
       <div>
-          {/* { this.updateUsers() } */}
-          <div style={{display: this.state.addFriendAlready ? 'block' : 'none'}}>
-            <div style={{ marginLeft: '20px', marginRight: '20px'}}>
-              <FriendList mode='display' users={this.state.users} hideSearch={true} />
-            </div>
-
-            <div style={{marginLeft: '80px', marginRight: '80px'}}>
-              <List>
-                {/* <Link to={`../u/1/friend_list/true`} > */}
-                  <Button onClick={this.handleChooseFriends} style={{color: 'green'}}> Add Friends </Button>
-                {/* </Link> */}
-              </List>
-            </div>
+        {/* { this.updateUsers() } */}
+        <div style={{display: this.state.addFriendAlready ? 'block' : 'none'}}>
+          <div>
+            <FriendList mode='display' users={this.state.users} hideSearch={true} />
           </div>
 
-          <div style={{display: this.state.addFriendAlready ? 'none' : 'block'}}>
-            <FriendList mode='multi-select' users={this.state.friends} updateUsers = {this.updateFriends} alreadyAddedUsers={this.state.users} />
-            {/* <Button onClick={this.handleChooseFriends}> Submit </Button> */}
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: 18
+            }}
+          >
+            <MButton
+              onClick={this.handleChooseFriends}
+              variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
+              <Icon type={'check-circle-o'} style={{marginRight: 18}}/>Add Friends
+            </MButton>
           </div>
+        </div>
 
-          {/* { this.createSubmitAddFriend } */}
+        <div style={{display: this.state.addFriendAlready ? 'none' : 'block'}}>
+          <FriendList mode='multi-select' users={this.state.friends} updateUsers = {this.updateFriends} alreadyAddedUsers={this.state.users} isAddGroup={this.props.isAddGroup}/>
+          {/* <Button onClick={this.handleChooseFriends}> Submit </Button> */}
+        </div>
+
+        {/* { this.createSubmitAddFriend } */}
       </div>
 
     )

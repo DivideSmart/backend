@@ -61,7 +61,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     friends = models.ManyToManyField('self')
     requested_friends = models.ManyToManyField(
-        'self', related_name='received_friend_requests', symmetrical=False
+        'self', related_name='received_friend_requests', symmetrical=False,
+        blank=True
     )
 
     avatar = models.ImageField(

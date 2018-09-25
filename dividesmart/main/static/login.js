@@ -27,16 +27,8 @@ library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCirc
 class LoginPage extends React.Component {
 
   constructor(props) {
-      super();
-      this.state = { isAuthenticated: false, username: '', password: '', token: ''};
-      redirectIfAuthenticated()
-  }
-
-  redirectIfAuthenticated() {
-    console.log(store.getState().auth.user)
-    if(store.getState().auth.user === undefined) {
-      window.location.replace("http://localhost:8000/");
-    }
+    super();
+    this.state = { isAuthenticated: false, username: '', password: '', token: '' };
   }
 
   handleClick(event, username, password) {
@@ -80,9 +72,7 @@ class LoginPage extends React.Component {
             Name of the Appp
           </NavBar>
         </div>
-        <TextField style={{ marginLeft: '45%', marginTop: '10%'}}
-           hintText="Enter your Username"
-           floatingLabelText="Username"
+        <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
            label="Username"
            onChange = {(event) => { console.log(event.target.value)
              this.setState({username: event.target.value})}}
@@ -94,7 +84,7 @@ class LoginPage extends React.Component {
            onChange = {(event) => this.setState({ password: event.target.value })}
         />
         <br></br>
-        <Button primary style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
+        <Button color="primary" style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
         {'  '}Submit
         </Button>
         <br></br>

@@ -6,6 +6,7 @@ const Item = List.Item
 const Brief = Item.Brief
 
 const prompt = Modal.prompt
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -147,7 +148,9 @@ const { classes } = this.props;
         <List>
           <Item
             arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            thumb={
+              <FontAwesomeIcon icon='receipt' style={{ color: '#38b8f2', width: 24, height: 24}} />
+            }
             multipleLine
             onClick={() => {}}
             extra={<span className={'other-owe-amount'}>$10</span>}
@@ -156,7 +159,9 @@ const { classes } = this.props;
           </Item>
           <Item
             arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
+            thumb={
+              <FontAwesomeIcon icon='dollar-sign' style={{ color: '#38b8f2', width: 24, height: 24}} />
+            }
             multipleLine
             onClick={() => {}}
             extra={<span className={'owe-other-amount'}>-$5</span>}

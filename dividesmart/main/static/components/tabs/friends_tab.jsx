@@ -5,6 +5,7 @@ import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
 import React from 'react'
 import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
+import axios from 'axios'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -52,14 +53,44 @@ class FriendsTab extends React.Component {
     super()
     this.state = {
       disabled: false,
+      users: {friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: []}
     }
+  }
+
+  componentDidMount() {
+    axios.get('/api/user/friends/').then(response => {
+      var friendsOweYou = []
+      var friendsYouOwe = []
+      var friendsSettledUp = []
+      response.data.friends.forEach(friend => {
+        friend.key = friend.id;
+        friend.name = friend.username;
+        if(parseFloat(friend.debt) > 0) {
+          friend.acc = parseFloat(friend.debt)
+          friendsOweYou.push(friend)
+        } else if(parseFloat(friend.debt) < 0) {
+          friend.acc = -parseFloat(friend.debt);
+          friendsYouOwe.push(friend);
+        } else {
+          friend.acc = 0
+          friendsSettledUp.push(friend);
+        }
+      })
+      this.setState({
+        users: {
+          friendsOweYou: friendsOweYou,
+          friendsYouOwe: friendsYouOwe,
+          friendsSettledUp: friendsSettledUp
+        }
+      })
+    })
   }
 
   render() {
     return (
       <div>
         <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
-        <FriendsList friends={sampleData}/>
+        <FriendsList friends={this.state.users}/>
 
         <WhiteSpace />
         <WhiteSpace />

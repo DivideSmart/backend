@@ -8,7 +8,7 @@ import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
-import { faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
+import { faMoneyBillAlt, faHandHoldingUsd, faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
 import {CreateForm} from './components/create_form.jsx'
@@ -30,8 +30,15 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Tabs2 } from './components/tabs2.jsx'
+import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
-library.add([faDollarSign, faReceipt, faHome, faChevronLeft, faUsers, faUserCircle, faLandmark])
+library.add([
+  faMoneyBillAlt,
+  faHandHoldingUsd,
+  faDollarSign,
+  faReceipt, faHome, faChevronLeft,
+  faUsers, faUserCircle, faLandmark
+])
 
 class App extends React.Component {
   constructor() {
@@ -55,7 +62,7 @@ class App extends React.Component {
       this.setState({
         user: response.data
       })
-      axios.get('/api/users/{0}/friends'.format(this.state.user.id)).then(response => {
+      axios.get('/api/user/friends').then(response => {
         this.setState({
           friends: response.data
         })
@@ -70,7 +77,7 @@ class App extends React.Component {
 
 
   shouldComponentUpdate(nextProp, nextState) {
-    if(JSON.stringify(nextProp) === JSON.stringify(this.props) &&
+    if (JSON.stringify(nextProp) === JSON.stringify(this.props) &&
       JSON.stringify(nextState) === JSON.stringify(this.state)) {
       return false;
     } else {
@@ -121,9 +128,14 @@ class App extends React.Component {
                   <Route
                     path={'/u/:group_id/friend_list'}
                     render={ ({match, location}) => {
-                        this.findFriendList(match.params.group_id);
-                        console.log(this.state.users);
-                        return (<FriendList isCreateGroup={false} users={this.state.users}/>)
+                        // this.findFriendList(match.params.group_id);
+                        // console.log(this.state.users);
+                        // return (<FriendList isCreateGroup={false} users={this.state.users}/>)
+                        return (
+                          <div style={{top: '6vh', position: 'relative'}}>
+                            <MultiSelectFriend group_id={match.params.group_id} isAddGroup={true}/>
+                          </div>
+                        )
                       }
                     }
                   />
@@ -191,7 +203,7 @@ class App extends React.Component {
                     render={ ({match, location}) => {
                         this.updateGroupInfo(match.params.gPk);
                         return (
-                          <div>
+                          <div style={{ top: '6vh', position: 'relative'}}>
                             <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
                             <WhiteSpace size="xl"/>
 

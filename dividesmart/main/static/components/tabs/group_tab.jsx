@@ -43,6 +43,7 @@ class GroupTab extends React.Component {
 
         response.data.groups.map(group_entry => {
           var group_id = group_entry.id;
+          console.log(group_id);
           axios.get('/api/groups/' + group_id.toString() + "/members").then(responseA => {
 
             var positiveDebt = responseA.data.members.reduce((x, y) => {
@@ -68,6 +69,7 @@ class GroupTab extends React.Component {
             this.setState({
               groups: newArray
             }) 
+            console.log(this.state.groups);
           })
         } );
       })
@@ -100,10 +102,10 @@ class GroupTab extends React.Component {
                 extra={
                   <div>
                     <div>
-                      <span style={{ color: '#dc143c', display:'inline-block', vertical_align:'middle' }}>${ group.negativeDebt }</span>
+                      <span style={{ color: '#dc143c', display:'inline-block', vertical_align:'middle' }}></span>
                     </div>
                     <div>
-                      <span style={{ color: '#00b894', display:'inline-block', vertical_align:'middle' }}>${ group.positiveDebt }</span>
+                      <span style={{ color: '#00b894', display:'inline-block', vertical_align:'middle' }}></span>
                     </div>
                   </div>
                 }
