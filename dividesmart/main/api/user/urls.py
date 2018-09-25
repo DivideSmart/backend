@@ -8,5 +8,5 @@ urlpatterns = [
     path('friends/<uuid:friend_id>/entries/', views.friend_entries),
     path('friends/<uuid:friend_id>/payments/', views.friend_payments),
     path('friends/<uuid:friend_id>/payments/<uuid:payment_id>/', views.friend_payment),
-    path('groups/', views.groups)
+    path('groups/', views.groups),
 ]

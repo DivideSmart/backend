@@ -249,7 +249,7 @@ class LoginPage extends React.Component {
       //       style={{height: '100%'}}
       //       mode="light"
       //     >
-      //       Name of the Appp
+      //       WeShare
       //     </NavBar>
       //   </div>
       //   <TextField style={{ marginLeft: '45%', marginTop: '15%'}}

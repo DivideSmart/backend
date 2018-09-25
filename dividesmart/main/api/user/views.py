@@ -80,23 +80,25 @@ def friends(request):
 
 
 @ensure_authenticated
-@ensure_friends
 def friend(request, friend_id):
     current_user = get_user(request)
     friend_user = current_user.friends.filter(id=friend_id).first()
-    if not friend_user:
-        return HttpResponseNotFound('No such friend')
     if request.method == 'GET':
+        if not friend_user:
+            return HttpResponseNotFound('No such friend')
         return JsonResponse(
             friend_user.to_dict_for_others(current_user, show_debt=True)
         )
     if request.method == 'DELETE':
         # Delete friendship / request with this user id
-        current_user.received_friend_requests.remove(friend_user)
-        current_user.requested_friends.remove(friend_user)
-        current_user.friends.remove(friend_user)
+        to_be_deleted = User.objects.filter(id=friend_id).first()
+        if not to_be_deleted:
+            return HttpResponseNotFound('No such user')
+        current_user.received_friend_requests.remove(to_be_deleted)
+        current_user.requested_friends.remove(to_be_deleted)
+        current_user.friends.remove(to_be_deleted)
         current_user.save()
-        friend_user.save()
+        to_be_deleted.save()
         return HttpResponse('Friend removed')
     return HttpResponseNotFound('Invalid request')
 
@@ -181,3 +183,7 @@ def friend_payment(request, friend_id, payment_id):
         return HttpResponse('Payment deleted')
 
     return HttpResponseBadRequest('Invalid Request')
+
+def allElse(request):
+    print(request)
+
