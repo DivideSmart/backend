@@ -56,7 +56,6 @@ def get_all_friends(current_user):
 
 
 @ensure_authenticated
-@csrf_exempt
 def friends(request):
     current_user = get_user(request)
     if request.method == 'GET':
@@ -216,7 +215,6 @@ def friend_entries(request, friend_id):
 
 @ensure_authenticated
 @ensure_friends
-@csrf_exempt
 def friend_payments(request, friend_id):
     current_user = get_user(request)
     friend_user = current_user.friends.get(id=friend_id)

@@ -42,7 +42,6 @@ def group(request, group_id):
     })
 
 
-@csrf_exempt
 @ensure_authenticated
 def group_members(request, group_id):
     current_user = get_user(request)
