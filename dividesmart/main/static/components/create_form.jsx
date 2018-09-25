@@ -60,6 +60,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { createForm } from 'rc-form';
 import { withStyles } from '@material-ui/core/styles';
 import { FriendList } from './tabs/friend_list.jsx'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem
 
@@ -127,6 +128,19 @@ class H5NumberInputExample extends React.Component {
   render() {
     return (
       <div>
+        <List className={'bill-desc'} renderHeader={() => 'Description'}>
+          <TextareaItem
+
+            // title={<FontAwesomeIcon icon='pen-nib' style={{ width: 18, height: 18}} />}
+            placeholder="Enter a description"
+            data-seed="logId"
+            ref={el => this.autoFocusInst = el}
+            autoHeight
+          />
+        </List>
+
+        <WhiteSpace size="lg" />
+
         <List className={'divide-list'} renderHeader={() => (
           <span>
             <span>Pay by</span>
@@ -184,71 +198,6 @@ class H5NumberInputExample extends React.Component {
             </MListItem>
           </MList>
         </Paper>
-        {/*<div >*/}
-          {/*<Paper elevation={0}>*/}
-            {/*<MList>*/}
-              {/*{[0, 1, 2].map(value => (*/}
-                {/*<div key={value}>*/}
-                  {/*<MListItem key={value} dense button>*/}
-                    {/*<Avatar alt="Remy Sharp" style={{width: 38, height: 38}} src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*/}
-                    {/*<ListItemText primary={`Line item ${value + 1}`} />*/}
-                    {/*<ListItemSecondaryAction>*/}
-
-                      {/*<Input*/}
-                        {/*id="adornment-amount"*/}
-                        {/*// value={this.state.amount}*/}
-                        {/*// onChange={this.handleChange('amount')}*/}
-                        {/*style={{width: '16vw'}}*/}
-                        {/*startAdornment={<InputAdornment position="start">$</InputAdornment>}*/}
-                      {/*/>*/}
-
-                    {/*</ListItemSecondaryAction>*/}
-                  {/*</MListItem>*/}
-                {/*</div>*/}
-              {/*))}*/}
-            {/*</MList>*/}
-          {/*</Paper>*/}
-        {/*</div>*/}
-
-
-        {/*<div>*/}
-          {/*<List renderHeader={() => 'test'} className="my-list">*/}
-            {/*{*/}
-              {/*friendsYouOwe.map(friend => (<List.Item*/}
-              {/*key={friend.key}*/}
-              {/*thumb={*/}
-                {/*<Badge>*/}
-                  {/*<span*/}
-                    {/*style={{*/}
-                      {/*width: '44px',*/}
-                      {/*height: '44px',*/}
-                      {/*background: 'url(' + friend.avatarUrl + ') center center /  44px 44px no-repeat',*/}
-                      {/*display: 'inline-block' }}*/}
-                  {/*/>*/}
-                {/*</Badge>*/}
-              {/*}*/}
-              {/*multipleLine*/}
-              {/*// onClick={() => { window.location.href = '/u/1'}}*/}
-              {/*extra={*/}
-                {/*<span className={'other-owe-amount'}>${ friend.acc }</span>*/}
-              {/*}*/}
-            {/*>*/}
-              {/*{friend.name} <Brief></Brief>*/}
-            {/*</List.Item>))*/}
-            {/*}*/}
-          {/*</List>*/}
-        {/*</div>*/}
-
-        {/*<List>*/}
-          {/*<InputItem*/}
-            {/*{...getFieldProps('inputtitle2')}*/}
-            {/*placeholder="Enter names, emails or phones"*/}
-          {/*>*/}
-            {/*<div style={{ backgroundImage: 'url(https://zos.alipayobjects.com/rmsportal/DfkJHaJGgMghpXdqNaKF.png)', backgroundSize: 'cover', height: '22px', width: '22px' }} />*/}
-          {/*</InputItem>*/}
-        {/*</List>*/}
-
-        {/*<WhiteSpace size="lg" />*/}
 
         <WhiteSpace size="lg" />
 
@@ -277,7 +226,10 @@ class H5NumberInputExample extends React.Component {
                     </ListItemAvatar>
                     <ListItemText style={{float: 'right'}} primary={splitter.username} />
                     <ListItemSecondaryAction>
-                      <span className={'other-owe-amount'}>
+                      <span
+                        // className={'other-owe-amount'}
+                        style={{ marginRight: '6vw'}}
+                      >
                         { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(3) }
                       </span>
                       <IconButton aria-label="Comments">
@@ -336,70 +288,6 @@ class H5NumberInputExample extends React.Component {
           </div>
         </Tabs>
 
-
-        {/* <Tabs tabs={tabs}
-          initialPage={1}
-          onChange={(tab, index) => { console.log('onChange', index, tab); }}
-          onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#fff' }}>
-            Content of first tab
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#fff' }}>
-            Content of second tab
-          </div>
-        </Tabs> */}
-
-        {/*<List className={'divide-list'}>*/}
-            {/*{[0, 1, 2].map(value => (*/}
-              {/*<InputItem*/}
-                {/*key={value}*/}
-                {/*{...getFieldProps('money3')}*/}
-                {/*type={type}*/}
-                {/*defaultValue={100}*/}
-                {/*placeholder="start from left"*/}
-                {/*clear*/}
-                {/*moneyKeyboardAlign="left"*/}
-                {/*moneyKeyboardWrapProps={moneyKeyboardWrapProps}*/}
-                {/*extra="$"*/}
-              {/*>*/}
-                {/*<Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />*/}
-              {/*</InputItem>*/}
-            {/*))}*/}
-        {/*</List>*/}
-
-
-
-
-        {/*<div>*/}
-          {/*<List renderHeader={() => 'CheckboxItem demo'}>*/}
-            {/*{this.state.data.map(i => (*/}
-              {/*<CheckboxItem key={i.value}*/}
-                {/*onChange={() => this.onChange(i.value)}*/}
-                {/*extra={'$' + i.price}*/}
-              {/*>*/}
-                {/*{i.label}*/}
-              {/*</CheckboxItem>*/}
-            {/*))}*/}
-            {/*<CheckboxItem*/}
-              {/*key="disabled"*/}
-              {/*data-seed="logId" disabled defaultChecked multipleLine>*/}
-              {/*Undergraduate*/}
-              {/*<List.Item.Brief>Auxiliary text</List.Item.Brief>*/}
-            {/*</CheckboxItem>*/}
-          {/*</List>*/}
-        {/*</div>*/}
-
-
-        {/*<div className="sub-title">to be settled up</div>*/}
-        {/*<Result*/}
-          {/*img={myImg('HWuSTipkjJRfTWekgTUG')}*/}
-          {/*// title="等待处理"*/}
-          {/*message="to be settled up"*/}
-        {/*/>*/}
-
-        {/*<WhiteSpace size="lg" />*/}
-
         <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -411,25 +299,8 @@ class H5NumberInputExample extends React.Component {
             <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Save
           </MButton>
         </div>
-
-
+        
         <ReceiptButton updateReceipt={this.updateReceipt}/>
-        {/* <WingBlank size="lg">
-          <WhiteSpace size="lg" />
-          <Card>
-            <Card.Header
-              title="This is title"
-              thumb="https://gw.alipayobjects.com/zos/rmsportal/MRhHctKOineMbKAZslML.jpg"
-              extra={<span>this is extra</span>}
-            />
-            <Card.Body>
-              <div>This is content of `Card`</div>
-            </Card.Body>
-            <Card.Footer content="footer content" extra={<div>extra footer content</div>} />
-          </Card>
-          <WhiteSpace size="lg" />
-        </WingBlank> */}
-
 
         <Modal
           visible={this.state.showAddSplittersModal}
