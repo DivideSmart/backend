@@ -37,9 +37,18 @@ class FriendList extends React.Component {
     this.renderButton = this.renderButton.bind(this);
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
     // this.fetch = this.fetch.bind(this);
+    this.addDefaultCheck = this.addDefaultCheck.bind(this);
   }
-
+  componentWillMount() {
+  }
   
+  shouldComponentUpdate(nextProp, nextState) {
+    if(JSON.stringify(nextProp) == JSON.stringify(this.props) && JSON.stringify(nextState) == JSON.stringify(this.state)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   // shouldComponentUpdate() {
   //   if(this.props.isClickable == false) {
@@ -52,26 +61,49 @@ class FriendList extends React.Component {
   // }
 
   renderButton(mode, updateUsers) {
-    if(mode == 'multi-select' || mode == 'single-select') {
+    if (mode == 'multi-select' || mode == 'single-select') {
       return (
         <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
       )
     }
   }
 
-  onChangeCheckBox(e, checked) {
-    if(checked && !(e.target.name in this.added_keys)) {
+  async onChangeCheckBox(e, checked) {
+    console.log("CHECKBOX update")
+    console.log(copy(this.state.added_users));
+    console.log(e.target.name)
+    console.log(checked);
+    if (checked && !(e.target.name in this.added_keys)) {
       this.added_keys.push(e.target.name);
       const new_user = this.props.users.filter(user => user.pk == e.target.name)[0];
       const newArray = this.state.added_users;
       newArray.push(new_user);
-      this.setState({
-        added_users: newArray
+      console.log("CHECKED")
+      console.log(copy(newArray))
+      await this.setState({
+        added_users: copy(newArray)
       });
     } else if(!checked) {
       const newArrayB = this.state.added_users.filter(user => user.pk != e.target.name);
-      this.setState({
-        added_users: newArrayB
+      console.log("UNCHECKED")
+      console.log(copy(newArrayB))
+      await this.setState({
+        added_users: copy(newArrayB)
+      })
+      console.log('test')
+      console.log(this.state.added_users)
+    }
+    
+    console.log("END1")
+  }
+
+  async addDefaultCheck(friend) {
+    if(friend.selected) {
+      this.added_keys.push(friend.pk);
+      var newArray = this.state.added_users;
+      newArray.push(friend);
+      await this.setState({
+        added_users: newArray
       })
     }
   }
@@ -136,18 +168,11 @@ class FriendList extends React.Component {
           <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
         </div>
         <List renderHeader={() => 'Friends'} className="my-list">
-        {console.log(this.state.users)}
         {
           this.state.users.map(friend => {
-            console.log("ABC");
-            
-            console.log(friend.id);
-            console.log(this.state.remove_ids);
-            console.log(this.props.mode);
 
             if (this.props.mode == 'multi-select' && !(this.state.remove_ids.includes(friend.id))) {
-              console.log(friend.id);
-              console.log(this.state.remove_ids);
+              {this.addDefaultCheck(friend)}
               return (
                 <Item
                   ref={friend.pk}
@@ -165,14 +190,12 @@ class FriendList extends React.Component {
                   }
                   multipleLine
                   // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#00b894' }}> <Checkbox name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
+                  extra={<span style={{ color: '#00b894' }}> <Checkbox defaultChecked={friend.selected == true ? true : false} name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
                 >
                   {friend.username} <Brief>{friend.emailAddress}</Brief>
                 </Item>
               )
             } else if(this.props.mode == 'display') {
-              console.log('display')
-              console.log(friend);
               return (
                   <Link to='u/1'>
                     <Item
@@ -221,7 +244,20 @@ class FriendList extends React.Component {
         }
 
         {/* {console.log(this.props.updateUsers)} */}
-        { this.renderButton(this.props.mode, this.props.updateUsers) }
+        {/* { this.renderButton(this.props.mode, this.props.updateUsers) } */}
+
+
+        {
+          (this.props.mode == 'multi-select' || this.props.mode == 'single-select') ? 
+            <Button onClick={ () => this.props.updateUsers(copy(this.state.added_users)) }> ADD </Button> :
+          null
+        }
+
+
+
+
+
+
 
         </List>
 

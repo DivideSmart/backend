@@ -43,8 +43,10 @@ class UserTabWithoutStyle extends React.Component {
       userInfo: {emailAddress: '', username: '', debt: '', color: 'other-owe-amount'},
       entries: [],
       friendId: '',
-      current_user_id: ''
+      current_user_id: '',
+      payAmount: 0
     }
+    this.postPayment = this.postPayment.bind(this);
   }
 
   componentDidMount() {
@@ -110,6 +112,13 @@ class UserTabWithoutStyle extends React.Component {
     })
   }
 
+  postPayment(amount) {
+    var payload = {amount: amount}
+    axios.post('/api/user/friends/' + this.props.match.params.userPk + "/payments/", payload)
+         .then(response => {
+            console.log(response);
+          })
+  }
 
   render() {
 
@@ -243,7 +252,7 @@ class UserTabWithoutStyle extends React.Component {
             </div>
 
             <br />
-            You pay Harry
+            You pay {this.state.userInfo.username}
             <br /><br />
 
             <FormControl style={{ marginBottom: 18 }}>
@@ -253,7 +262,10 @@ class UserTabWithoutStyle extends React.Component {
                 type='number'
                 // value={this.state.amount}
                 // onChange={this.handleChange('amount')}
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                startAdornment={<InputAdornment position="start" >$</InputAdornment>}
+                onChange={event => {
+                  this.setState({payAmount: event.target.value})
+                }} 
               />
             </FormControl>
 
@@ -272,7 +284,7 @@ class UserTabWithoutStyle extends React.Component {
             /> */}
             <br/>
             <br/>
-            <MButton variant="contained" color="primary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
+            <MButton variant="contained" color="primary" size="medium" style={{ width: '80%', marginBottom: 16}}    onClick = {() => this.postPayment(this.state.payAmount)}>
               Record Payment
             </MButton>
             <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
