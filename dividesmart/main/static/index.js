@@ -8,7 +8,11 @@ import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { Provider, connect } from 'react-redux';
-import { faMoneyBillAlt, faHandHoldingUsd, faChevronLeft, faDollarSign, faHome, faReceipt, faUserCircle, faUsers, faLandmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPenNib, faHandHoldingUsd, faMoneyBillAlt,
+  faChevronLeft, faDollarSign, faHome,
+  faReceipt, faUserCircle, faUsers, faLandmark
+} from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
 import {CreateForm} from './components/create_form.jsx'
@@ -33,6 +37,7 @@ import { Tabs2 } from './components/tabs2.jsx'
 import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
 library.add([
+  faPenNib,
   faMoneyBillAlt,
   faHandHoldingUsd,
   faDollarSign,
