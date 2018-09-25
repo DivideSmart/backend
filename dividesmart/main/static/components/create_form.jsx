@@ -119,6 +119,8 @@ class H5NumberInputExample extends React.Component {
       showAddSplittersModal: false,
       friends: [],
       files: [],
+      splitterToAmount: {},
+      name: ''
     }
 
     this.removeSplitter = (splitter) => {
@@ -131,6 +133,14 @@ class H5NumberInputExample extends React.Component {
     this.handleAmountChange = (e) => {
       this.setState({
         totalAmount: e.target.value,
+      })
+    }
+
+    this.handleNameChange = (e) => {
+      console.log("UPDATE NAME")
+      console.log(e)
+      this.setState({
+        name: e,
       })
     }
 
@@ -150,10 +160,44 @@ class H5NumberInputExample extends React.Component {
     }
 
     this.updateFriends = this.updateFriends.bind(this);
-      
+    this.postBill = this.postBill.bind(this);
+
+    this.updateIndividualAmount = (e) => {
+      var user_id = e.target.name;
+      console.log(this.state.splitterToAmount)
+      // var newSplitterToAmount = this.state.splitterToAmount.map(splitter => {
+      //                               if(splitter.id == user_id) {
+      //                                 splitter.amount = e.target.value;
+      //                               }
+      //                           })
+      var newSplitterToAmount = this.state.splitterToAmount;
+      newSplitterToAmount[user_id] = e.target.value
+      this.setState({
+        splitterToAmount: newSplitterToAmount
+      })
+    }
   }
 
+  // updateIndividualAmount(e) {
+  //   console.log("UPDATE")
+  //   console.log(e)
+  //   console.log(e.target)
+  //   console.log(e.target.name)
+  //   var user_id = e.target.name;
+  //   console.log(this.state.splitterToAmount)
+  //   var newSplitterToAmount = this.state.splitterToAmount.map(splitter => {
+  //                                 if(splitter.id == user_id) {
+  //                                   splitter.amount = e.target.value;
+  //                                 }
+  //                             })
+  //   this.setState({
+  //     splitterToAmount: newSplitterToAmount
+  //   })
+  // }
+
   updateFriends(added_users) {
+      console.log("AFTER UPDATE")
+      console.log(added_users);
       var new_added_users = added_users.map(u => {
                                       var p = {uuid: u.id, 
                                                username: u.username,
@@ -163,11 +207,10 @@ class H5NumberInputExample extends React.Component {
       this.setState({
         splitters: new_added_users
       })
-      console.log("AFTER UPDATE")
-      console.log(added_users)
-      console.log(new_added_users)
-      console.log(this.state.splitters)
 
+      this.setState({
+        showAddSplittersModal: false
+      })
       var ref_ids = added_users.map(u => u.id);
 
       var friends = this.state.friends.map(friend => {
@@ -185,6 +228,36 @@ class H5NumberInputExample extends React.Component {
       })
   }
   
+
+  postBill() {
+    console.log("AMOUNT OF MONEY")
+    console.log(this.state.totalAmount)
+    console.log(this.state.splitterToAmount)
+    console.log(this.state)
+    var formatSplitterToAmount = this.state.splitterToAmount;
+    console.log(formatSplitterToAmount)
+    if(this.state.splitMode == "equally") {
+      var keys = this.state.splitters.map(splitter => splitter.uuid);
+      var equalAmount = this.state.totalAmount / (keys.length)
+      keys.forEach(key => formatSplitterToAmount[key] = equalAmount.toString())
+    }
+    console.log("FORMAT")
+    console.log(this.state.splitterToAmount)
+    console.log(formatSplitterToAmount)
+    var payload = {
+      "name": this.state.name,
+      "groupId": null,
+      "initiator": this.state.current_user.id,
+      "loans": formatSplitterToAmount,
+      "amount": this.state.totalAmount,
+    }
+    axios.post('/api/bills/', payload)
+        .then(response => {
+              console.log("RESPONSE")
+              console.log(response)
+          } )
+  }
+ 
   componentWillMount() {
     axios.get("/api/user").then(response => {
           this.setState({
@@ -216,6 +289,7 @@ class H5NumberInputExample extends React.Component {
             data-seed="logId"
             ref={el => this.autoFocusInst = el}
             autoHeight
+            onChange={this.handleNameChange}
           />
         </List>
 
@@ -338,18 +412,21 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {this.state.splitters.map(splitter => (
-                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif" />
+                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>   
+                  <ListItemAvatar>
+                      <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
                     <ListItemText style={{float: 'right'}}  primary={splitter.username} />
                     <ListItemSecondaryAction>
                       <Input
                         id="adornment-amount"
+                        name={splitter.uuid}
                         // value={this.state.amount}
                         // onChange={this.handleChange('amount')}
                         style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        onChange={this.updateIndividualAmount}
+                        startAdornment={<InputAdornment position="start"
+                        >$</InputAdornment>}
                       />
                       <IconButton aria-label="Comments">
                         <RemoveCircleOutline
@@ -360,7 +437,9 @@ class H5NumberInputExample extends React.Component {
                     </ListItemSecondaryAction>
                   </MListItem>
                 ))}
-                <MListItem button >
+                <MListItem 
+                   onClick={() => this.setState({showAddSplittersModal: true})}
+                   button >
                   <ListItemAvatar>
                     <Avatar>
                       <AddIcon />
@@ -403,7 +482,8 @@ class H5NumberInputExample extends React.Component {
           }}
         >
           <MButton
-            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
+            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}
+            onClick={() => this.postBill()}>
             <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Save
           </MButton>
         </div>

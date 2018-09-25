@@ -68,7 +68,7 @@ class FriendList extends React.Component {
     }
   }
 
-  async onChangeCheckBox(e, checked) {
+  onChangeCheckBox(e, checked) {
     console.log("CHECKBOX update")
     console.log(copy(this.state.added_users));
     console.log(e.target.name)
@@ -76,22 +76,23 @@ class FriendList extends React.Component {
     if (checked && !(e.target.name in this.added_keys)) {
       this.added_keys.push(e.target.name);
       const new_user = this.props.users.filter(user => user.pk == e.target.name)[0];
-      const newArray = this.state.added_users;
+      const newArray = copy(this.state.added_users);
       newArray.push(new_user);
       console.log("CHECKED")
       console.log(copy(newArray))
-      await this.setState({
+      this.setState({
         added_users: copy(newArray)
       });
     } else if(!checked) {
-      const newArrayB = this.state.added_users.filter(user => user.pk != e.target.name);
       console.log("UNCHECKED")
+      console.log(this.state.added_users);
+      const newArrayB = this.state.added_users.filter(user => user.pk != e.target.name);
       console.log(copy(newArrayB))
-      await this.setState({
+      this.setState({
         added_users: copy(newArrayB)
       })
       console.log('test')
-      console.log(this.state.added_users)
+      console.log(copy(this.state.added_users))
     }
     
     console.log("END1")
@@ -103,7 +104,7 @@ class FriendList extends React.Component {
       var newArray = this.state.added_users;
       newArray.push(friend);
       await this.setState({
-        added_users: newArray
+        added_users: copy(newArray)
       })
     }
   }
@@ -147,6 +148,17 @@ class FriendList extends React.Component {
     this.setState({
       users: this.props.users
     })
+    var newArray = this.state.added_users;
+
+    this.props.users.forEach(friend => {
+            if(friend.selected) {
+              this.added_keys.push(friend.pk);
+              newArray.push(friend);
+            }
+          })
+    this.setState({
+        added_users: copy(newArray)
+    })
   }
 
   filterOut(users) {
@@ -172,7 +184,7 @@ class FriendList extends React.Component {
           this.state.users.map(friend => {
 
             if (this.props.mode == 'multi-select' && !(this.state.remove_ids.includes(friend.id))) {
-              {this.addDefaultCheck(friend)}
+              // {this.addDefaultC  heck(friend)}
               return (
                 <Item
                   ref={friend.pk}
