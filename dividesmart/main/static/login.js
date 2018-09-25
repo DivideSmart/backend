@@ -48,6 +48,9 @@ import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import { MySnackbarContentWrapper } from './components/alert_message.jsx'
+
 library.add(faFacebook, faGoogle, faUsers)
 
 class LoginPage extends React.Component {
@@ -62,8 +65,9 @@ class LoginPage extends React.Component {
       isAuthenticated: false,
       username: '',
       password: '',
-      token: ''
-    };
+      token: '',
+      errorMessage: false,
+    }
 
     this.clickLogin = function() {
       var apiBaseUrl = "/api";
@@ -72,21 +76,22 @@ class LoginPage extends React.Component {
         "password": this.state.password
       }
 
+      const self = this
       axios.post(apiBaseUrl + '/login/', payload)
       .then(function (response) {
-        if(response.status == 200){
-          alert("Login successful");
+        if (response.status == 200){
           window.location.replace("http://localhost:8000/");
         }
-        else if(response.status == 400){
+        else if (response.status == 400){
           alert("username password do not match")
         }
-        else{
+        else {
           alert("Username does not exist");
         }
-        })
+      })
       .catch(function (error) {
-        console.log(error);
+        console.log(error)
+        self.setState({errorMessage: true})
       });
     }
 
@@ -99,6 +104,13 @@ class LoginPage extends React.Component {
           // TODO: notification
         })
       }, {scope: 'email'})  // TODO: get user' friends also
+    }
+
+    this.handleMessageClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return
+      }
+      this.setState({ errorMessage: false })
     }
   }
 
@@ -244,6 +256,22 @@ class LoginPage extends React.Component {
           </MButton>
         </div>
 
+
+        <Snackbar anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.errorMessage}
+          autoHideDuration={3800}
+          onClose={this.handleMessageClose}
+        >
+          <MySnackbarContentWrapper
+            onClose={this.handleMessageClose}
+            variant="warning"
+            message="email or password incorrect"
+          />
+        </Snackbar>
+
       </div>
 
 
@@ -292,7 +320,6 @@ class LoginPage extends React.Component {
       //   {'  '}Log in with Facebook
       //   </Button>
       // </div>
-
     )
   }
 }
