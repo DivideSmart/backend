@@ -16,6 +16,7 @@ import {
   Tabs,
   TextareaItem,
   WhiteSpace,
+  ImagePicker,
   WingBlank,
 } from 'antd-mobile'
 
@@ -91,6 +92,9 @@ const tabs = [
 class H5NumberInputExample extends React.Component {
   constructor(props) {
     super()
+
+    this.imgReader = new FileReader()
+
     this.state = {
       totalAmount: 0,
       splitMode: 'equally',
@@ -106,6 +110,7 @@ class H5NumberInputExample extends React.Component {
         username: 'Test'
       }],
       showAddSplittersModal: false,
+      files: [],
     }
 
     this.removeSplitter = (splitter) => {
@@ -119,6 +124,25 @@ class H5NumberInputExample extends React.Component {
       this.setState({
         totalAmount: e.target.value,
       })
+    }
+
+    this.addPhoto = async (file) => {
+      await this.imgReader.readAsDataURL(file)
+      const self = this
+      
+      this.imgReader.addEventListener("load", function() {
+        const url = self.imgReader.result
+        const newFiles = self.state.files
+        newFiles.push({
+          file: file,
+          url: url
+        })
+        self.setState({
+          files: newFiles,
+        })
+      }, false);
+
+
     }
 
     this.updateReceipt = (content) => {
@@ -301,6 +325,30 @@ class H5NumberInputExample extends React.Component {
           </div>
         </Tabs>
 
+
+        <div style={{display: this.state.files.length > 0 ? 'block' : 'none'}}>
+          <WhiteSpace size="lg" />
+
+          <List renderHeader={() => (
+            <span>
+              <span>Images</span>
+            </span>
+          )}>
+          </List>
+          <ImagePicker
+            files={this.state.files}
+            onChange={(files, type, index) => {
+              console.log(files, type, index);
+              this.setState({
+                files,
+              });
+            }}
+            onImageClick={(index, fs) => console.log(index, fs)}
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+          />
+        </div>
+
+
         <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -313,7 +361,7 @@ class H5NumberInputExample extends React.Component {
           </MButton>
         </div>
 
-        <ReceiptButton updateReceipt={this.updateReceipt}/>
+        <ReceiptButton addPhoto={this.addPhoto} updateReceipt={this.updateReceipt}/>
 
         <Modal
           visible={this.state.showAddSplittersModal}

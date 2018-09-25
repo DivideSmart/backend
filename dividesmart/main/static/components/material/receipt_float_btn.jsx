@@ -48,7 +48,6 @@ class FlaoatingButton extends React.Component {
           options: BUTTONS,
           cancelButtonIndex: BUTTONS.length - 1,
           maskClosable: true,
-          'data-seed': 'logId',
           wrapProps,
         },
         (buttonIndex) => {
@@ -59,25 +58,26 @@ class FlaoatingButton extends React.Component {
 
     this.handleFiles = () => {
       var file = this.finput.files[0]
-      console.log(file)
-      var data = new FormData()
-      data.append('csrfmiddlewaretoken', getCookie('csrftoken'))
-      data.append('receipt', file)
-      axios.post('/api/ocr', data).then((response) => {
-        this.setState({
-          content: response.data.content
-        })
-        // console.log(response.data.content)
-        props.updateReceipt(response.data.content)
-
-        var lines = []
-        for (var line of response.data.content.split('\n')) {
-          if (line.match(/\d+\.\d+/g) && parseFloat(line.match(/\d+\.\d+/g)[0]) != 0) {
-            lines.push(line)
-            console.log(line)
-          }
-        }
-      })
+      props.addPhoto(file)
+      // console.log(file)
+      // var data = new FormData()
+      // data.append('csrfmiddlewaretoken', getCookie('csrftoken'))
+      // data.append('receipt', file)
+      // axios.post('/api/ocr', data).then((response) => {
+      //   this.setState({
+      //     content: response.data.content
+      //   })
+      //   // console.log(response.data.content)
+      //   props.updateReceipt(response.data.content)
+      //
+      //   var lines = []
+      //   for (var line of response.data.content.split('\n')) {
+      //     if (line.match(/\d+\.\d+/g) && parseFloat(line.match(/\d+\.\d+/g)[0]) != 0) {
+      //       lines.push(line)
+      //       console.log(line)
+      //     }
+      //   }
+      // })
     }
   }
 
