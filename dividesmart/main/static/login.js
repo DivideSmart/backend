@@ -185,7 +185,7 @@ class LoginPage extends React.Component {
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" size="small"
-            style={{ width: '66%', height: '6vh', backgroundColor:'#DD4B39', borderColor:'#DD4B39' }}
+            style={{ width: '66%', height: '48px', backgroundColor:'#DD4B39', borderColor:'#DD4B39' }}
           >
             <FontAwesomeIcon icon={['fab', 'google']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
             <span style={{color: 'white', fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Google</span>
@@ -204,7 +204,7 @@ class LoginPage extends React.Component {
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" color="primary" size="small"
-            style={{ width: '66%', height: '6vh', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
+            style={{ width: '66%', height: '48px', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
             onClick={this.facebookLogin}
           >
             <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
