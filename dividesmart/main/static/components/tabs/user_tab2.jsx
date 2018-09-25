@@ -82,7 +82,7 @@ class UserTabWithoutStyle extends React.Component {
           entry.dateFormat = (dateObj.getMonth() + 1).toString() + "/"
                               + dateObj.getDate().toString() + "/"
                               + dateObj.getFullYear().toString();
-          if(entry.type == 'payment') {
+          if (entry.type == 'payment') {
             entry.color = 'payment-amount'
             entry.name = entry.initiator == current_user_id
                                 ? 'you pay ' + this.state.userInfo.username
@@ -160,7 +160,7 @@ class UserTabWithoutStyle extends React.Component {
 
           <List.Item extra={this.state.userInfo.emailAddress}
             // arrow="horizontal"
-            className={''}
+            className={'user-email'}
           >
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
@@ -187,10 +187,10 @@ class UserTabWithoutStyle extends React.Component {
                   onClick={() => {}}
                   extra={<span className={entry.color}>${entry.amount}</span>}
                   >
-                     {entry.name} <Brief>{entry.dateFormat}</Brief>
+                    {entry.name} <Brief>{entry.dateFormat}</Brief>
                   </Item>
                 )
-             })
+            })
           }
         </List>
 
@@ -241,13 +241,13 @@ class UserTabWithoutStyle extends React.Component {
             >
               <Avatar
                 alt="Remy Sharp"
-                src="https://forums.dctp.ws/download/file.php?avatar=10907_1408814803.gif"
+                src={this.state.userInfo.avatarUrl}
                 style={{width: 60, height: 60}}
               />
             </div>
 
             <br />
-            You pay {this.state.userInfo.username}
+            You pay <span style={{ color: '#484848', fontWeight: 500}}>{this.state.userInfo.username}</span>
             <br /><br />
 
             <FormControl style={{ marginBottom: 18 }}>
@@ -260,7 +260,7 @@ class UserTabWithoutStyle extends React.Component {
                 startAdornment={<InputAdornment position="start" >$</InputAdornment>}
                 onChange={event => {
                   this.setState({payAmount: event.target.value})
-                }} 
+                }}
               />
             </FormControl>
 
