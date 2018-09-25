@@ -77,7 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif self.external_avatar_url:
             return self.external_avatar_url
         else:
-            return "/media/avatars/default_portrait.png"
+            return "/media/avatars/default_avatar.png"
 
     is_active = models.BooleanField(default=True)
 
@@ -107,6 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'id': self.id,
             'emailAddress': self.email_address,
             'username': self.username,
+            'avatarUrl': self.avatar_url,
         }
         return user_json
 

@@ -122,4 +122,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "bundled_static", 'prod'),
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
 AUTH_USER_MODEL = 'main.User'
