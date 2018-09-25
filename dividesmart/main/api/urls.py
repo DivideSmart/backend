@@ -10,6 +10,8 @@ urlpatterns = [
     
     path('bills/', include('main.api.bills.urls')),
 
+    path('login/fb/', views.handle_fb_login),
+
     path('login/', views.handle_login),
 
     path('register/', views.handle_register),
