@@ -162,6 +162,8 @@ class GroupManager(models.Manager):
         group.add_member(user)
         if invited_users:
             for invited_user in invited_users:
+                if group.has_member(invited_user):
+                    continue
                 group.add_member(invited_user)
         return group
 
