@@ -92,8 +92,22 @@ const tabs = [
 class H5NumberInputExample extends React.Component {
   constructor(props) {
     super()
-
     this.imgReader = new FileReader()
+    this.tempFile = undefined
+    const self = this
+    
+    this.imgReader.addEventListener("load", function() {
+      const url = self.imgReader.result
+      const newFiles = self.state.files
+      const file = this.tempFile
+      newFiles.push({
+        file: file,
+        url: url
+      })
+      self.setState({
+        files: newFiles,
+      })
+    }, false);
 
     this.state = {
       totalAmount: 0,
@@ -126,23 +140,9 @@ class H5NumberInputExample extends React.Component {
       })
     }
 
-    this.addPhoto = async (file) => {
-      await this.imgReader.readAsDataURL(file)
-      const self = this
-      
-      this.imgReader.addEventListener("load", function() {
-        const url = self.imgReader.result
-        const newFiles = self.state.files
-        newFiles.push({
-          file: file,
-          url: url
-        })
-        self.setState({
-          files: newFiles,
-        })
-      }, false);
-
-
+    this.addPhoto = (file) => {
+      this.tempFile = file
+      this.imgReader.readAsDataURL(file)
     }
 
     this.updateReceipt = (content) => {

@@ -57,8 +57,9 @@ class FlaoatingButton extends React.Component {
     }
 
     this.handleFiles = () => {
-      var file = this.finput.files[0]
+      const file = this.finput.files[0]
       props.addPhoto(file)
+      this.finput.files = []
       // console.log(file)
       // var data = new FormData()
       // data.append('csrfmiddlewaretoken', getCookie('csrftoken'))

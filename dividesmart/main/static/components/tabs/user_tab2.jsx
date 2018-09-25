@@ -1,41 +1,39 @@
-import {Badge, Button, Icon, List, WhiteSpace, WingBlank, Modal } from 'antd-mobile';
+import {Badge, Button, Icon, List, Modal, WhiteSpace, WingBlank} from 'antd-mobile';
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import FormControl from '@material-ui/core/FormControl';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import MButton from '@material-ui/core/Button'
+import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
 import React from 'react'
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import axios from 'axios'
+import classNames from 'classnames';
+import store from '../../redux/store.js'
+import { withStyles } from '@material-ui/core/styles';
 
 const Item = List.Item
 const Brief = Item.Brief
 
 const prompt = Modal.prompt
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import MButton from '@material-ui/core/Button'
 
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Collapse from '@material-ui/core/Collapse';
-import classNames from 'classnames';
-import Avatar from '@material-ui/core/Avatar';
-import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
-
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
-import axios from 'axios'
-import store from '../../redux/store.js'
 
 class UserTabWithoutStyle extends React.Component {
   constructor() {
@@ -44,79 +42,72 @@ class UserTabWithoutStyle extends React.Component {
       showSettleUpModal: false,
       userInfo: {emailAddress: '', username: '', debt: '', color: 'other-owe-amount'},
       entries: [],
-      friend_id: '',
+      friendId: '',
       current_user_id: ''
     }
   }
 
   componentDidMount() {
     this.setState({
-      friend_id: this.props.match.params.userPk,
+      friendId: this.props.match.params.userPk,
       current_user_id: store.getState().auth.user.id
     })
 
-    var friend_id = this.props.match.params.userPk;
-    console.log("HERE")
-    console.log(this.state.friend_id);
+    var friendId = this.props.match.params.userPk;
 
-    axios.get('/api/user/friends/' + friend_id + "/")
-         .then(response => {
-            var userInfo = {}
-            userInfo.emailAddress = response.data.emailAddress;
-            userInfo.username = response.data.username;
-            
-            userInfo.debt = parseFloat(response.data.debt) > 0 ? response.data.debt : response.data.debt.slice(1);
+    axios.get('/api/user/friends/' + friendId + "/")
+    .then(response => {
+      var userInfo = {}
+      userInfo.emailAddress = response.data.emailAddress;
+      userInfo.username = response.data.username;
 
-            userInfo.avatarUrl = response.data.avatarUrl;
-            userInfo.color = parseFloat(response.data.debt) > 0 ? 'other-owe-amount' : 'owe-other-amount'
+      userInfo.debt = parseFloat(response.data.debt) > 0 ? response.data.debt : response.data.debt.slice(1);
 
-            this.setState({
-              userInfo: userInfo
-            })
+      userInfo.avatarUrl = response.data.avatarUrl;
+      userInfo.color = parseFloat(response.data.debt) > 0 ? 'other-owe-amount' : 'owe-other-amount'
 
+      this.setState({
+        userInfo: userInfo
+      })
 
-                axios.get('/api/user/friends/' + friend_id + "/entries/")
-                .then(response => {
-                    var current_user_id = store.getState().auth.user.id;
-                    var entries = []
-                    response.data.entries.forEach(entry => {
+      axios.get('/api/user/friends/' + friendId + "/entries/")
+      .then(response => {
+        var current_user_id = store.getState().auth.user.id;
+        var entries = []
+        response.data.entries.forEach(entry => {
 
-                      var dateObj = new Date(entry.dateCreated);
-                      entry.dateFormat = (dateObj.getMonth() + 1).toString() + "/" 
-                                          + dateObj.getDate().toString() + "/" 
-                                          + dateObj.getFullYear().toString();
-                      if(entry.type == 'payment') {
-                        entry.color = 'payment-amount'
-                        entry.name = entry.initiator == current_user_id 
-                                            ? 'you pay ' + this.state.userInfo.username
-                                            : this.state.userInfo.username + ' pay you'
-                      } else if (entry.type == 'bill') {
-                        entry.amount = entry.initiator == current_user_id  
-                                            ? entry.loans[friend_id] 
-                                            : entry.loans[current_user_id]
-                        console.log(friend_id)
-                        console.log(current_user_id)
-                        console.log(entry.loans)
-                        console.log(entry.loans[friend_id])
-                        console.log(entry.loans[current_user_id])
-                        console.log("STOP")
-                        entry.color = entry.initiator == current_user_id 
-                                            ? 'other-owe-amount'
-                                            : 'owe-other-amount'
-                      }
+          var dateObj = new Date(entry.dateCreated);
+          entry.dateFormat = (dateObj.getMonth() + 1).toString() + "/"
+                              + dateObj.getDate().toString() + "/"
+                              + dateObj.getFullYear().toString();
+          if(entry.type == 'payment') {
+            entry.color = 'payment-amount'
+            entry.name = entry.initiator == current_user_id
+                                ? 'you pay ' + this.state.userInfo.username
+                                : this.state.userInfo.username + ' pay you'
+          } else if (entry.type == 'bill') {
+            entry.amount = entry.initiator == current_user_id
+                                ? entry.loans[friendId]
+                                : entry.loans[current_user_id]
+            // console.log(friendId)
+            // console.log(current_user_id)
+            // console.log(entry.loans)
+            // console.log(entry.loans[friendId])
+            // console.log(entry.loans[current_user_id])
+            // console.log("STOP")
+            entry.color = entry.initiator == current_user_id
+                                ? 'other-owe-amount'
+                                : 'owe-other-amount'
+          }
 
-                      entries.push(entry)
-                    })
+          entries.push(entry)
+        })
 
-                    this.setState({
-                      entries: entries
-                    })
-                  })
-
-
-                })
-
-    
+        this.setState({
+          entries: entries
+        })
+      })
+    })
   }
 
 
@@ -179,7 +170,7 @@ class UserTabWithoutStyle extends React.Component {
         <List>
 
 
-          { 
+          {
             this.state.entries.map(entry => {
               return (
                 <Item
