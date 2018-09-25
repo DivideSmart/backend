@@ -158,8 +158,10 @@ class App extends React.Component {
   findGroupMembers(group_id) {
     axios.get('/api/groups/' + group_id + '/members/')
          .then(response => {
+            var newMembers = response.data.members.filter(friend => friend.id != this.state.user.id);
+
             this.setState({
-              groupMembers: response.data.members
+              groupMembers: newMembers
             })
           })
   }
@@ -212,6 +214,7 @@ class App extends React.Component {
                         <CreateForm
                           match={match}
                           location={location}
+                          splitters={this.state.groupMembers}
                           friends={this.state.groupMembers}
                         />
                       </div>

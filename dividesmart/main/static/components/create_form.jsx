@@ -77,6 +77,15 @@ const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${sr
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 
 
+function copy(o) {
+  var output, v, key;
+  output = Array.isArray(o) ? [] : {};
+  for (key in o) {
+      v = o[key];
+      output[key] = (typeof v === "object") ? copy(v) : v;
+  }
+  return output;
+}
 
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -230,20 +239,14 @@ class H5NumberInputExample extends React.Component {
   
 
   postBill() {
-    console.log("AMOUNT OF MONEY")
-    console.log(this.state.totalAmount)
-    console.log(this.state.splitterToAmount)
-    console.log(this.state)
     var formatSplitterToAmount = this.state.splitterToAmount;
-    console.log(formatSplitterToAmount)
+    
     if(this.state.splitMode == "equally") {
       var keys = this.state.splitters.map(splitter => splitter.uuid);
       var equalAmount = this.state.totalAmount / (keys.length)
       keys.forEach(key => formatSplitterToAmount[key] = equalAmount.toString())
     }
-    console.log("FORMAT")
-    console.log(this.state.splitterToAmount)
-    console.log(formatSplitterToAmount)
+
     var payload = {
       "name": this.state.name,
       "groupId": null,
@@ -251,12 +254,19 @@ class H5NumberInputExample extends React.Component {
       "loans": formatSplitterToAmount,
       "amount": this.state.totalAmount,
     }
-    console.log(payload);
+    
+    if(this.props.match && this.props.match.params.gPk) {
+      console.log("HERE")
+      console.log(this.props);
+      payload.groupId = this.props.match.params.gPk;
+    }
+
     axios.post('/api/bills/', payload)
         .then(response => {
               console.log("RESPONSE")
               console.log(response)
           } )
+
   }
  
   componentDidMount() {
@@ -265,15 +275,17 @@ class H5NumberInputExample extends React.Component {
             current_user: response.data
           })
 
+          console.log("WHY HERE")
           if(this.props.friends) {
             console.log("HURAY I HAVE FRIENDS");
             var friends = this.props.friends.filter(friend => friend.id != response.data.id);
-            friends.forEach(friend => {friend.pk = friend.id;})
+            friends.forEach(friend => {friend.pk = friend.id; friend.selected=true})
             this.setState({
               friends: friends
             })
             console.log(friends);
           } else {
+            console.log("OMG");
             axios.get('/api/user/friends').then(responseB => {
               var friends = responseB.data.friends;
               friends = friends.map(friend => {
@@ -309,12 +321,38 @@ class H5NumberInputExample extends React.Component {
   componentWillReceiveProps(nextProps) {
     console.log("TEST HERE HAHA")
     console.log(this.props.splitters);
+    if(nextProps.friends) {
+      var friends = copy(nextProps.friends);
+      friends.forEach(friend => {friend.pk = friend.id; friend.selected=true})
+      this.setState({
+        friends: friends
+      })
+    }
+
     if(nextProps.splitters) {
       var newSplitters = nextProps.splitters.map(splitter => {
                                                   return {uuid: splitter.id,
                                                           username: splitter.username,
                                                           avatarUrl: splitter.avatarUrl}
                                                 })
+      var ref_ids = nextProps.splitters.map(splitter => splitter.id);
+    
+      var friends = this.state.friends.map(friend => {
+        if (ref_ids.includes(friend.id) ) {
+          friend.selected = true
+        } else {
+          friend.selected = false
+        }
+
+        friend.pk = friend.id;
+        return friend;
+      })
+
+
+      this.setState({
+        friends: friends
+      })
+
       this.setState({
         splitters: newSplitters
       })
