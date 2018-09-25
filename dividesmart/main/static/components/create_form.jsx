@@ -247,6 +247,8 @@ class H5NumberInputExample extends React.Component {
       keys.forEach(key => formatSplitterToAmount[key] = equalAmount.toString())
     }
 
+    delete formatSplitterToAmount[this.state.current_user.id]
+
     var payload = {
       "name": this.state.name,
       "groupId": null,
@@ -278,8 +280,10 @@ class H5NumberInputExample extends React.Component {
           console.log("WHY HERE")
           if(this.props.friends) {
             console.log("HURAY I HAVE FRIENDS");
-            var friends = this.props.friends.filter(friend => friend.id != response.data.id);
+            // var friends = this.props.friends.filter(friend => friend.id != response.data.id);
+            var friends = this.props.friends;
             friends.forEach(friend => {friend.pk = friend.id; friend.selected=true})
+            friends.push(response.data);
             this.setState({
               friends: friends
             })
@@ -288,6 +292,7 @@ class H5NumberInputExample extends React.Component {
             console.log("OMG");
             axios.get('/api/user/friends').then(responseB => {
               var friends = responseB.data.friends;
+              friends.push(response.data)
               friends = friends.map(friend => {
                 friend.pk = friend.id;
                 return friend;

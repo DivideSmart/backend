@@ -158,8 +158,8 @@ class App extends React.Component {
   findGroupMembers(group_id) {
     axios.get('/api/groups/' + group_id + '/members/')
          .then(response => {
-            var newMembers = response.data.members.filter(friend => friend.id != this.state.user.id);
-
+            // var newMembers = response.data.members.filter(friend => friend.id != this.state.user.id);
+            var newMembers = response.data.members;
             this.setState({
               groupMembers: newMembers
             })
