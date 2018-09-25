@@ -178,4 +178,4 @@ db.sqlite3
 **/media/document_thumbnails/*
 .DS_Store
 
-dividesmart/main/migrations/*
+**/migrations/*
