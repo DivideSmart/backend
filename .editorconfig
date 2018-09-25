@@ -14,5 +14,5 @@ indent_size = 2
 [*.{html,htm}]
 indent_size = 2
 
-[*.css]
+[*.{css,less}]
 indent_size = 2

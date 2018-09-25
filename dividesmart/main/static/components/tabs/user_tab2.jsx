@@ -156,6 +156,7 @@ class UserTabWithoutStyle extends React.Component {
 
           <List.Item extra={this.state.userInfo.emailAddress}
             // arrow="horizontal"
+            className={'user-email'}
           >
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
