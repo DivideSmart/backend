@@ -56,7 +56,6 @@ class Tabs extends React.Component {
             }
             title="Groups"
             key="Groups"
-            // badge={'new'}
             selected={this.state.selectedTab === 'redTab'}
             onPress={() => {
               this.setState({

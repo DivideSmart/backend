@@ -118,7 +118,7 @@ class UserTab extends React.Component {
             Custom corner
           </Item> */}
 
-          <Item extra={this.state.myEmailAddress}>
+          <Item extra={this.state.myEmailAddress} className={'user-email'}>
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </Item>
@@ -146,6 +146,11 @@ class UserTab extends React.Component {
             />
           </Item> */}
         </List>
+
+
+        <WhiteSpace />
+
+
         <List renderHeader={() => 'Pending Requests'} className="email-list">
           {
             this.state.pendingRequests.map(request => {
@@ -169,6 +174,9 @@ class UserTab extends React.Component {
             })
           }
         </List>
+
+        <WhiteSpace />
+
         <List renderHeader={() => 'Sent requests'} className="email-list">
           {
             this.state.sentRequests.map(request => {

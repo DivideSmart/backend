@@ -1,11 +1,15 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
+import { Badge, Icon, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
 import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
 import React from 'react'
 import axios from 'axios'
+import MButton from '@material-ui/core/Button'
+import {
+  Link,
+} from 'react-router-dom'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -89,8 +93,25 @@ class FriendsTab extends React.Component {
   render() {
     return (
       <div>
-        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         <FriendsList friends={this.state.users}/>
+
+
+        <WhiteSpace />
+        <WhiteSpace />
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Link to='/addFriend' style={{ width: '80%' }}>
+            <MButton
+              variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
+              <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Add Friend
+            </MButton>
+          </Link>
+        </div>
 
         <WhiteSpace />
         <WhiteSpace />

@@ -82,12 +82,6 @@ class LoginPage extends React.Component {
         if (response.status == 200){
           window.location.replace("http://localhost:8000/");
         }
-        else if (response.status == 400){
-          alert("username password do not match")
-        }
-        else {
-          alert("Username does not exist");
-        }
       })
       .catch(function (error) {
         console.log(error)

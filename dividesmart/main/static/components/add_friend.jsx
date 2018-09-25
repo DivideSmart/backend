@@ -1,7 +1,7 @@
 import 'regenerator-runtime/runtime'
 import '../style/add_friend.less'
 
-import { Button, List, WhiteSpace } from 'antd-mobile'
+import { Button, List, WhiteSpace, Icon } from 'antd-mobile'
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Close from '@material-ui/icons/Close';
@@ -16,6 +16,7 @@ import {
   Link,
 } from 'react-router-dom';
 import ListItem from 'antd-mobile/lib/list/ListItem';
+import MButton from '@material-ui/core/Button'
 import { MySnackbarContentWrapper } from './alert_message.jsx'
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
@@ -105,10 +106,10 @@ class AddFriendForm extends React.Component {
     // const suffix = userName ? <Icon type="check-circle"/> : null;
     return (
       <div>
-        <div>
+        <div style={{textAlign: 'center'}}>
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
-          <FormControl>
+          <FormControl style={{width: '80%'}}>
             <Input
               className="full-width"
               id="adornment-email"
@@ -144,19 +145,40 @@ class AddFriendForm extends React.Component {
                   <Item
                     className="full-width"
                     key = {email.key}
-                    extra={<Checkbox
-                      name={email.email}
-                      onClick={this.removeEmailAddress}
-                      icon={<IconButton><Close/></IconButton>} >
-                    </Checkbox>}
+                    extra={
+                      <Checkbox
+                        style={{ width: 28, height: 28, }}
+                        name={email.email}
+                        onClick={this.removeEmailAddress}
+                        icon={<IconButton><Close /></IconButton>} >
+                      </Checkbox>
+                    }
                   >
                     {email.email}
                   </Item>
                 )
               })
             }
-            <Button className="full-width" onClick={ () => this.addFriends() }> Add all </Button>
+
+            {/* <Button className="full-width" onClick={ () => this.addFriends() }> Add all </Button> */}
           </List>
+
+
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: 38
+            }}
+          >
+            <Link to='/addFriend' style={{ width: '80%' }}>
+              <MButton
+                variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
+                <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Add Friend
+              </MButton>
+            </Link>
+          </div>
+
+
           <Snackbar anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',
@@ -180,3 +202,4 @@ class AddFriendForm extends React.Component {
 const AddFriend = createForm()(AddFriendForm);
 
 export { AddFriend }
+//
