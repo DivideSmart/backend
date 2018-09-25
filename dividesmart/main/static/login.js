@@ -108,7 +108,7 @@ class LoginPage extends React.Component {
             style={{ width: '66%', height: '6vh', backgroundColor:'#DD4B39', borderColor:'#DD4B39' }}
           >
             <FontAwesomeIcon icon={['fab', 'google']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
-            <span style={{color: 'white', fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+            <span style={{color: 'white', fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Google</span>
           </MButton>
         </div>
 
@@ -127,8 +127,31 @@ class LoginPage extends React.Component {
             style={{ width: '66%', height: '6vh', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
           >
             <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
-            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Facebook</span>
             </MButton>
+        </div>
+
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+
+
+
+
+
+
+
+        <div style={{ textAlign: 'center'}}>
+          <TextField
+            label="Username"
+            onChange = {(event) => { console.log(event.target.value)
+            this.setState({username: event.target.value})}}
+          />
+          <WhiteSpace size="lg" />
+          <TextField
+            type="password"
+            label="Password"
+            onChange = {(event) => this.setState({ password: event.target.value })}
+          />
         </div>
 
         <WhiteSpace size="lg" />
@@ -145,7 +168,7 @@ class LoginPage extends React.Component {
             style={{ width: '66%', height: '6vh' }}
           >
             <Icon type={'check-circle-o'} style={{ height: 28, marginRight: 8}}/>
-            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Settle Up</span>
+            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in</span>
           </MButton>
         </div>
 
