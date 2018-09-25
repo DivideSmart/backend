@@ -108,6 +108,13 @@ class H5NumberInputExample extends React.Component {
       showAddSplittersModal: false,
     }
 
+    this.removeSplitter = (splitter) => {
+      const newSplitters = this.state.splitters.filter(s => s.uuid != splitter.uuid)
+      this.setState({
+        splitters: newSplitters
+      })
+    }
+
     this.handleAmountChange = (e) => {
       this.setState({
         totalAmount: e.target.value,
@@ -233,7 +240,10 @@ class H5NumberInputExample extends React.Component {
                         { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(3) }
                       </span>
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
+                        <RemoveCircleOutline
+                          style={{ color: '#d35400', width: 18, height: 18}}
+                          onClick={() => this.removeSplitter(splitter)}
+                        />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>
@@ -270,7 +280,10 @@ class H5NumberInputExample extends React.Component {
                         startAdornment={<InputAdornment position="start">$</InputAdornment>}
                       />
                       <IconButton aria-label="Comments">
-                        <RemoveCircleOutline style={{ color: '#d35400', width: 18, height: 18}} />
+                        <RemoveCircleOutline
+                          style={{ color: '#d35400', width: 18, height: 18}}
+                          onClick={() => this.removeSplitter(splitter)}
+                        />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MListItem>
@@ -299,7 +312,7 @@ class H5NumberInputExample extends React.Component {
             <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Save
           </MButton>
         </div>
-        
+
         <ReceiptButton updateReceipt={this.updateReceipt}/>
 
         <Modal
