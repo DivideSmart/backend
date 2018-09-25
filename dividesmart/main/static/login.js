@@ -53,40 +53,50 @@ library.add(faFacebook, faGoogle, faUsers)
 class LoginPage extends React.Component {
 
   constructor(props) {
-    super();
-    this.state = { isAuthenticated: false, username: '', password: '', token: '' };
-  }
+    super()
 
-  handleClick(event, username, password) {
-    var apiBaseUrl = "http://localhost:8000/api/";
-    var self = this;
-    var payload={
-    "email_address": this.state.username,
-    "password": this.state.password
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+    this.state = {
+      isAuthenticated: false,
+      username: '',
+      password: '',
+      token: ''
+    };
+
+    this.clickLogin = function() {
+      var apiBaseUrl = "/api";
+      var payload={
+        "email_address": this.state.username,
+        "password": this.state.password
+      }
+
+      console.log("payload")
+      console.log(payload);
+
+      axios.post(apiBaseUrl + '/login/', payload)
+      .then(function (response) {
+        console.log(response);
+        if(response.status == 200){
+          alert("Login successful");
+          window.location.replace("http://localhost:8000/");
+        }
+        else if(response.status == 400){
+          alert("username password do not match")
+        }
+        else{
+          alert("Username does not exist");
+        }
+        })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
 
-    console.log("payload")
-    console.log(payload);
-    axios.post(apiBaseUrl+'login/', payload)
-    .then(function (response) {
-      console.log(response);
-      if(response.status == 200){
-        alert("Login successful");
-        window.location.replace("http://localhost:8000/");
-      }
-      else if(response.status == 400){
-        alert("username password do not match")
-      }
-      else{
-        alert("Username does not exist");
-      }
-      })
-    .catch(function (error) {
-      console.log(error);
-    });
   }
 
-  // updateUserN
+
   render() {
     return (
       <div>
@@ -137,19 +147,20 @@ class LoginPage extends React.Component {
 
 
 
-
-
-
         <div style={{ textAlign: 'center'}}>
           <TextField
             label="Username"
-            onChange = {(event) => { console.log(event.target.value)
-            this.setState({username: event.target.value})}}
+            value={this.state.username}
+            onChange = {(event) => {
+              console.log(event.target.value)
+              this.setState({username: event.target.value})
+            }}
           />
           <WhiteSpace size="lg" />
           <TextField
             type="password"
             label="Password"
+            value={this.state.password}
             onChange = {(event) => this.setState({ password: event.target.value })}
           />
         </div>
@@ -163,7 +174,7 @@ class LoginPage extends React.Component {
           }}
         >
           <MButton
-            // onClick = {() => this.setState({ showSettleUpModal: true })}
+            onClick={(event) => this.clickLogin()}
             variant="outlined" color="primary" size="small"
             style={{ width: '66%', height: '6vh' }}
           >
