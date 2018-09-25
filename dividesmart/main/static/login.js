@@ -172,7 +172,7 @@ class LoginPage extends React.Component {
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <Card style={{marginLeft: '12vw', marginRight: '12vw', paddingBottom: '8vh' }}>
+        <Card style={{marginLeft: '8vw', marginRight: '8vw', paddingBottom: '8vh' }}>
         <div style={{height: '12vh'}}>
 
         </div>
@@ -258,7 +258,7 @@ class LoginPage extends React.Component {
 
 
         <Snackbar anchorOrigin={{
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'left',
           }}
           open={this.state.errorMessage}
