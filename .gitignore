@@ -177,3 +177,5 @@ db.sqlite3
 **/media/portrait/*/*
 **/media/document_thumbnails/*
 .DS_Store
+
+dividesmart/main/migrations/*
