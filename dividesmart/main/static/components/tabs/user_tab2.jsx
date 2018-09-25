@@ -34,19 +34,95 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-
+import axios from 'axios'
+import store from '../../redux/store.js'
 
 class UserTabWithoutStyle extends React.Component {
   constructor() {
     super()
     this.state = {
-      showSettleUpModal: false
+      showSettleUpModal: false,
+      userInfo: {emailAddress: '', username: '', debt: '', color: 'other-owe-amount'},
+      entries: [],
+      friend_id: '',
+      current_user_id: ''
     }
   }
 
+  componentDidMount() {
+    this.setState({
+      friend_id: this.props.match.params.userPk,
+      current_user_id: store.getState().auth.user.id
+    })
+
+    var friend_id = this.props.match.params.userPk;
+    console.log("HERE")
+    console.log(this.state.friend_id);
+
+    axios.get('/api/user/friends/' + friend_id + "/")
+         .then(response => {
+            var userInfo = {}
+            userInfo.emailAddress = response.data.emailAddress;
+            userInfo.username = response.data.username;
+            
+            userInfo.debt = parseFloat(response.data.debt) > 0 ? response.data.debt : response.data.debt.slice(1);
+
+            userInfo.avatarUrl = response.data.avatarUrl;
+            userInfo.color = parseFloat(response.data.debt) > 0 ? 'other-owe-amount' : 'owe-other-amount'
+
+            this.setState({
+              userInfo: userInfo
+            })
+
+
+                axios.get('/api/user/friends/' + friend_id + "/entries/")
+                .then(response => {
+                    var current_user_id = store.getState().auth.user.id;
+                    var entries = []
+                    response.data.entries.forEach(entry => {
+
+                      var dateObj = new Date(entry.dateCreated);
+                      entry.dateFormat = (dateObj.getMonth() + 1).toString() + "/" 
+                                          + dateObj.getDate().toString() + "/" 
+                                          + dateObj.getFullYear().toString();
+                      if(entry.type == 'payment') {
+                        entry.color = 'payment-amount'
+                        entry.name = entry.initiator == current_user_id 
+                                            ? 'you pay ' + this.state.userInfo.username
+                                            : this.state.userInfo.username + ' pay you'
+                      } else if (entry.type == 'bill') {
+                        entry.amount = entry.initiator == current_user_id  
+                                            ? entry.loans[friend_id] 
+                                            : entry.loans[current_user_id]
+                        console.log(friend_id)
+                        console.log(current_user_id)
+                        console.log(entry.loans)
+                        console.log(entry.loans[friend_id])
+                        console.log(entry.loans[current_user_id])
+                        console.log("STOP")
+                        entry.color = entry.initiator == current_user_id 
+                                            ? 'other-owe-amount'
+                                            : 'owe-other-amount'
+                      }
+
+                      entries.push(entry)
+                    })
+
+                    this.setState({
+                      entries: entries
+                    })
+                  })
+
+
+                })
+
+    
+  }
+
+
   render() {
 
-const { classes } = this.props;
+  const { classes } = this.props;
 
     return (
       <div>
@@ -71,137 +147,55 @@ const { classes } = this.props;
                   width: '60px',
                   height: '60px',
                   margin: '6px 0px 0px 0px',
-                  background: 'url(https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg) center center /  60px 60px no-repeat',
+                  background: 'url(' + this.state.userInfo.avatarUrl + ') center center /  60px 60px no-repeat',
                   display: 'inline-block' }}
               />
             </Badge>
-            <span style={{ marginLeft: 12 }}>Harry</span>
+            <span style={{ marginLeft: 12 }}>{this.state.userInfo.username}</span>
           </List.Item>
 
           <Item
             // arrow="horizontal"
             // thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             // multipleLine
-            extra={<span className={'other-owe-amount'}>$20</span>}
+            extra={<span className={this.state.userInfo.color}>$ {this.state.userInfo.debt}</span>}
           >
             <Badge text={0} style={{ marginLeft: 12 }}>Summary</Badge>
           </Item>
 
-          <List.Item extra="test@test.com"
+          <List.Item extra={this.state.userInfo.emailAddress}
             // arrow="horizontal"
           >
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </List.Item>
-
-          {/*<List.Item>*/}
-            {/*Customize*/}
-            {/*<Badge text="券" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#f19736', borderRadius: 2 }} />*/}
-            {/*<Badge text="NEW" style={{ marginLeft: 12, padding: '0 3px', backgroundColor: '#21b68a', borderRadius: 2 }} />*/}
-            {/*<Badge text="自动缴费"*/}
-              {/*style={{*/}
-                {/*marginLeft: 12,*/}
-                {/*padding: '0 3px',*/}
-                {/*backgroundColor: '#fff',*/}
-                {/*borderRadius: 2,*/}
-                {/*color: '#f19736',*/}
-                {/*border: '1px solid #f19736',*/}
-              {/*}}*/}
-            {/*/>*/}
-          {/*</List.Item>*/}
         </List>
-
-
-        {/*<Card className={classes.card}>*/}
-          {/*<CardContent>*/}
-            {/*<List.Item extra={*/}
-              {/*<IconButton*/}
-                {/*aria-label="Show more"*/}
-              {/*>*/}
-                {/*<ExpandMoreIcon />*/}
-              {/*</IconButton>*/}
-            {/*} arrow="horizontal">*/}
-              {/*<Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>*/}
-              {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
-            {/*</List.Item>*/}
-          {/*</CardContent>*/}
-        {/*</Card>*/}
-        {/*<Collapse in={true} timeout="auto" unmountOnExit>*/}
-          {/*<List.Item extra="12345678" arrow="horizontal">*/}
-            {/*<Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>*/}
-            {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
-          {/*</List.Item>*/}
-
-          {/*<List.Item extra="test@test.com" arrow="horizontal">*/}
-            {/*<Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>*/}
-            {/*/!* <Badge text={'new'} style={{ marginLeft: 12 }} /> *!/*/}
-          {/*</List.Item>*/}
-        {/*</Collapse>*/}
 
         <WhiteSpace />
-        <List renderHeader={() => 'Debt List with Tom'} className="my-list">
+        <List renderHeader={() => 'History with Tom'} className="my-list">
           {/*<Item extra={'Debt'}>Date</Item>*/}
         </List>
-        <List>
-          <Item
-            arrow="horizontal"
-            thumb={
-              <FontAwesomeIcon icon='receipt' style={{ color: '#38b8f2', width: 24, height: 24}} />
-            }
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'other-owe-amount'}>$10</span>}
-          >
-            Lunch @ PGP<Brief>8/29/18</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            thumb={
-              <FontAwesomeIcon icon='dollar-sign' style={{ color: '#38b8f2', width: 24, height: 24}} />
-            }
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'owe-other-amount'}>-$5</span>}
-          >
-            Movie Night<Brief>8/30/18</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'other-owe-amount'}>$15</span>}
-          >
-            Dinner Date <Brief>8/31/18</Brief>
-          </Item>
 
-          <Item
-            arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'other-owe-amount'}>$10</span>}
-          >
-            Lunch @ PGP<Brief>8/29/18</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'owe-other-amount'}>-$5</span>}
-          >
-            Movie Night<Brief>8/30/18</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
-            multipleLine
-            onClick={() => {}}
-            extra={<span className={'other-owe-amount'}>$15</span>}
-          >
-            Dinner Date <Brief>8/31/18</Brief>
-          </Item>
+        <List>
+
+
+          { 
+            this.state.entries.map(entry => {
+              return (
+                <Item
+                  arrow="horizontal"
+                  thumb={
+                    <FontAwesomeIcon icon={entry.type == 'bill' ? 'receipt' : 'dollar-sign'} style={{ color: '#38b8f2', width: 24, height: 24}} />
+                  }
+                  multipleLine
+                  onClick={() => {}}
+                  extra={<span className={entry.color}>${entry.amount}</span>}
+                  >
+                     {entry.name} <Brief>{entry.dateFormat}</Brief>
+                  </Item>
+                )
+             })
+          }
         </List>
 
         <WhiteSpace />

@@ -64,9 +64,9 @@ class FriendsList extends React.Component {
                 }
                 multipleLine
                 // onClick={() => { window.location.href = '/u/1'}}
-                extra={<Link key={friend.key} to="/u/123" style={{ color: 'black' }}><span className={'other-owe-amount'}>${ friend.acc }</span></Link>}
+                extra={<Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}><span className={'other-owe-amount'}>${ friend.acc }</span></Link>}
               >
-                <Link to="/u/123" style={{ color: 'black' }}>
+                <Link to={"/u/"+friend.id} style={{ color: 'black' }}>
                   {friend.name} <Brief>8/31/18</Brief>
                 </Link>
               </Item>
@@ -115,9 +115,9 @@ class FriendsList extends React.Component {
                     </Badge>
                   }
                   multipleLine
-                  extra={<Link key={friend.key} to="/u/123" style={{ color: 'black' }}><span className={'owe-other-amount'}>${ friend.acc }</span></Link>}
+                  extra={<Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}><span className={'owe-other-amount'}>${ friend.acc }</span></Link>}
                 >
-                  <Link key={friend.key} to="/u/123" style={{ color: 'black' }}>
+                  <Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}>
                     {friend.name} <Brief>8/31/18</Brief>
                   </Link>
                 </Item>
@@ -140,7 +140,7 @@ class FriendsList extends React.Component {
             ListItem （Android）<Brief>There may have water ripple effect of <br /> material if you set the click event.</Brief>
           </Item> */}
           {
-            this.state.friends.friendsYouOwe.map(friend => {
+            this.state.friends.friendsSettledUp.map(friend => {
               return (
                 <Item
                   key={friend.key}
@@ -157,9 +157,11 @@ class FriendsList extends React.Component {
                     </Badge>
                   }
                   multipleLine
-                  extra={<span>settled up</span>}
+                  extra={<Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}><span className={'owe-other-amount'}>${ friend.acc }</span></Link>}
                 >
-                  {friend.name} <Brief>8/31/18</Brief>
+                  <Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}>
+                    {friend.name} <Brief>8/31/18</Brief>
+                  </Link>
                 </Item>
               )
             })
