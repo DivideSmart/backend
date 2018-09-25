@@ -15,6 +15,7 @@ import axios from 'axios'
 import { List, WhiteSpace, Button } from 'antd-mobile'
 import Snackbar from '@material-ui/core/Snackbar';
 import { MySnackbarContentWrapper } from './alert_message.jsx'
+import '../style/add_friend.less'
 
 const Item = List.Item
 
@@ -137,7 +138,7 @@ class AddFriendForm extends React.Component {
           <WhiteSpace size="lg" />
           <FormControl>
             <Input
-              style={{marginLeft: '20%', width: '100%'}}
+              className="full-width"
               id="adornment-email"
               placeholder="Enter email address"
               type='text'
@@ -169,7 +170,7 @@ class AddFriendForm extends React.Component {
               this.state.entered.map(email => {
                 return (
                   <Item
-                    style={{width: '100%'}}
+                    className="full-width"
                     key = {email.key}
                     extra={<Checkbox 
                       name={email.email} 
@@ -182,7 +183,7 @@ class AddFriendForm extends React.Component {
                 )
               })
             }
-            <Button style={{width: '100%'}} onClick={ () => this.addFriends() }> Add all </Button>
+            <Button className="full-width" onClick={ () => this.addFriends() }> Add all </Button>
           </List>
           <Snackbar anchorOrigin={{
               vertical: 'bottom',

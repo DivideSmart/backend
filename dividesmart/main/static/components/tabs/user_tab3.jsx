@@ -5,6 +5,7 @@ import axios from 'axios'
 import React from 'react'
 import QRCode from 'qrcode.react'
 import Done from '@material-ui/icons/Done';
+import Close from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import { MySnackbarContentWrapper } from '../alert_message.jsx'
 
@@ -18,9 +19,11 @@ class UserTab extends React.Component {
       myAvatarUrl: '',
       pendingRequests: [],
       sentRequests: [],
-      open: false
+      open: false,
+      successMessage: ''
     };  
     this.acceptRequest = this.acceptRequest.bind(this)
+    this.rejectRequest = this.rejectRequest.bind(this)
   }
 
   handleClose = (event, reason) => {
@@ -54,13 +57,28 @@ class UserTab extends React.Component {
       if(err) {
         throw err
       } else {
-        console.log(request);
         this.setState({
           pendingRequests: this.state.pendingRequests.filter(r => {
-            console.log(r);
             return r.emailAddress !== request.emailAddress;
           }),
-          open: true
+          open: true,
+          successMessage: 'Accepted request'
+        })
+      }
+    })
+  }
+
+  rejectRequest(request) {
+    axios.delete('/api/user/friends/{0}/'.format(request.id)).then((response, err) => {
+      if(err) {
+        throw err
+      } else {
+        this.setState({
+          pendingRequests: this.state.pendingRequests.filter(r => {
+            return r.emailAddress !== request.emailAddress;
+          }),
+          open: true,
+          successMessage: 'Rejected request'
         })
       }
     })
@@ -136,6 +154,11 @@ class UserTab extends React.Component {
                   >
                     <Done />
                   </IconButton>
+                  <IconButton
+                    onClick={(e) => this.rejectRequest(request)}
+                  >
+                    <Close />
+                  </IconButton>
                   {request.username}
                 </Item>
               )
@@ -166,7 +189,7 @@ class UserTab extends React.Component {
           <MySnackbarContentWrapper
             onClose={this.handleClose}
             variant="success"
-            message="Accepted request"
+            message={this.state.successMessage}
           />
         </Snackbar>
         {/* <WhiteSpace />

@@ -11,6 +11,9 @@ import store from './redux/store';
 import { LocaleProvider } from 'antd-mobile';
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import QRCode from 'qrcode.react'
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import './style/index.less'
 
 class Code extends React.Component {
   
@@ -75,8 +78,12 @@ ReactDOM.render(
             }
             mode="light"
             >
-            Name of the Appp
+            WeShare
           </NavBar>
+          <br/>
+          <Typography variant="headline" gutterBottom style={{textAlign: 'center'}}>
+            Scan your QR Code to let friends add you!
+          </Typography>
         </div>
       )} />
     </Router>

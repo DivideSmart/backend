@@ -10,3 +10,5 @@ ujson==1.35
 facebook-sdk
 validate_email
 google-auth
+psycopg2
+

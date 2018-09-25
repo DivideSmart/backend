@@ -2,6 +2,8 @@ import 'regenerator-runtime/runtime'
 import './style/index.less'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 
 import React, { Component } from 'react'
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
@@ -9,6 +11,7 @@ import { Provider, connect } from 'react-redux';
 import store from './redux/store';
 import Home from '@material-ui/icons/Home'
 import { Icon, NavBar, Popover } from 'antd-mobile'
+import axios from 'axios'
 
 import { LocaleProvider } from 'antd-mobile';
 import QrReader from 'react-qr-reader'
@@ -38,22 +41,24 @@ class App extends Component {
   };
 
   handleScan(data) {
-    console.log(data)
-    this.setState({ 
-      result: data,
-      open: true
-    })
-    var payload={
-      "friendEmail": data,
-    }
-    axios.post('http://localhost:8000/api/user/friends/', payload)
-    .then((res, err) => {
-      if(err) {
-        console.log(err)
-      } else {
-        console.log(res)
+    if(data !== null) {
+      console.log("Data: " + data)
+      var payload={
+        "friendEmail": data,
       }
-    })
+      axios.post('http://localhost:8000/api/user/friends/', payload)
+      .then((res, err) => {
+        if(err) {
+          console.log(err)
+        } else {
+          console.log(res)
+          this.setState({ 
+            result: data,
+            open: true
+          })
+        }
+      })
+    }
   }
 
   handleError(err){
@@ -68,6 +73,10 @@ class App extends Component {
           onError={this.handleError}
           onScan={this.handleScan}
         />
+        <br/>
+        <Typography variant="headline" gutterBottom style={{textAlign: 'center'}}>
+          Scan your friend's QR Code to add them!
+        </Typography>
         <Snackbar anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
@@ -82,6 +91,7 @@ class App extends Component {
             message="Sending Request!"
           />
         </Snackbar>
+
       </div>
     )
   }
@@ -104,7 +114,7 @@ ReactDOM.render(
             }
             mode="light"
             >
-            Name of the Appp
+            WeShare
           </NavBar>
         </div>
       )} />
