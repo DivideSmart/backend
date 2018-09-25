@@ -61,6 +61,8 @@ class GroupCreateForm extends React.Component {
     this.setState({
       users: added_users
     })
+    console.log("STATE")
+    console.log(this.state)
   }
 
   render() {

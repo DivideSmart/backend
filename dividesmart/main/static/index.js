@@ -56,11 +56,15 @@ class App extends React.Component {
       users: [],
       count_user: 0,
       name: '',
-      friends: []
+      friends: [],
+      splitters: [],
+      groupMembers: []
     }
     this.updateUsers = this.updateUsers.bind(this);
     this.updateGroupInfo = this.updateGroupInfo.bind(this);
     this.findFriendList = this.findFriendList.bind(this);
+    this.findFriend = this.findFriend.bind(this);
+    this.findGroupMembers = this.findGroupMembers.bind(this);
 
     // Check for browser support of service worker
     if ('serviceWorker' in navigator) {
@@ -133,6 +137,25 @@ class App extends React.Component {
     })
   }
 
+  findFriend(user_id) {
+    axios.get('/api/user/friends/' + user_id + '/')
+         .then(response => {
+            this.setState({
+              splitters: [response.data]
+            })
+            console.log("TEST HERE TOO")
+            console.log(this.state.splitters)
+          })
+  }
+
+  findGroupMembers(group_id) {
+    axios.get('/api/groups/' + group_id + '/members/')
+         .then(response => {
+            this.setState({
+              groupMembers: response.data.members
+            })
+          })
+  }
 
   render() {
     return (
@@ -159,6 +182,36 @@ class App extends React.Component {
                     }
                   />
 
+                                    
+                  <Route
+                    path={'/u/:userPk/createBill/'}
+                    render={ ({match, location}) =>
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                        {this.findFriend(match.params.userPk)}
+                        <CreateForm
+                          match={match}
+                          location={location}
+                          splitters={this.state.splitters}
+                        />
+                      </div>
+                    }
+                   />
+
+                  <Route
+                    path={'/g/:gPk/createBill'}
+                    render={ ({match, location}) =>
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                        {this.findGroupMembers(match.params.gPk)}
+                        <CreateForm
+                          match={match}
+                          location={location}
+                          friends={this.state.groupMembers}
+                        />
+                      </div>
+                    }
+                  />
+
+
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>
@@ -167,7 +220,7 @@ class App extends React.Component {
                           match={match}
                           location={location}
                         />
-                        <FloatingButton />
+                        <FloatingButton user_id={match.params.userPk} prefix='/u/'/>
                       </div>
                     }
                   />
@@ -193,7 +246,7 @@ class App extends React.Component {
                       </div>
                     }
                   />
-
+                
                   <Route
                     path={'/addFriend'}
                     render={ ({match, location}) =>
@@ -228,6 +281,8 @@ class App extends React.Component {
 
                             <Tabs2 group_id={match.params.gPk}/>
                             {/* <FriendsTab /> */}
+                            <FloatingButton user_id={match.params.gPk} prefix='/g/'/>
+
                           </div>
                         )
                       }

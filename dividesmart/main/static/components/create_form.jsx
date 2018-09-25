@@ -214,7 +214,7 @@ class H5NumberInputExample extends React.Component {
       var ref_ids = added_users.map(u => u.id);
 
       var friends = this.state.friends.map(friend => {
-        if (ref_ids.includes(friend.id) ){
+        if (ref_ids.includes(friend.id) ) {
           friend.selected = true
         } else {
           friend.selected = false
@@ -251,6 +251,7 @@ class H5NumberInputExample extends React.Component {
       "loans": formatSplitterToAmount,
       "amount": this.state.totalAmount,
     }
+    console.log(payload);
     axios.post('/api/bills/', payload)
         .then(response => {
               console.log("RESPONSE")
@@ -258,24 +259,76 @@ class H5NumberInputExample extends React.Component {
           } )
   }
  
-  componentWillMount() {
+  componentDidMount() {
     axios.get("/api/user").then(response => {
           this.setState({
             current_user: response.data
           })
 
-          axios.get('/api/user/friends').then(responseB => {
-            var friends = responseB.data.friends;
-            friends = friends.map(friend => {
-              friend.pk = friend.id;
-              return friend;
-            })
+          if(this.props.friends) {
+            console.log("HURAY I HAVE FRIENDS");
+            var friends = this.props.friends.filter(friend => friend.id != response.data.id);
+            friends.forEach(friend => {friend.pk = friend.id;})
             this.setState({
               friends: friends
             })
-          })
+            console.log(friends);
+          } else {
+            axios.get('/api/user/friends').then(responseB => {
+              var friends = responseB.data.friends;
+              friends = friends.map(friend => {
+                friend.pk = friend.id;
+                return friend;
+              })
+              this.setState({
+                friends: friends
+              })
+            })
+          }
+
+
 
         })
+  }
+
+    
+    // var new_added_users = added_users.map(u => {
+    //   var p = {uuid: u.id, 
+    //            username: u.username,
+    //            avatarUrl: u.avatarUrl}
+    //   return p;})
+
+    // this.setState({
+    //   splitters: new_added_users
+    // })
+
+    // this.setState({
+    //   splitters: 
+    // })
+
+  componentWillReceiveProps(nextProps) {
+    console.log("TEST HERE HAHA")
+    console.log(this.props.splitters);
+    if(nextProps.splitters) {
+      var newSplitters = nextProps.splitters.map(splitter => {
+                                                  return {uuid: splitter.id,
+                                                          username: splitter.username,
+                                                          avatarUrl: splitter.avatarUrl}
+                                                })
+      this.setState({
+        splitters: newSplitters
+      })
+    }
+
+    // if(nextProps.friends) {
+    //   console.log("HURAY I HAVE FRIENDS");
+    //   var friends = nextProps.friends.filter(friend => friend.id != this.state.current_user.id);
+    //   friends.forEach(friend => {friend.pk = friend.id;})
+    //   this.setState({
+    //     friends: friends
+    //   })
+    //   console.log(friends)
+    // }
   }
 
   render() {
