@@ -169,12 +169,11 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div>
-      {/*<Paper>*/}
-
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <div style={{height: '18vh'}}>
+        <Card style={{marginLeft: '8vw', marginRight: '8vw', paddingBottom: '8vh' }}>
+        <div style={{height: '12vh'}}>
 
         </div>
 
@@ -255,10 +254,11 @@ class LoginPage extends React.Component {
             <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in</span>
           </MButton>
         </div>
+        </Card>
 
 
         <Snackbar anchorOrigin={{
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'left',
           }}
           open={this.state.errorMessage}
@@ -271,55 +271,7 @@ class LoginPage extends React.Component {
             message="email or password incorrect"
           />
         </Snackbar>
-
       </div>
-
-
-      // <div>
-      //   <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
-      //     <NavBar
-      //       style={{height: '100%'}}
-      //       mode="light"
-      //     >
-      //       WeShare
-      //     </NavBar>
-      //   </div>
-      //   <TextField style={{ marginLeft: '45%', marginTop: '15%'}}
-      //     label="Username"
-      //     onChange = {(event) => { console.log(event.target.value)
-      //     this.setState({username: event.target.value})}}
-      //   />
-      //   <br></br>
-      //   <TextField style={{ marginLeft: '45%', marginTop: '2%'}}
-      //     type="password"
-      //     label="Password"
-      //     onChange = {(event) => this.setState({ password: event.target.value })}
-      //   />
-      //   <br></br>
-      //   <Button color="primary" style={{marginLeft: '48%', marginTop: 20}} onClick={(event) => this.handleClick(event, this.state.username, this.state.password)}>
-      //   {'  '}Submit
-      //   </Button>
-      //   <br></br>
-      //   <Button
-      //     style={{ backgroundColor:'#DD4B39', borderColor:'#DD4B39', marginLeft: '45%', marginTop: '5%', color: 'white' }}
-      //     className='login-form-button'
-      //     id='google-login'
-      //   >
-      //   <i className='fa fa-google' aria-hidden='true'></i>
-      //   {'  '}Log in with Google
-      //   </Button>
-      //   <br></br>
-      //   <Button
-      //     style={{ backgroundColor:'#3b5998', borderColor:'#3b5998', marginLeft: '45%', marginTop: '2%' , color: 'white' }}
-      //     className='login-form-button'
-      //     id='facebook-login'
-      //     onClick={this.facebookLogin}
-      //     loading={this.state.fbLoginButtonLoading}
-      //   >
-      //   <i className='fa fa-facebook-official' aria-hidden='true'></i>
-      //   {'  '}Log in with Facebook
-      //   </Button>
-      // </div>
     )
   }
 }
