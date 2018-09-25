@@ -2,9 +2,9 @@ import 'regenerator-runtime/runtime'
 
 import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
-import React from 'react'
 import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
+import React from 'react'
 import axios from 'axios'
 
 const Item = List.Item

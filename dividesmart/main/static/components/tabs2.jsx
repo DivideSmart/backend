@@ -1,15 +1,15 @@
-import { ListView, TabBar, SearchBar } from 'antd-mobile';
+import { ListView, SearchBar, TabBar } from 'antd-mobile';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FriendsTab } from './tabs/friends_tab.jsx'
-import React from 'react'
-import { GroupHistoryTab } from './tabs/group_history_tab.jsx'
-import {FriendsList} from './tabs/shared_components/friends_list.jsx'
-import axios from 'axios'
 import Close from '@material-ui/icons/Close';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FriendsList} from './tabs/shared_components/friends_list.jsx'
+import { FriendsTab } from './tabs/friends_tab.jsx'
+import { GroupHistoryTab } from './tabs/group_history_tab.jsx'
+import React from 'react'
+import axios from 'axios'
 
 class Tabs2 extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +26,7 @@ class Tabs2 extends React.Component {
       var details = { friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: [] };
       var users = {};
       responseA.data.members.forEach( person => {
-      
+
         users[person.id] = person.username;
         if(person.debt) {
           person.name = person.username;
@@ -51,7 +51,7 @@ class Tabs2 extends React.Component {
       })
       console.log(this.state.users);
 
-      
+
     })
   }
 

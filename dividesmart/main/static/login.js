@@ -3,18 +3,27 @@ import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
+import { Button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import { LocaleProvider, NavBar, Button, Icon, WhiteSpace } from 'antd-mobile';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider, connect } from 'react-redux';
+import { dom, library } from '@fortawesome/fontawesome-svg-core'
+import {
+  faFacebook,
+  faGoogle
+} from '@fortawesome/free-brands-svg-icons'
+import {
+  faHandHoldingUsd,
+  faHome,
+  faLandmark,
+  faMoneyBillAlt,
+  faPenNib,
+  faReceipt,
+  faUserCircle,
+  faUsers,
+} from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
-
-import FormControl from '@material-ui/core/FormControl';
-import MButton from '@material-ui/core/Button';
-import React from 'react'
-import ReactDOM from 'react-dom'
-import TextField from '@material-ui/core/TextField';
 
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -25,27 +34,18 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-
-import {
-  faPenNib, faHandHoldingUsd, faMoneyBillAlt, faHome,
-  faReceipt, faUserCircle, faUsers, faLandmark,
-} from '@fortawesome/free-solid-svg-icons'
-
-import {
-  faFacebook, faGoogle
-} from '@fortawesome/free-brands-svg-icons'
-
-
+import MButton from '@material-ui/core/Button';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import TextField from '@material-ui/core/TextField';
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
-import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
 
 library.add(faFacebook, faGoogle, faUsers)
@@ -157,12 +157,14 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div>
+      {/*<Paper>*/}
 
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <WhiteSpace size="lg" />
-        <WhiteSpace size="lg" />
+        <div style={{height: '18vh'}}>
+
+        </div>
 
         <div style={{
             display: 'flex',
@@ -207,6 +209,7 @@ class LoginPage extends React.Component {
 
         <div style={{ textAlign: 'center'}}>
           <TextField
+            style={{width: '69%'}}
             label="Username"
             value={this.state.username}
             onChange = {(event) => {
@@ -215,6 +218,7 @@ class LoginPage extends React.Component {
           />
           <WhiteSpace size="lg" />
           <TextField
+            style={{width: '69%'}}
             type="password"
             label="Password"
             value={this.state.password}

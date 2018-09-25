@@ -4,37 +4,44 @@ import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
-import { WhiteSpace } from 'antd-mobile'
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider, connect } from 'react-redux';
 import {
-  faPenNib, faHandHoldingUsd, faMoneyBillAlt,
-  faChevronLeft, faDollarSign, faHome,
-  faReceipt, faUserCircle, faUsers, faLandmark
+  faChevronLeft,
+  faDollarSign,
+  faHandHoldingUsd,
+  faHome,
+  faLandmark,
+  faMoneyBillAlt,
+  faPenNib,
+  faReceipt,
+  faUserCircle,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
+import {AddFriend} from './components/add_friend.jsx'
 import {CreateForm} from './components/create_form.jsx'
 import FloatingButton from './components/material/material_float_btn.jsx'
 import { FriendList } from './components/tabs/friend_list.jsx'
 import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import {GroupCreate} from './components/group_create.jsx'
-import {AddFriend} from './components/add_friend.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { LocaleProvider } from 'antd-mobile';
+import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Tabs } from './components/tabs.jsx'
+import { Tabs2 } from './components/tabs2.jsx'
 import { TopBar } from './components/topbar.jsx'
 import {UserTab} from './components/tabs/user_tab2.jsx'
+import { WhiteSpace } from 'antd-mobile'
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Tabs2 } from './components/tabs2.jsx'
-import { MultiSelectFriend } from './components/tabs/multi_select_friend.jsx';
 
 library.add(
   faPenNib,

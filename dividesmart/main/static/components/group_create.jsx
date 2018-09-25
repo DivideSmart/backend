@@ -11,6 +11,9 @@ import ReceiptButton from './material/receipt_float_btn.jsx'
 import { createForm } from 'rc-form';
 import TextField from '@material-ui/core/TextField';
 import { MultiSelectFriend } from './tabs/multi_select_friend.jsx';
+import axios from 'axios'
+import Snackbar from '@material-ui/core/Snackbar';
+import { MySnackbarContentWrapper } from './alert_message.jsx'
 
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -31,10 +34,9 @@ class GroupCreateForm extends React.Component {
     super()
     this.state = {
       type: 'group',
-      users: []
-    }
-    this.onChange = () => {
-
+      users: [],
+      name: '',
+      open: false
     }
 
     this.onChange2 = (value) => {
@@ -47,7 +49,12 @@ class GroupCreateForm extends React.Component {
     this.mainRef = React.createRef();
     this.friendRef = React.createRef();
     this.updateUsers = this.updateUsers.bind(this);
+    this.createGroup = this.createGroup.bind(this);
   }
+
+  handleChange = prop => event => { 
+    this.setState({ [prop]: event });
+  };
 
   componentDidCatch(error) {
     if(!this.state.error) { // set error only once per update
@@ -61,12 +68,29 @@ class GroupCreateForm extends React.Component {
     this.setState({
       users: added_users
     })
-    console.log("STATE")
     console.log(this.state)
   }
 
+  createGroup() {
+    var payload = {
+      name: this.state.name,
+      members: this.state.users.map(user => user.id)
+    }
+    axios.post('http://localhost:8000/api/groups/', payload).then((res, err) => {
+      if(err) {
+        throw err
+      } else {
+        this.setState({
+          name: '',
+          users: [],
+          open: true
+        })
+        console.log(res)
+      }
+    })
+  }
+
   render() {
-    const { getFieldProps } = this.props.form;
     const { type } = this.state;
     return (
       <div>
@@ -77,22 +101,18 @@ class GroupCreateForm extends React.Component {
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
 
-          <List>
-            <InputItem
-              {...getFieldProps('inputtitle2')}
-              placeholder="Enter group names"
-            >
-              <div style={{ backgroundImage: 'url(http://i64.tinypic.com/314wh1l.jpg)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
-            </InputItem>
-          </List>
+          <InputItem
+            value={this.state.name}
+            onChange={this.handleChange('name')}
+            placeholder="Enter group names"
+          >
+            <div style={{ backgroundImage: 'url(http://i64.tinypic.com/314wh1l.jpg)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
+          </InputItem>
 
           <WhiteSpace />
           <WhiteSpace />
 
-
-          <List>
-            <TextareaItem placeholder="Enter your group description" rows="5"/>
-          </List>
+          <TextareaItem placeholder="Enter your group description" rows="5"/>
 
           <WhiteSpace size="lg" />
 
@@ -102,8 +122,22 @@ class GroupCreateForm extends React.Component {
           <WhiteSpace />
           <WhiteSpace />
           <WingBlank>
-            <Button type="primary">SAVE</Button>
+            <Button type="primary" onClick={this.createGroup}>SAVE</Button>
           </WingBlank>
+          <Snackbar anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+          >
+            <MySnackbarContentWrapper
+              onClose={this.handleClose}
+              variant="success"
+              message="Group Created"
+            />
+          </Snackbar>
         </div>
 
 
