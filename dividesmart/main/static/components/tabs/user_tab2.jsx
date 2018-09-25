@@ -79,7 +79,7 @@ const { classes } = this.props;
           </List.Item>
 
           <Item
-            arrow="horizontal"
+            // arrow="horizontal"
             // thumb="https://zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png"
             // multipleLine
             extra={<span className={'other-owe-amount'}>$20</span>}
@@ -87,12 +87,9 @@ const { classes } = this.props;
             <Badge text={0} style={{ marginLeft: 12 }}>Summary</Badge>
           </Item>
 
-          <List.Item extra="12345678" arrow="horizontal">
-            <Badge text={0} style={{ marginLeft: 12 }}>Phone number</Badge>
-            {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
-          </List.Item>
-
-          <List.Item extra="test@test.com" arrow="horizontal">
+          <List.Item extra="test@test.com"
+            // arrow="horizontal"
+          >
             <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </List.Item>

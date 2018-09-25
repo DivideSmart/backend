@@ -71,13 +71,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     external_avatar_url = models.TextField(blank=True, null=True)
 
     @property
-    def portrait_url(self):
+    def avatar_url(self):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
         elif self.external_avatar_url:
             return self.external_avatar_url
         else:
-            return "/media/portrait/default_portrait.png"
+            return "/media/avatars/default_portrait.png"
 
     is_active = models.BooleanField(default=True)
 
