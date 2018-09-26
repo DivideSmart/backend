@@ -153,12 +153,13 @@ class UserTab extends React.Component {
         <WhiteSpace />
 
 
-        <List renderHeader={() => 'Pending Requests'} className="email-list">
+        <List renderHeader={() => 'Pending Received Requests'} className="email-list">
           {
             this.state.pendingRequests.length == 0 ?
             <Result
+              className={'no-pending-request'}
               img={<Icon type="check-circle" style={{ fill: '#1F90E6', width: 28, height: 28 }} />}
-              message="No pending request!"
+              message="No pending received request!"
             /> :
             this.state.pendingRequests.map(request => {
               return (
@@ -184,8 +185,14 @@ class UserTab extends React.Component {
 
         <WhiteSpace />
 
-        <List renderHeader={() => 'Sent requests'} className="email-list">
+        <List renderHeader={() => 'Pending Sent requests'} className="email-list">
           {
+            this.state.sentRequests.length == 0 ?
+            <Result
+              className={'no-pending-request'}
+              img={<Icon type="check-circle" style={{ fill: '#1F90E6', width: 28, height: 28 }} />}
+              message="No pending sent request!"
+            /> :
             this.state.sentRequests.map(request => {
               return (
                 <Item
