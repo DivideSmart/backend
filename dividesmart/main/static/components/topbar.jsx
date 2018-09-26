@@ -91,7 +91,7 @@ class TopBar extends React.Component {
     
     this.logout = () => {
       console.log("LOL")
-      axios.post('http://localhost:8000/api/logout/').then((res, err) => {
+      axios.post('/api/logout/').then((res, err) => {
         if(err) {
           throw err
         } else {

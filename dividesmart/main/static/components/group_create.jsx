@@ -83,7 +83,7 @@ class GroupCreateForm extends React.Component {
       name: this.state.name,
       members: this.state.users.map(user => user.id)
     }
-    axios.post('http://localhost:8000/api/groups/', payload).then((res, err) => {
+    axios.post('/api/groups/', payload).then((res, err) => {
       if(err) {
         throw err
       } else {
