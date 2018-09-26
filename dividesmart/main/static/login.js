@@ -135,15 +135,12 @@ class LoginPage extends React.Component {
     function attachSignin(element) {
       auth2.attachClickHandler(element, {},
         function(googleUser) {
-          axios.post('/api/signin/google', {
+          axios.post('/api/login/google/', {
             id_token: googleUser.getAuthResponse().id_token 
           }).then((response) => {
             window.location.href = '/'
           }).catch(e => {
-            notification['warning']({
-              message: e.response == undefined ? '' : e.response.data,
-              duration: 1.8,
-            })
+            console.log(e.response)
           })
         }, function(error) {
           console.log(JSON.stringify(error, undefined, 2))
@@ -168,8 +165,8 @@ class LoginPage extends React.Component {
 
         <Card id="login-card">
 
-        <div className="social" id="logo">
-
+        <div className="social" id="logo-div">
+          <img id='logo' src="/media/avatars/default_avatar.png" />
         </div>
 
         <div className="social">
