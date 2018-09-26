@@ -135,7 +135,7 @@ class LoginPage extends React.Component {
     function attachSignin(element) {
       auth2.attachClickHandler(element, {},
         function(googleUser) {
-          axios.post('/api/login/google', {
+          axios.post('/api/login/google/', {
             id_token: googleUser.getAuthResponse().id_token 
           }).then((response) => {
             window.location.href = '/'
