@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime'
 import '../style/index.less'
+import '../style/topbar.less'
 
 import { Icon, NavBar, Popover } from 'antd-mobile'
 
@@ -31,15 +32,15 @@ function PopOver(props) {
           My Qrcode
         </Item>),
 
-        (<Item key="help" value="button ct" icon={<PersonAdd style={{ width: 18, height: 18 }} />}>
+        (<Item key="help" value="button ct" icon={<PersonAdd id="icon-size" />}>
           <Link to='/addfriend'>
-            <span style={{ marginRight: 5, color: 'black'}}>Add Friend</span>
+            <span id="link-style">Add Friend</span>
           </Link>
         </Item>),
 
-        <Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' style={{ width: 18, height: 18 }} />}>
+        <Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' id="icon-size" />}>
           <Link to='/g/create'>
-            <span style={{ marginRight: 5, color: 'black' }}>Create Group</span>
+            <span id="link-style">Create Group</span>
           </Link>
         </Item>,
       ]}
@@ -50,14 +51,7 @@ function PopOver(props) {
       onVisibleChange={props.handleVisibleChange}
       onSelect={props.onSelect}
     >
-      <div style={{
-        height: '100%',
-        padding: '0 15px',
-        marginRight: '-15px',
-        display: 'flex',
-        alignItems: 'center',
-      }}
-      >
+      <div id="ellipsis-icon">
         <Icon type="ellipsis" />
       </div>
     </Popover>
@@ -91,14 +85,12 @@ class TopBar extends React.Component {
 
   render() {
     return (
-      <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
+      <div id="navbar-style">
         <NavBar
           style={{height: '100%'}}
           icon={
             <Link className='topbar-btn' to='/' aria-label='home'>
-              <Home
-                style={{width: '28px', height: '28px',}}
-              />
+              <Home id="home-icon" />
             </Link>
           }
           mode="light"

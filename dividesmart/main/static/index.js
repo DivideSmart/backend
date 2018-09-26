@@ -162,7 +162,7 @@ class App extends React.Component {
                         // console.log(this.state.users);
                         // return (<FriendList isCreateGroup={false} users={this.state.users}/>)
                         return (
-                          <div style={{top: '6vh', position: 'relative'}}>
+                          <div className="top-position">
                             <MultiSelectFriend group_id={match.params.group_id} isAddGroup={true}/>
                           </div>
                         )
@@ -173,7 +173,7 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk/create-bill/'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                         {this.findFriend(match.params.userPk)}
                         <CreateForm
                           match={match}
@@ -187,7 +187,7 @@ class App extends React.Component {
                   <Route
                     path={'/g/:gPk/create-bill'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                         {this.findGroupMembers(match.params.gPk)}
                         <CreateForm
                           match={match}
@@ -202,7 +202,7 @@ class App extends React.Component {
                   <Route
                     path={'/u/:userPk'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                         <UserTab
                           match={match}
                           location={location}
@@ -225,7 +225,7 @@ class App extends React.Component {
                   <Route
                     path={'/create'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                         <CreateForm
                           match={match}
                           location={location}
@@ -237,7 +237,7 @@ class App extends React.Component {
                   <Route
                     path={'/addfriend'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                         <AddFriend
                           match={match}
                           location={location}
@@ -249,7 +249,7 @@ class App extends React.Component {
                   <Route
                     path={'/g/create'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative' }}>
+                      <div className="top-position">
                           <GroupCreate users = {this.state.users} />
                       </div>
                     }
