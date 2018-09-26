@@ -152,7 +152,6 @@ class App extends React.Component {
         <Route render={({ location }) => (
           <div>
             <TopBar />
-
             <TransitionGroup>
               <CSSTransition key={location.key} classNames="fade" timeout={380}>
                 <Switch>
