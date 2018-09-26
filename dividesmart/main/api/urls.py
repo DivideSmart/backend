@@ -12,6 +12,8 @@ urlpatterns = [
 
     path('login/fb/', views.handle_fb_login),
 
+    path('login/google/', views.handle_google_login),
+
     path('login/', views.handle_login),
 
     path('register/', views.handle_register),
