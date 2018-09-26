@@ -40,7 +40,7 @@ class FriendsList extends React.Component {
             Friends owe you
             <span style={{float: 'right'}}>
               total: <span className={'other-owe-amount'}>
-                {this.state.total_other_owe}
+                {'$' + this.state.total_other_owe}
               </span>
             </span>
           </span>
@@ -81,7 +81,7 @@ class FriendsList extends React.Component {
             Friends you owe
             <span style={{float: 'right'}}>
               total: <span className={'owe-other-amount'}>
-                {this.state.total_owe_other}
+                {'$' + this.state.total_owe_other}
               </span>
             </span>
           </span>
