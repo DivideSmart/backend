@@ -3,8 +3,9 @@ import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 import './style/login.less'
+import './style/index.less'
 
-import { -button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
+import { button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
 // import { CSSTransition, TransitionGroup } from "react-transition-group"
 // import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -50,7 +51,7 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
 // import { getCookie } from 'util.js'
 import Snackbar from '@material-ui/core/Snackbar';
-import { MySnackbarContent-wrapper } from './components/alert_message.jsx'
+import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
 library.add(faFacebook, faGoogle, faUsers)
 
@@ -130,33 +131,32 @@ class LoginPage extends React.Component {
     }
 
 
-    // var auth2 = undefined
-    // function attachSignin(element) {
-    //   auth2.attachClickHandler(element, {},
-    //     function(googleUser) {
-    //       var data = new FormData()
-    //       data.append('csrfmiddlewaretoken', getCookie('csrftoken'))
-    //       data.append('id_token', googleUser.getAuthResponse().id_token)
-    //       axios.post('/api/signin/google', data).then((response) => {
-    //         window.location.href = '/'
-    //       }).catch(e => {
-    //         notification['warning']({
-    //           message: e.response == undefined ? '' : e.response.data,
-    //           duration: 1.8,
-    //         })
-    //       })
-    //     }, function(error) {
-    //       console.log(JSON.stringify(error, undefined, 2))
-    //     }
-    //   )
-    // }
-    // gapi.load('auth2', function(){
-    //   auth2 = gapi.auth2.init({
-    //     client_id: 'some value',  // TODO:
-    //     cookiepolicy: 'single_host_origin',
-    //   })
-    //   attachSignin(document.getElementById('google-login'))
-    // })
+    var auth2 = undefined
+    function attachSignin(element) {
+      auth2.attachClickHandler(element, {},
+        function(googleUser) {
+          axios.post('/api/signin/google', {
+            id_token: googleUser.getAuthResponse().id_token 
+          }).then((response) => {
+            window.location.href = '/'
+          }).catch(e => {
+            notification['warning']({
+              message: e.response == undefined ? '' : e.response.data,
+              duration: 1.8,
+            })
+          })
+        }, function(error) {
+          console.log(JSON.stringify(error, undefined, 2))
+        }
+      )
+    }
+    gapi.load('auth2', function(){
+      auth2 = gapi.auth2.init({
+        client_id: '656759793501-95m29dhgik9us1k2hk9ucfqnm5b96rmh.apps.googleusercontent.com',
+        cookiepolicy: 'single_host_origin',
+      })
+      attachSignin(document.getElementById('google-button'))
+    })
   }
 
 
@@ -232,7 +232,7 @@ class LoginPage extends React.Component {
             className="social-button"
           >
             <Icon type={'check-circle-o'} className="social-icon" style={{ marginRight: 8 }}/>
-            <span className="social-text" style={{color: primary}}>Log in</span>
+            <span className="social-text" style={{color: 'primary'}}>Log in</span>
           </MButton>
         </div>
         </Card>

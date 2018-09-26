@@ -4,12 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseNotFound, JsonResponse)
 from django.views.decorators.csrf import csrf_exempt
+from google.auth.transport import requests as gauth_requests
+from google.oauth2 import id_token
 
 import ujson as json
 from main.forms import LoginForm, RegistrationForm
 from main.models import User
 
 
+@csrf_exempt
 def handle_fb_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')
@@ -26,11 +29,11 @@ def handle_fb_login(request):
             new_user = User()
             new_user.username = name
             new_user.email_address = email
-            new_user.external_portrait_url = portrait_url
+            new_user.external_avatar_url = portrait_url
             new_user.save()
         user = User.objects.filter(email_address=email).first()
         user.username = name
-        user.external_portrait_url = portrait_url
+        user.external_avatar_url = portrait_url
         user.save()
 
         user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -38,6 +41,46 @@ def handle_fb_login(request):
         return HttpResponse(status=200)
     except Exception:
         return HttpResponse("Facebook login fail", status=400)
+
+
+@csrf_exempt
+def handle_google_login(request):
+    if request.method != 'POST':
+        return HttpResponseNotFound('Invalid request')
+
+    try:
+        req_json = json.loads(request.body)
+        id_token = str(req_json['id_token'])
+
+        # TODO: do not hardcode client ID, put it into private_settings.py and import from settings
+        userinfo = id_token.verify_oauth2_token(
+            id_token, gauth_requests.Request(), 
+            "656759793501-95m29dhgik9us1k2hk9ucfqnm5b96rmh.apps.googleusercontent.com"
+        )
+        if userinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise Exception('Wrong issuer.')
+        if 'error_description' in userinfo:
+            raise Exception('Wrong ID token.')
+        if 'email_verified' not in userinfo or not userinfo['email_verified']:
+            raise Exception('Wrong email.')
+
+        if not User.objects.filter(email_address=userinfo['email']).exists():
+            new_user = User()
+            new_user.username = userinfo['name']
+            new_user.email_address = userinfo['email']
+            new_user.external_avatar_url = userinfo['picture']
+            new_user.save()
+
+        user = User.objects.get(email_address=userinfo['email'])
+        user.username = userinfo['name']
+        user.external_avatar_url = userinfo['picture']
+        user.save()
+
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return HttpResponse(status=200)
+    except Exception:
+        return HttpResponse("Google login fail", status=400)
 
 
 @csrf_exempt
