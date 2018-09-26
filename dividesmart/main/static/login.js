@@ -168,6 +168,10 @@ class LoginPage extends React.Component {
 
         <Card id="login-card">
 
+        <div className="social" id="logo">
+
+        </div>
+
         <div className="social">
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
@@ -231,8 +235,8 @@ class LoginPage extends React.Component {
             variant="outlined" color="primary" size="small"
             className="social-button"
           >
-            <Icon type={'check-circle-o'} className="social-icon" style={{ marginRight: 8 }}/>
-            <span className="social-text" style={{color: 'primary'}}>Log in</span>
+            <Icon type={'check-circle-o'} id="submit-icon" style={{ color: '#3b5998', marginRight: 8 }}/>
+            <span className="social-text" style={{color: '#3b5998'}}>Log in</span>
           </MButton>
         </div>
         </Card>
