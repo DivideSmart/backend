@@ -45,16 +45,13 @@ def handle_fb_login(request):
 
 @csrf_exempt
 def handle_google_login(request):
-    if request.method != 'POST':
-        return HttpResponseNotFound('Invalid request')
-
     try:
         req_json = json.loads(request.body)
-        id_token = str(req_json['id_token'])
+        input_token = str(req_json['id_token'])
 
         # TODO: do not hardcode client ID, put it into private_settings.py and import from settings
         userinfo = id_token.verify_oauth2_token(
-            id_token, gauth_requests.Request(), 
+            input_token, gauth_requests.Request(), 
             "656759793501-95m29dhgik9us1k2hk9ucfqnm5b96rmh.apps.googleusercontent.com"
         )
         if userinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
