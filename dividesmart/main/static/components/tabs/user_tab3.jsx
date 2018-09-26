@@ -1,6 +1,6 @@
 import '../../style/user_tab.less'
 
-import { Badge, Checkbox, List, WhiteSpace, WingBlank } from 'antd-mobile';
+import { Badge, Result, Checkbox, Icon, List, WhiteSpace, WingBlank } from 'antd-mobile';
 import Close from '@material-ui/icons/Close';
 import Done from '@material-ui/icons/Done';
 import IconButton from '@material-ui/core/IconButton';
@@ -54,7 +54,7 @@ class UserTab extends React.Component {
   }
 
   acceptRequest(request) {
-    var payload = {
+    const payload = {
       friendEmail: request.emailAddress,
     }
     axios.post('/api/user/friends/', payload).then((response, err) => {
@@ -155,6 +155,11 @@ class UserTab extends React.Component {
 
         <List renderHeader={() => 'Pending Requests'} className="email-list">
           {
+            this.state.pendingRequests.length == 0 ?
+            <Result
+              img={<Icon type="check-circle" style={{ fill: '#1F90E6', width: 28, height: 28 }} />}
+              message="No pending request!"
+            /> :
             this.state.pendingRequests.map(request => {
               return (
                 <Item
