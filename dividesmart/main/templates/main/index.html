@@ -18,7 +18,7 @@
 
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw', { scope: '/api' })
+    navigator.serviceWorker.register('/sw', { scope: '/' })
       .then(function(registration) {
             console.log('Service Worker Registered');
       });
