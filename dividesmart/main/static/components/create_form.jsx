@@ -235,7 +235,7 @@ class H5NumberInputExample extends React.Component {
     }
     delete formatSplitterToAmount[this.state.current_user.id]
 
-    var payload = {
+    const payload = {
       "name": this.state.name,
       "groupId": null,
       "initiator": this.state.current_user.id,
@@ -243,7 +243,7 @@ class H5NumberInputExample extends React.Component {
       "amount": this.state.totalAmount,
     }
 
-    if(this.props.match && this.props.match.params.gPk) {
+    if (this.props.match && this.props.match.params.gPk) {
       payload.groupId = this.props.match.params.gPk;
     }
 
@@ -252,7 +252,7 @@ class H5NumberInputExample extends React.Component {
       console.log("RESPONSE")
       console.log(response)
       if(response.status == 200) {
-        alert("SUCCESS");
+        // TODO: some message to users
         window.location.href = "/";
       }
     })
