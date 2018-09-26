@@ -241,7 +241,7 @@ class LoginPage extends React.Component {
           <MButton
             onClick={(event) => this.clickLogin()}
             variant="outlined" color="primary" size="small"
-            style={{ width: '66%', height: '6vh' }}
+            style={{ width: '66%', height: '48px' }}
           >
             <Icon type={'check-circle-o'} style={{ height: 28, marginRight: 8}}/>
             <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in</span>

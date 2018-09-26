@@ -289,7 +289,7 @@ class App extends React.Component {
                   <Route
                     path={'/'}
                     render={ ({match, location}) =>
-                      <div>
+                      <div style={{ top: '6vh', position: 'relative', height: '100%'}}>
                         <Tabs />
                         <FloatingButton />
                       </div>
