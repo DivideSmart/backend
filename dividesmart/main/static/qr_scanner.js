@@ -46,7 +46,7 @@ class App extends Component {
       var payload={
         "friendEmail": data,
       }
-      axios.post('http://localhost:8000/api/user/friends/', payload)
+      axios.post('/api/user/friends/', payload)
       .then((res, err) => {
         if(err) {
           console.log(err)
