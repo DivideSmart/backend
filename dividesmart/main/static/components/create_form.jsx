@@ -251,6 +251,10 @@ class H5NumberInputExample extends React.Component {
     .then(response => {
       console.log("RESPONSE")
       console.log(response)
+      if(response.status == 200) {
+        alert("SUCCESS");
+        window.location.href = "/";
+      }
     })
   }
 
@@ -454,7 +458,6 @@ class H5NumberInputExample extends React.Component {
                       <Input
                         id="adornment-amount"
                         name={splitter.uuid}
-                        // value={this.state.amount}
                         // onChange={this.handleChange('amount')}
                         style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
                         onChange={this.updateIndividualAmount}
