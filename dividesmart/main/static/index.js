@@ -18,7 +18,8 @@ import {
   faPenNib,
   faReceipt,
   faUserCircle,
-  faUsers
+  faUsers,
+  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
@@ -49,7 +50,7 @@ library.add(
   faHandHoldingUsd,
   faDollarSign,
   faReceipt, faHome, faChevronLeft,
-  faUsers, faUserCircle, faLandmark
+  faUsers, faUserCircle, faLandmark, faSignOutAlt
 )
 
 class App extends React.Component {

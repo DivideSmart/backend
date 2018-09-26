@@ -12,6 +12,7 @@ import {
 } from 'react-router-dom'
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
+import axios from 'axios'
 
 const Item = Popover.Item
 
@@ -38,11 +39,17 @@ function PopOver(props) {
           </Link>
         </Item>),
 
-        <Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' id="icon-size" />}>
+        (<Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' class="icon-size" />}>
           <Link to='/g/create'>
             <span id="link-style">Create Group</span>
           </Link>
-        </Item>,
+        </Item>),
+
+        (<Item 
+          key="logout" value="button ct" 
+          icon={<FontAwesomeIcon icon='sign-out-alt' class="icon-size" />}
+        > Logout
+        </Item>),
       ]}
       align={{
         overflow: { adjustY: 0, adjustX: 0 },
@@ -71,6 +78,8 @@ class TopBar extends React.Component {
         window.location.href = '/qr'
       else if(opt.key == 'qr')
         window.location.href = '/code'
+      else if(opt.key == 'logout')
+        this.logout()
       this.setState({
         visible: false,
         selected: opt.props.value,
@@ -81,6 +90,18 @@ class TopBar extends React.Component {
         visible,
       });
     };
+    
+    this.logout = () => {
+      console.log("LOL")
+      axios.post('http://localhost:8000/api/logout/').then((res, err) => {
+        if(err) {
+          throw err
+        } else {
+          console.log(res)
+          window.location.href = '/login'
+        }
+      })
+    }
   }
 
   render() {
