@@ -95,7 +95,7 @@ class UserTab extends React.Component {
         <WhiteSpace />
 
         <List>
-          <Item extra={<span className={this.state.totalDebt > 0 ? 'other-owe-amount' : 'owe-other-amount'}>{'${0}'.format(Math.abs(this.state.totalDebt))}</span>}>
+          <Item extra={<span className={this.state.totalDebt >= 0 ? 'other-owe-amount' : 'owe-other-amount'}>{'${0}'.format(Math.abs(this.state.totalDebt))}</span>}>
             <Badge>
               <span
                 id="photo"
