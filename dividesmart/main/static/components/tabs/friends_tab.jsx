@@ -111,7 +111,7 @@ class FriendsTab extends React.Component {
               variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
               <PersonOutline style={{ marginRight: 18 }} />
               <span style={{ marginTop: 3 }}>
-                Add Friend
+                Send Requests
               </span>
             </MButton>
           </Link>

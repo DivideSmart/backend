@@ -22,6 +22,7 @@ import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
+import MailOutline from '@material-ui/icons/MailOutline';
 import axios from 'axios'
 import { createForm } from 'rc-form';
 
@@ -173,7 +174,11 @@ class AddFriendForm extends React.Component {
             <Link to='/addfriend' style={{ width: '80%' }}>
               <MButton
                 variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
-                <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Add Friend
+                
+                <MailOutline style={{ marginRight: 18 }} />
+                <span style={{ marginTop: 3 }}>
+                  Add Friend
+                </span>
               </MButton>
             </Link>
           </div>
