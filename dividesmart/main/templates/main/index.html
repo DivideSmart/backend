@@ -9,22 +9,21 @@
   <meta name="theme-color" content="#0060c0">
 
   {% include "main/tools_import_subpage.html" %}
-  <title>Index</title>
+  <title>WeShare</title>
 </head>
 <body>
     <div id="main"></div>
 </body>
 <script src="/static/bundle/main/index.js"></script>
 
-<!-- <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw', { scope: '/' })
-      .then(function(registration) {
-            console.log('Service Worker Registered');
-      });
-    navigator.serviceWorker.ready.then(function(registration) {
-        console.log('Service Worker Ready');
-    });
-  }
-</script> -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw', { scope: '/' }).then(function(registration) {
+    console.log('Service Worker Registered');
+  });
+  navigator.serviceWorker.ready.then(function(registration) {
+    console.log('Service Worker Ready');
+  });
+}
+</script>
 </html>

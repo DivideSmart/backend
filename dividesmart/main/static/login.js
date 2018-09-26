@@ -4,8 +4,8 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 
 import { Button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
-import { CSSTransition, TransitionGroup } from "react-transition-group"
-import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+// import { CSSTransition, TransitionGroup } from "react-transition-group"
+// import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider, connect } from 'react-redux';
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
@@ -14,32 +14,32 @@ import {
   faGoogle
 } from '@fortawesome/free-brands-svg-icons'
 import {
-  faHandHoldingUsd,
-  faHome,
-  faLandmark,
-  faMoneyBillAlt,
-  faPenNib,
-  faReceipt,
-  faUserCircle,
+  // faHandHoldingUsd,
+  // faHome,
+  // faLandmark,
+  // faMoneyBillAlt,
+  // faPenNib,
+  // faReceipt,
+  // faUserCircle,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import CardActions from '@material-ui/core/CardActions';
+// import CardContent from '@material-ui/core/CardContent';
+// import CardHeader from '@material-ui/core/CardHeader';
+// import CardMedia from '@material-ui/core/CardMedia';
+// import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
+// import Collapse from '@material-ui/core/Collapse';
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import IconButton from '@material-ui/core/IconButton';
+// import Input from '@material-ui/core/Input';
+// import InputAdornment from '@material-ui/core/InputAdornment';
+// import InputLabel from '@material-ui/core/InputLabel';
 import MButton from '@material-ui/core/Button';
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -47,7 +47,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
-import { getCookie } from 'util.js'
+// import { getCookie } from 'util.js'
 import Snackbar from '@material-ui/core/Snackbar';
 import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
