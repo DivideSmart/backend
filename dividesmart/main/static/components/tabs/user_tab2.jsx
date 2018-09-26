@@ -173,8 +173,6 @@ class UserTabWithoutStyle extends React.Component {
         </List>
 
         <List>
-
-
           {
             this.state.entries.map(entry => {
               return (
