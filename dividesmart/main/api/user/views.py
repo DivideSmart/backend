@@ -1,21 +1,16 @@
-import ujson as json
 import uuid
 from decimal import Decimal
 from functools import wraps
 
 from django.contrib.auth import get_user
-from django.http import (
-    HttpResponseNotFound, HttpResponse, HttpResponseForbidden, JsonResponse,
-    HttpResponseBadRequest
-)
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseForbidden, HttpResponseNotFound,
+                         JsonResponse)
 from django.views.decorators.csrf import csrf_exempt
 
-from main.models import (
-    User, Group, Entry, Bill, Payment
-)
-from main.utils import (
-    ensure_authenticated,
-)
+import ujson as json
+from main.models import Bill, Entry, Group, Payment, User
+from main.utils import ensure_authenticated
 
 
 def ensure_friends(f):
@@ -186,4 +181,3 @@ def friend_payment(request, friend_id, payment_id):
 
 def allElse(request):
     print(request)
-

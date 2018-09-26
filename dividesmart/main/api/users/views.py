@@ -1,13 +1,8 @@
 from django.contrib.auth import get_user
-from django.http import (
-    HttpResponseForbidden, JsonResponse,
-)
-from main.models import (
-    User, Group,
-)
-from main.utils import (
-    ensure_authenticated,
-)
+from django.http import HttpResponseForbidden, JsonResponse
+
+from main.models import Group, User
+from main.utils import ensure_authenticated
 
 
 @ensure_authenticated
