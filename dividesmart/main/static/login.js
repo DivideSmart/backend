@@ -160,13 +160,10 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div>
-        <WhiteSpace size="lg" />
-        <WhiteSpace size="lg" />
-
         <Card id="login-card">
 
         <div className="social" id="logo-div">
-          <img id='logo' src="/media/avatars/default_avatar.png" />
+          <img id='logo' src="/static/img/logo.png" />
         </div>
 
         <div className="social">

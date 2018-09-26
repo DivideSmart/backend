@@ -355,7 +355,7 @@ class H5NumberInputExample extends React.Component {
           <MList>
             <MListItem button style={{marginBottom: 6}}>
               <ListItemAvatar>
-                <AttachMoney />
+                <AttachMoney style={{color: '#888', fill: '#1F90E6'}}/>
               </ListItemAvatar>
               <ListItemText primary="Total Amount" />
               <ListItemSecondaryAction>
@@ -372,7 +372,7 @@ class H5NumberInputExample extends React.Component {
 
             <MListItem button >
               <ListItemAvatar>
-                <PersonOutline />
+                <PersonOutline style={{color: '#888', fill: '#1F90E6'}}/>
               </ListItemAvatar>
               <ListItemText primary="Pay by" />
               <Avatar

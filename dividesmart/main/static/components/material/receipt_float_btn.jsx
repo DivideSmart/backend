@@ -1,12 +1,12 @@
 import 'regenerator-runtime/runtime'
 
-import {ActionSheet, Button, Toast, WhiteSpace, WingBlank} from 'antd-mobile'
+import {ActionSheet, Button, Toast, WhiteSpace, WingBlank } from 'antd-mobile'
 
 import CameraAlt from '@material-ui/icons/CameraAlt';
 import MButton from '@material-ui/core/Button';
 import React from 'react'
-import axios from 'axios'
-import { getCookie } from 'util.js'
+// import axios from 'axios'
+// import { getCookie } from 'util.js'
 import { withStyles } from '@material-ui/core/styles';
 import '../../style/index.less'
 
@@ -96,6 +96,7 @@ class FlaoatingButton extends React.Component {
           ref={item => this.finput = item}
           style={{ visibility: 'hidden' }}
           type={'file'}
+          accept="image/gif,image/jpeg,image/jpg,image/png"
           onChange={async () => this.handleFiles()}>
         </input>
 

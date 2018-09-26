@@ -112,16 +112,17 @@ class TopBar extends React.Component {
               <Home id="home-icon" />
             </Link>
           }
-          mode="light"
+          // mode="light"
           rightContent={
             <PopOver
+              style={{color: 'white'}}
               visible={this.state.visible}
               handleVisibleChange={this.handleVisibleChange}
               onSelect={this.onSelect}
             />
           }
         >
-          WeShare
+          <span style={{fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: 18, color: 'white'}}>WeShare</span>
         </NavBar>
       </div>
     )

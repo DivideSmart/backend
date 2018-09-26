@@ -3,12 +3,12 @@
   "name": "WeShare",
   "icons": [
     {
-      "src": "/media/avatars/default_avatar.png",
+      "src": "/static/img/logo.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/media/avatars/default_avatar.png",
+      "src": "/static/img/logo.png",
       "type": "image/png",
       "sizes": "512x512"
     }
