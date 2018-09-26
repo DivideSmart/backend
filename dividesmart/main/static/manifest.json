@@ -1,6 +1,18 @@
 {
   "short_name": "WeShare",
   "name": "WeShare",
+  "icons": [
+    {
+      "src": "/media/avatars/default_avatar.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/media/avatars/default_avatar.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
   "start_url": "/",
   "background_color": "#f5f5f9",
   "display": "standalone",
