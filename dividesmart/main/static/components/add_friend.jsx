@@ -1,64 +1,38 @@
 import 'regenerator-runtime/runtime'
+import '../style/add_friend.less'
 
+import { Button, List, WhiteSpace, Icon } from 'antd-mobile'
+
+import Checkbox from '@material-ui/core/Checkbox';
+import Close from '@material-ui/icons/Close';
+import Done from '@material-ui/icons/Done';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import PersonAdd from '@material-ui/icons/PersonAdd';
-import Done from '@material-ui/icons/Done';
-import Close from '@material-ui/icons/Close';
-import Checkbox from '@material-ui/core/Checkbox';
-import axios from 'axios'
-import { List, WhiteSpace, Button } from 'antd-mobile'
-import Snackbar from '@material-ui/core/Snackbar';
+import InputLabel from '@material-ui/core/InputLabel';
+import {
+  Link,
+} from 'react-router-dom';
+import ListItem from 'antd-mobile/lib/list/ListItem';
+import MButton from '@material-ui/core/Button'
 import { MySnackbarContentWrapper } from './alert_message.jsx'
-import '../style/add_friend.less'
+import PersonAdd from '@material-ui/icons/PersonAdd';
+import React from 'react'
+import Snackbar from '@material-ui/core/Snackbar';
+import TextField from '@material-ui/core/TextField';
+import MailOutline from '@material-ui/icons/MailOutline';
+import axios from 'axios'
+import { createForm } from 'rc-form';
 
 const Item = List.Item
 
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-import {
-  Link,
-} from 'react-router-dom';
-import ListItem from 'antd-mobile/lib/list/ListItem';
-import React from 'react'
-import { createForm } from 'rc-form';
 
 const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" style={{ width: 60, height: 60 }} alt="" />;
-var sampleData = [
-    {
-      pk: '1',
-      username: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      pk: '2',
-      username: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-    {
-      pk: '3',
-      username: 'Hieu',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      pk: '4',
-      username: 'Yuyang',
-      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
-      acc: 20.66,
-    }, {
-      pk: '5',
-      username: 'Sipanis',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    }
-]
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -133,10 +107,10 @@ class AddFriendForm extends React.Component {
     // const suffix = userName ? <Icon type="check-circle"/> : null;
     return (
       <div>
-        <div>
+        <div style={{textAlign: 'center'}}>
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
-          <FormControl>
+          <FormControl style={{width: '80%'}}>
             <Input
               className="full-width"
               id="adornment-email"
@@ -166,25 +140,50 @@ class AddFriendForm extends React.Component {
           <WhiteSpace />
           <WhiteSpace />
           <List renderHeader={() => this.state.entered.length > 0 ? 'Selected emails' : ''} className="email-list">
-            { 
+            {
               this.state.entered.map(email => {
                 return (
                   <Item
                     className="full-width"
                     key = {email.key}
-                    extra={<Checkbox 
-                      name={email.email} 
-                      onClick={this.removeEmailAddress}
-                      icon={<IconButton><Close/></IconButton>} >
-                    </Checkbox>}
+                    extra={
+                      <Checkbox
+                        style={{ width: 28, height: 28, }}
+                        name={email.email}
+                        onClick={this.removeEmailAddress}
+                        icon={<IconButton><Close /></IconButton>} >
+                      </Checkbox>
+                    }
                   >
                     {email.email}
                   </Item>
                 )
               })
             }
-            <Button className="full-width" onClick={ () => this.addFriends() }> Add all </Button>
+
+            {/* <Button className="full-width" onClick={ () => this.addFriends() }> Add all </Button> */}
           </List>
+
+
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: 38
+            }}
+          >
+            <Link to='/addfriend' style={{ width: '80%' }}>
+              <MButton
+                variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
+                
+                <MailOutline style={{ marginRight: 18 }} />
+                <span style={{ marginTop: 3 }}>
+                  Send Requests
+                </span>
+              </MButton>
+            </Link>
+          </div>
+
+
           <Snackbar anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',
@@ -208,3 +207,4 @@ class AddFriendForm extends React.Component {
 const AddFriend = createForm()(AddFriendForm);
 
 export { AddFriend }
+//

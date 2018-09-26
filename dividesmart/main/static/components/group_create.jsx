@@ -105,9 +105,6 @@ class GroupCreateForm extends React.Component {
 
           <WhiteSpace siz='xg' />
 
-          <WhiteSpace size="lg" />
-          <WhiteSpace size="lg" />
-
           <InputItem
             value={this.state.name}
             onChange={this.handleChange('name')}

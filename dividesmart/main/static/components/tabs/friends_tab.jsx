@@ -1,52 +1,19 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List, SearchBar, WhiteSpace } from 'antd-mobile'
+import { Badge, Icon, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
-import React from 'react'
-import Close from '@material-ui/icons/Close';
+// import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
+import {
+  Link,
+} from 'react-router-dom'
+import MButton from '@material-ui/core/Button'
+import PersonOutline from '@material-ui/icons/PersonOutline';
+import React from 'react'
 import axios from 'axios'
 
 const Item = List.Item
 const Brief = Item.Brief
-
-
-var sampleData = {
-  friendsOweYou: [
-    {
-      key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      key: '2',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-  ],
-  friendsYouOwe: [
-    {
-      key: '1',
-      name: 'Harry',
-      avatarUrl: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg',
-      acc: 10.28,
-    }, {
-      key: '2',
-      name: 'Charlie',
-      avatarUrl: 'https://www.shareicon.net/data/256x256/2016/07/05/791216_people_512x512.png',
-      acc: 20.66,
-    }, {
-      key: '3',
-      name: 'Oscar',
-      avatarUrl: 'https://www.osustuff.org/img/avatars/2017-04-22/211652.jpg',
-      acc: 8.6,
-    },
-  ],
-  friendsSettledUp: [
-
-  ],
-}
 
 class FriendsTab extends React.Component {
   constructor() {
@@ -89,8 +56,29 @@ class FriendsTab extends React.Component {
   render() {
     return (
       <div>
-        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         <FriendsList friends={this.state.users}/>
+
+
+        <WhiteSpace />
+        <WhiteSpace />
+
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Link aria-label="add-friends" to='/addfriend' style={{ width: '80%' }}>
+            <MButton
+              aria-label="add-friends"
+              variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
+              <PersonOutline style={{ marginRight: 18 }} />
+              <span style={{ marginTop: 3 }}>
+                Add Friends
+              </span>
+            </MButton>
+          </Link>
+        </div>
 
         <WhiteSpace />
         <WhiteSpace />

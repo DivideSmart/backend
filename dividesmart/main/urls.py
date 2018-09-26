@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^api/', include('main.api.urls')),
+    
+    url(r'^sw$', views.service_worker),
 
     path('register/', views.register),
 
@@ -21,6 +23,6 @@ urlpatterns = [
     url(r'^u', views.display_index),
     url(r'^g', views.display_index),
     url(r'^create', views.display_index),
-    url(r'^addFriend', views.display_index),
+    url(r'^addfriend', views.display_index),
     url('loginPage/', views.display_index)
 ]

@@ -7,6 +7,7 @@ from django.shortcuts import render
 
 from main.forms import LoginForm, RegistrationForm
 from main.models import User
+import requests
 from django.shortcuts import redirect
 
 def register(request):
@@ -23,6 +24,12 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, 'main/register.html', {'form': form})
+
+
+def service_worker(request):
+    content = requests.get(request.scheme + '://' + request.META['HTTP_HOST'] + '/static/sw.js').text
+    response = HttpResponse(content, content_type='application/javascript')
+    return response
 
 
 def display_login(request):

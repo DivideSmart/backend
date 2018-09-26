@@ -37,6 +37,8 @@ class FlaoatingButton extends React.Component {
     super()
     this.state = {
       value: 0,
+      prefix: '',
+      user_id: ''
     };
 
     this.handleChange = (event, value) => {
@@ -46,9 +48,21 @@ class FlaoatingButton extends React.Component {
     this.handleChangeIndex = index => {
       this.setState({ value: index });
     };
-
+    
+    this.formatLink = this.formatLink.bind(this);
   }
 
+  formatLink() {
+    return this.state.prefix ? this.props.prefix + this.props.user_id + '/create-bill/'
+                             : '/create'
+  }
+
+  componentDidMount() {
+    this.setState({
+        prefix: this.props.prefix,
+        user_id: this.props.user_id
+    })
+  }
   render() {
     const { classes, theme } = this.props;
     const transitionDuration = {
@@ -84,8 +98,9 @@ class FlaoatingButton extends React.Component {
       //   }}
       //   unmountOnExit
       // >
-        <Link to={'/create'}>
+        <Link aria-label="create-bill" to={this.formatLink()}>
           <Button
+            aria-label="create-bill"
             variant="fab"
             className={classes.fab + ' create-debt-btn'}
             style={{bottom: 66, zIndex: 1000, position: 'fixed'}}

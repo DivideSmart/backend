@@ -2,17 +2,17 @@ import 'regenerator-runtime/runtime'
 import '../style/index.less'
 
 import {
-  Badge,
-  Button,
-  Card,
+  // Badge,
+  // Button,
+  // Card,
   Checkbox,
   Flex,
   Icon,
-  InputItem,
+  // InputItem,
   List,
   Modal,
   Radio,
-  Result,
+  // Result,
   Tabs,
   TextareaItem,
   WhiteSpace,
@@ -23,11 +23,11 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Avatar from '@material-ui/core/Avatar';
-import CommentIcon from '@material-ui/icons/Comment';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+// import CommentIcon from '@material-ui/icons/Comment';
+// import Divider from '@material-ui/core/Divider';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormGroup from '@material-ui/core/FormGroup';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -42,41 +42,50 @@ import MButton from '@material-ui/core/Button';
 import MCheckbox from '@material-ui/core/Checkbox';
 import MList from '@material-ui/core/List';
 import MListItem from '@material-ui/core/ListItem';
-import MListItemIcon from '@material-ui/core/ListItemIcon';
-import MenuItem from '@material-ui/core/MenuItem';
+// import MListItemIcon from '@material-ui/core/ListItemIcon';
+// import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonOutline from '@material-ui/icons/PersonOutline';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
-import Select from '@material-ui/core/Select';
-import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+// import Select from '@material-ui/core/Select';
+// import Switch from '@material-ui/core/Switch';
+// import TextField from '@material-ui/core/TextField';
+// import ToggleButton from '@material-ui/lab/ToggleButton';
+// import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+// import Visibility from '@material-ui/icons/Visibility';
+// import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { createForm } from 'rc-form';
 import { withStyles } from '@material-ui/core/styles';
 import { FriendList } from './tabs/friend_list.jsx'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import axios from 'axios';
-const RadioItem = Radio.RadioItem;
-const CheckboxItem = Checkbox.CheckboxItem
+// const RadioItem = Radio.RadioItem;
+// const CheckboxItem = Checkbox.CheckboxItem
 
 const Item = List.Item
 const Brief = Item.Brief
 
 
-const AgreeItem = Checkbox.AgreeItem;
+// const AgreeItem = Checkbox.AgreeItem;
 const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" style={{ width: 60, height: 60 }} alt="" />;
 
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 
 
+function copy(o) {
+  var output, v, key;
+  output = Array.isArray(o) ? [] : {};
+  for (key in o) {
+      v = o[key];
+      output[key] = (typeof v === "object") ? copy(v) : v;
+  }
+  return output;
+}
 
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -96,7 +105,7 @@ class H5NumberInputExample extends React.Component {
     this.imgReader = new FileReader()
     this.tempFile = undefined
     const self = this
-    
+
     this.imgReader.addEventListener("load", function() {
       const url = self.imgReader.result
       const newFiles = self.state.files
@@ -115,9 +124,9 @@ class H5NumberInputExample extends React.Component {
       totalAmount: 0,
       splitMode: 'equally',
       payer: undefined,
-      splitters: [],
+      splitters: [],  // selected splitters
       showAddSplittersModal: false,
-      friends: [],
+      friends: [],  // all friends of this user, with an attribute indicate whether selected or not
       files: [],
       splitterToAmount: {},
       name: ''
@@ -125,8 +134,16 @@ class H5NumberInputExample extends React.Component {
 
     this.removeSplitter = (splitter) => {
       const newSplitters = this.state.splitters.filter(s => s.uuid != splitter.uuid)
+      const friends = this.state.friends.map(friend => {
+        if (friend.id == splitter.uuid)
+          friend.selected = false
+        friend.pk = friend.id
+        return friend
+      })
+
       this.setState({
-        splitters: newSplitters
+        splitters: newSplitters,
+        friends: friends
       })
     }
 
@@ -137,27 +154,26 @@ class H5NumberInputExample extends React.Component {
     }
 
     this.handleNameChange = (e) => {
-      console.log("UPDATE NAME")
-      console.log(e)
       this.setState({
         name: e,
       })
+    }
+
+    this.getUpdatedFriendsBySplitters = () => {
+      var ref_ids = this.state.splitters.map(u => u.uuid);
+      var tempFriendsList = this.state.friends.map(friend => {
+        friend.selected = ref_ids.includes(friend.id)
+        friend.pk = friend.id
+        return friend
+      })
+      return tempFriendsList
     }
 
     this.addPhoto = (file) => {
       this.tempFile = file
       this.imgReader.readAsDataURL(file)
     }
-
-    this.updateReceipt = (content) => {
-      this.setState({
-        data: [
-          { value: 0, label: 'Shiquasa Mojito', price: '4.90' },
-          { value: 1, label: 'Cranberry Juice', price: '3.50' },
-          { value: 2, label: 'Mountain Monster Curry', price: '24.00' },
-        ]
-      })
-    }
+    this.updateReceipt = (content) => {}
 
     this.updateFriends = this.updateFriends.bind(this);
     this.postBill = this.postBill.bind(this);
@@ -196,54 +212,29 @@ class H5NumberInputExample extends React.Component {
   // }
 
   updateFriends(added_users) {
-      console.log("AFTER UPDATE")
-      console.log(added_users);
-      var new_added_users = added_users.map(u => {
-                                      var p = {uuid: u.id, 
-                                               username: u.username,
-                                               avatarUrl: u.avatarUrl}
-                                      return p;})
-
-      this.setState({
-        splitters: new_added_users
-      })
-
-      this.setState({
-        showAddSplittersModal: false
-      })
-      var ref_ids = added_users.map(u => u.id);
-
-      var friends = this.state.friends.map(friend => {
-        if (ref_ids.includes(friend.id) ){
-          friend.selected = true
-        } else {
-          friend.selected = false
-        }
-
-        friend.pk = friend.id;
-        return friend;
-      })
-      this.setState({
-        friends: friends
-      })
+    var newSplitters = added_users.map(u => {
+      return {
+        uuid: u.id,
+        username: u.username,
+        avatarUrl: u.avatarUrl
+      }
+    })
+    this.setState({
+      splitters: newSplitters,
+      showAddSplittersModal: false,
+    })
   }
-  
 
   postBill() {
-    console.log("AMOUNT OF MONEY")
-    console.log(this.state.totalAmount)
-    console.log(this.state.splitterToAmount)
-    console.log(this.state)
     var formatSplitterToAmount = this.state.splitterToAmount;
-    console.log(formatSplitterToAmount)
+
     if(this.state.splitMode == "equally") {
       var keys = this.state.splitters.map(splitter => splitter.uuid);
       var equalAmount = this.state.totalAmount / (keys.length)
       keys.forEach(key => formatSplitterToAmount[key] = equalAmount.toString())
     }
-    console.log("FORMAT")
-    console.log(this.state.splitterToAmount)
-    console.log(formatSplitterToAmount)
+    delete formatSplitterToAmount[this.state.current_user.id]
+
     var payload = {
       "name": this.state.name,
       "groupId": null,
@@ -251,31 +242,78 @@ class H5NumberInputExample extends React.Component {
       "loans": formatSplitterToAmount,
       "amount": this.state.totalAmount,
     }
+
+    if(this.props.match && this.props.match.params.gPk) {
+      payload.groupId = this.props.match.params.gPk;
+    }
+
     axios.post('/api/bills/', payload)
-        .then(response => {
-              console.log("RESPONSE")
-              console.log(response)
-          } )
+    .then(response => {
+      console.log("RESPONSE")
+      console.log(response)
+      if(response.status == 200) {
+        alert("SUCCESS");
+        window.location.href = "/";
+      }
+    })
   }
- 
-  componentWillMount() {
+
+  componentDidMount() {
     axios.get("/api/user").then(response => {
-          this.setState({
-            current_user: response.data
-          })
+      var thisUser = response.data
+      this.setState({ current_user: thisUser })
 
-          axios.get('/api/user/friends').then(responseB => {
-            var friends = responseB.data.friends;
-            friends = friends.map(friend => {
-              friend.pk = friend.id;
-              return friend;
-            })
-            this.setState({
-              friends: friends
-            })
-          })
-
+      if (this.props.friends) {
+        var friends = this.props.friends.filter(friend => friend.id != response.data.id);
+        friends.forEach(friend => {
+          friend.pk = friend.id
+          friend.selected = true
         })
+        friends.push(thisUser);
+        this.setState({ friends: friends })
+      } else {
+        axios.get('/api/user/friends').then(responseB => {
+          var friends = responseB.data.friends;
+          friends.forEach(friend => {
+            friend.pk = friend.id
+            friend.selected = true
+          })
+          friends.push(thisUser);
+          this.setState({ friends: friends })
+        })
+      }
+    })
+  }
+    // var new_added_users = added_users.map(u => {
+    //   var p = {uuid: u.id,
+    //            username: u.username,
+    //            avatarUrl: u.avatarUrl}
+    //   return p;})
+
+    // this.setState({
+    //   splitters: new_added_users
+    // })
+
+    // this.setState({
+    //   splitters:
+    // })
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.friends) {
+      var friends = copy(nextProps.friends);
+      friends.forEach(friend => {friend.pk = friend.id; friend.selected = true})
+      this.setState({
+        friends: friends
+      })
+    }
+    if (nextProps.splitters) {
+      var newSplitters = nextProps.splitters.map(splitter => { return {
+        uuid: splitter.id,
+        username: splitter.username,
+        avatarUrl: splitter.avatarUrl
+      }})
+      this.setState({ splitters: newSplitters })
+    }
   }
 
   render() {
@@ -293,7 +331,7 @@ class H5NumberInputExample extends React.Component {
           />
         </List>
 
-        <WhiteSpace size="lg" />
+        {/* <WhiteSpace size="lg" /> */}
 
         <List className={'divide-list'} renderHeader={() => (
           <span>
@@ -353,7 +391,7 @@ class H5NumberInputExample extends React.Component {
           </MList>
         </Paper>
 
-        <WhiteSpace size="lg" />
+        {/* <WhiteSpace size="lg" /> */}
 
         <List renderHeader={() => (
           <span>
@@ -377,11 +415,10 @@ class H5NumberInputExample extends React.Component {
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}} primary={splitter.username} />
+                    <ListItemText style={{float: 'right'}} primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
-                      <span
+                      <span style={{ marginRight: '6vw'}}
                         // className={'other-owe-amount'}
-                        style={{ marginRight: '6vw'}}
                       >
                         { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(3) }
                       </span>
@@ -412,16 +449,15 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {this.state.splitters.map(splitter => (
-                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>   
+                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
                   <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}}  primary={splitter.username} />
+                    <ListItemText style={{float: 'right'}}  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <Input
                         id="adornment-amount"
                         name={splitter.uuid}
-                        // value={this.state.amount}
                         // onChange={this.handleChange('amount')}
                         style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
                         onChange={this.updateIndividualAmount}
@@ -437,13 +473,12 @@ class H5NumberInputExample extends React.Component {
                     </ListItemSecondaryAction>
                   </MListItem>
                 ))}
-                <MListItem 
-                   onClick={() => this.setState({showAddSplittersModal: true})}
-                   button >
+                <MListItem
+                  button
+                  onClick={() => this.setState({showAddSplittersModal: true})}
+                >
                   <ListItemAvatar>
-                    <Avatar>
-                      <AddIcon />
-                    </Avatar>
+                    <Avatar> <AddIcon /> </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary="Add people" />
                 </MListItem>
@@ -474,7 +509,6 @@ class H5NumberInputExample extends React.Component {
           />
         </div>
 
-
         <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -496,15 +530,15 @@ class H5NumberInputExample extends React.Component {
           maskClosable={true}
           ref="modal_ref"
           onClose={() => this.setState({ showAddSplittersModal: false })}
-          title="Settle up"
+          // title=""
           // footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
           wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
-          <div >
-            <FriendList 
-              mode='multi-select' 
-              users={this.state.friends} 
-              updateUsers = {this.updateFriends} 
+          <div>
+            <FriendList
+              mode='multi-select'
+              users={this.getUpdatedFriendsBySplitters()}
+              updateUsers = {this.updateFriends}
             />
             <WhiteSpace />
           </div>

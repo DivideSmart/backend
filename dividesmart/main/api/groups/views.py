@@ -7,6 +7,7 @@ from django.http import (
     HttpResponseForbidden, JsonResponse
 )
 from django.views.decorators.csrf import csrf_exempt
+from decimal import Decimal
 
 from main.forms import CreateGroupForm
 from main.models import (

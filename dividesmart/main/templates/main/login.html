@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://apis.google.com/js/api:client.js"></script>
+    <meta name="description" content="An awesome bill splitting Webapp"/>
+    <meta name="theme-color" content="#0060c0">
+    <!-- <script src="https://apis.google.com/js/api:client.js"></script> -->
     {% include "main/tools_import_subpage.html" %}
     <title>Sign In</title>
 </head>
@@ -13,5 +15,16 @@
 </body>
 
 <script src="/static/bundle/main/login.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw', { scope: '/' })
+      .then(function(registration) {
+            console.log('Service Worker Registered');
+      });
+    navigator.serviceWorker.ready.then(function(registration) {
+        console.log('Service Worker Ready');
+    });
+  }
+</script>
 </html>
 

@@ -34,14 +34,12 @@ class FriendList extends React.Component {
     }
     this.added_keys = [];
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
-    this.renderButton = this.renderButton.bind(this);
+    // this.renderButton = this.renderButton.bind(this);
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
     // this.fetch = this.fetch.bind(this);
     this.addDefaultCheck = this.addDefaultCheck.bind(this);
   }
-  componentWillMount() {
-  }
-  
+
   shouldComponentUpdate(nextProp, nextState) {
     if(JSON.stringify(nextProp) == JSON.stringify(this.props) && JSON.stringify(nextState) == JSON.stringify(this.state)) {
       return false;
@@ -60,42 +58,42 @@ class FriendList extends React.Component {
   //   }
   // }
 
-  renderButton(mode, updateUsers) {
-    if (mode == 'multi-select' || mode == 'single-select') {
-      return (
-        <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
-      )
-    }
-  }
+  // renderButton(mode, updateUsers) {
+  //   if (mode == 'multi-select' || mode == 'single-select') {
+  //     return (
+  //       <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
+  //     )
+  //   }
+  // }
 
   onChangeCheckBox(e, checked) {
-    console.log("CHECKBOX update")
-    console.log(copy(this.state.added_users));
-    console.log(e.target.name)
-    console.log(checked);
+    // console.log("CHECKBOX update")
+    // console.log(copy(this.state.added_users));
+    // console.log(e.target.name)
+    // console.log(checked);
     if (checked && !(e.target.name in this.added_keys)) {
       this.added_keys.push(e.target.name);
       const new_user = this.props.users.filter(user => user.pk == e.target.name)[0];
       const newArray = copy(this.state.added_users);
       newArray.push(new_user);
-      console.log("CHECKED")
-      console.log(copy(newArray))
+      // console.log("CHECKED")
+      // console.log(copy(newArray))
       this.setState({
         added_users: copy(newArray)
       });
     } else if(!checked) {
-      console.log("UNCHECKED")
+      // console.log("UNCHECKED")
       console.log(this.state.added_users);
       const newArrayB = this.state.added_users.filter(user => user.pk != e.target.name);
       console.log(copy(newArrayB))
       this.setState({
         added_users: copy(newArrayB)
       })
-      console.log('test')
-      console.log(copy(this.state.added_users))
+      // console.log('test')
+      // console.log(copy(this.state.added_users))
     }
-    
-    console.log("END1")
+
+    // console.log("END1")
   }
 
   async addDefaultCheck(friend) {
@@ -111,10 +109,10 @@ class FriendList extends React.Component {
 
   componentDidCatch(error) {
     if(!this.state.error) { // set error only once per update
-       this.setState({
-         error,
-       })
-   }
+      this.setState({
+        error,
+      })
+    }
   }
 
   // shouldComponentUpdate(nextProp, nextState) {
@@ -130,7 +128,7 @@ class FriendList extends React.Component {
   // }
 
   componentWillReceiveProps(nextProp) {
-    if(nextProp.alreadyAddedUsers && nextProp.isAddGroup) {
+    if (nextProp.alreadyAddedUsers && nextProp.isAddGroup) {
       var IDs = [];
       nextProp.alreadyAddedUsers.forEach(person => {
         IDs.push(person.id);
@@ -169,7 +167,6 @@ class FriendList extends React.Component {
   //   console.log("COME HERE")
   //   console.log(users)
   //   return (
-      
   //   )
   // }
 
@@ -193,10 +190,9 @@ class FriendList extends React.Component {
                     <Badge>
                       <span
                         style={{
-                          width: '48px',
-                          height: '48px',
+                          width: '48px', height: '48px', display: 'inline-block',
                           background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
+                        }}
                       />
                     </Badge>
                   }
@@ -215,10 +211,9 @@ class FriendList extends React.Component {
                         <Badge>
                           <span
                             style={{
-                              width: '48px',
-                              height: '48px',
+                              width: '48px', height: '48px', display: 'inline-block',
                               background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
-                              display: 'inline-block' }}
+                          }}
                           />
                         </Badge>
                       }
@@ -237,10 +232,9 @@ class FriendList extends React.Component {
                     <Badge>
                       <span
                         style={{
-                          width: '48px',
-                          height: '48px',
+                          width: '48px', height: '48px', display: 'inline-block',
                           background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
-                          display: 'inline-block' }}
+                        }}
                       />
                     </Badge>
                   }
@@ -255,21 +249,11 @@ class FriendList extends React.Component {
           })
         }
 
-        {/* {console.log(this.props.updateUsers)} */}
-        {/* { this.renderButton(this.props.mode, this.props.updateUsers) } */}
-
-
         {
-          (this.props.mode == 'multi-select' || this.props.mode == 'single-select') ? 
-            <Button onClick={ () => this.props.updateUsers(copy(this.state.added_users)) }> ADD </Button> :
+          (this.props.mode == 'multi-select' || this.props.mode == 'single-select') ?
+          <Button onClick={ () => this.props.updateUsers(copy(this.state.added_users)) }> ADD </Button> :
           null
         }
-
-
-
-
-
-
 
         </List>
 
