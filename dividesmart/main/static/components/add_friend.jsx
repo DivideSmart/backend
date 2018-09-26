@@ -71,21 +71,21 @@ class AddFriendForm extends React.Component {
   addFriends(event) {
     console.log(this.state.entered)
     this.state.entered.forEach(email => {
-      var payload={
+      const payload={
         "friendEmail": email.email,
       }
-      axios.post('http://localhost:8000/api/user/friends/', payload)
+      axios.post('/api/user/friends/', payload)
       .then((res, err) => {
-        if(err) {
+        if (err) {
           throw err
         } else {
           console.log(res)
+          this.setState({
+            requestsSent: true,
+            open: true
+          })
         }
       })
-    })
-    this.setState({
-      requestsSent: true,
-      open: true
     })
   }
 
