@@ -449,7 +449,7 @@ class H5NumberInputExample extends React.Component {
                   <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}}  primary={splitter.username} />
+                    <ListItemText style={{float: 'right'}}  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <Input
                         id="adornment-amount"
