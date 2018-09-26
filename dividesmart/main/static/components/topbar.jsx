@@ -109,7 +109,8 @@ class TopBar extends React.Component {
           style={{height: '100%'}}
           icon={
             <Link className='topbar-btn' to='/' aria-label='home'>
-              <Home id="home-icon" />
+              {/*<Home id="home-icon" />*/}
+              <img src={'/static/img/logo-white.png'} className="spe am-icon am-icon-md" alt="" />
             </Link>
           }
           // mode="light"
