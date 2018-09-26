@@ -47,7 +47,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
-
+import { getCookie } from 'util.js'
 import Snackbar from '@material-ui/core/Snackbar';
 import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
@@ -57,7 +57,6 @@ class LoginPage extends React.Component {
 
   constructor(props) {
     super()
-
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
@@ -70,20 +69,20 @@ class LoginPage extends React.Component {
     }
 
     this.clickLogin = function() {
-      var apiBaseUrl = "/api";
-      var payload={
+      const apiBaseUrl = "/api";
+      const payload={
         "email_address": this.state.username,
-        "password": this.state.password
+        "password": this.state.password,
       }
 
       const self = this
       axios.post(apiBaseUrl + '/login/', payload)
-      .then(function (response) {
+      .then(function(response) {
         if (response.status == 200){
-          window.location.replace("http://localhost:8000/");
+          window.location.replace('/');
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error)
         self.setState({errorMessage: true})
       });

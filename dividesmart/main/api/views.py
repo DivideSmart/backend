@@ -1,18 +1,13 @@
-from django.http import (
-    HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
-)
-from django.contrib.auth import (
-    authenticate, login, logout
-)
-from main.forms import (
-    LoginForm, RegistrationForm
-)
-from main.models import User
-from django.views.decorators.csrf import csrf_exempt
 import facebook
 import requests
+from django.contrib.auth import authenticate, login, logout
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseNotFound, JsonResponse)
+from django.views.decorators.csrf import csrf_exempt
 
 import ujson as json
+from main.forms import LoginForm, RegistrationForm
+from main.models import User
 
 
 def handle_fb_login(request):
@@ -45,6 +40,7 @@ def handle_fb_login(request):
         return HttpResponse("Facebook login fail", status=400)
 
 
+@csrf_exempt
 def handle_login(request):
     if request.method != 'POST':
         return HttpResponseNotFound('Invalid request')
