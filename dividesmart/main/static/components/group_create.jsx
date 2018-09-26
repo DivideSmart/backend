@@ -56,6 +56,13 @@ class GroupCreateForm extends React.Component {
     this.setState({ [prop]: event });
   };
 
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({ open: false });
+  };
+
   componentDidCatch(error) {
     if(!this.state.error) { // set error only once per update
       this.setState({
