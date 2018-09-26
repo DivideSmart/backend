@@ -2,17 +2,17 @@ import 'regenerator-runtime/runtime'
 import '../style/index.less'
 
 import {
-  Badge,
-  Button,
-  Card,
+  // Badge,
+  // Button,
+  // Card,
   Checkbox,
   Flex,
   Icon,
-  InputItem,
+  // InputItem,
   List,
   Modal,
   Radio,
-  Result,
+  // Result,
   Tabs,
   TextareaItem,
   WhiteSpace,
@@ -23,11 +23,11 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Avatar from '@material-ui/core/Avatar';
-import CommentIcon from '@material-ui/icons/Comment';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+// import CommentIcon from '@material-ui/icons/Comment';
+// import Divider from '@material-ui/core/Divider';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormGroup from '@material-ui/core/FormGroup';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -42,35 +42,35 @@ import MButton from '@material-ui/core/Button';
 import MCheckbox from '@material-ui/core/Checkbox';
 import MList from '@material-ui/core/List';
 import MListItem from '@material-ui/core/ListItem';
-import MListItemIcon from '@material-ui/core/ListItemIcon';
-import MenuItem from '@material-ui/core/MenuItem';
+// import MListItemIcon from '@material-ui/core/ListItemIcon';
+// import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonOutline from '@material-ui/icons/PersonOutline';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
-import Select from '@material-ui/core/Select';
-import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+// import Select from '@material-ui/core/Select';
+// import Switch from '@material-ui/core/Switch';
+// import TextField from '@material-ui/core/TextField';
+// import ToggleButton from '@material-ui/lab/ToggleButton';
+// import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+// import Visibility from '@material-ui/icons/Visibility';
+// import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { createForm } from 'rc-form';
 import { withStyles } from '@material-ui/core/styles';
 import { FriendList } from './tabs/friend_list.jsx'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import axios from 'axios';
-const RadioItem = Radio.RadioItem;
-const CheckboxItem = Checkbox.CheckboxItem
+// const RadioItem = Radio.RadioItem;
+// const CheckboxItem = Checkbox.CheckboxItem
 
 const Item = List.Item
 const Brief = Item.Brief
 
 
-const AgreeItem = Checkbox.AgreeItem;
+// const AgreeItem = Checkbox.AgreeItem;
 const myImg = src => < img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" style={{ width: 60, height: 60 }} alt="" />;
 
 
