@@ -98,8 +98,9 @@ class FlaoatingButton extends React.Component {
       //   }}
       //   unmountOnExit
       // >
-        <Link to={this.formatLink()}>
+        <Link aria-label="create-bill" to={this.formatLink()}>
           <Button
+            aria-label="create-bill"
             variant="fab"
             className={classes.fab + ' create-debt-btn'}
             style={{bottom: 66, zIndex: 1000, position: 'fixed'}}

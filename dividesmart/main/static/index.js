@@ -25,8 +25,8 @@ import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 import {AddFriend} from './components/add_friend.jsx'
 import {CreateForm} from './components/create_form.jsx'
 import FloatingButton from './components/material/material_float_btn.jsx'
-import { FriendList } from './components/tabs/friend_list.jsx'
-import { FriendsTab } from './components/tabs/friends_tab.jsx'
+// import { FriendList } from './components/tabs/friend_list.jsx'
+// import { FriendsTab } from './components/tabs/friends_tab.jsx'
 import {GroupCreate} from './components/group_create.jsx'
 import { GroupInfoTab } from './components/tabs/group_info_tab.jsx';
 import { LocaleProvider } from 'antd-mobile';
@@ -72,18 +72,6 @@ class App extends React.Component {
     this.findFriendList = this.findFriendList.bind(this);
     this.findFriend = this.findFriend.bind(this);
     this.findGroupMembers = this.findGroupMembers.bind(this);
-
-    // Check for browser support of service worker
-    // if ('serviceWorker' in navigator) {
-    //   navigator.serviceWorker.register('./service-worker.js')
-    //   .then(function(registration) {
-    //     // Successful registration
-    //     console.log('Hooray. Registration successful, scope is:', registration.scope);
-    //   }).catch(function(error) {
-    //     // Failed registration, service worker won’t be installed
-    //     console.log('Whoops. Service worker registration failed, error:', error);
-    //   });
-    // }
   }
 
   componentWillMount() {

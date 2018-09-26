@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^api/', include('main.api.urls')),
+    
+    url(r'^sw$', views.service_worker),
 
     path('register/', views.register),
 

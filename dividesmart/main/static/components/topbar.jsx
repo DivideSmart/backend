@@ -95,7 +95,7 @@ class TopBar extends React.Component {
         <NavBar
           style={{height: '100%'}}
           icon={
-            <Link className='topbar-btn' to='/'>
+            <Link className='topbar-btn' to='/' aria-label='home'>
               <Home
                 style={{width: '28px', height: '28px',}}
               />
