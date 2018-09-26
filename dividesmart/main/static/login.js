@@ -235,8 +235,8 @@ class LoginPage extends React.Component {
             variant="outlined" color="primary" size="small"
             className="social-button"
           >
-            <Icon type={'check-circle-o'} id="submit-icon" style={{ color: '#3b5998', marginRight: 8 }}/>
-            <span className="social-text" style={{color: '#3b5998'}}>Log in</span>
+            <Icon type={'check-circle-o'} id="submit-icon" style={{ color: '0060c0', marginRight: 8 }}/>
+            <span className="social-text" style={{color: '#0060c0'}}>Log in</span>
           </MButton>
         </div>
         </Card>
