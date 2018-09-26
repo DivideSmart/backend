@@ -89,6 +89,8 @@ class AddFriendForm extends React.Component {
   }
 
   addEmailAddress(event) {
+    if (this.state.email.length == 0)
+      return
     this.state.entered.push({key: this.state.entered.length + 1, email: this.state.email})
     this.setState({
       email: '',
