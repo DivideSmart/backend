@@ -4,7 +4,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 import './style/login.less'
 
-import { -button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
+import { Button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
 // import { CSSTransition, TransitionGroup } from "react-transition-group"
 // import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -50,7 +50,7 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
 // import { getCookie } from 'util.js'
 import Snackbar from '@material-ui/core/Snackbar';
-import { MySnackbarContent-wrapper } from './components/alert_message.jsx'
+import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
 library.add(faFacebook, faGoogle, faUsers)
 
@@ -231,8 +231,8 @@ class LoginPage extends React.Component {
             variant="outlined" color="primary" size="small"
             className="social-button"
           >
-            <Icon type={'check-circle-o'} className="social-icon" style={{ marginRight: 8 }}/>
-            <span className="social-text" style={{color: primary}}>Log in</span>
+            <Icon type={'check-circle-o'} className="social-icon" style={{ color: '#3b5998', marginRight: 8 }}/>
+            <span className="social-text" style={{color: '#3b5998'}}>Log in</span>
           </MButton>
         </div>
         </Card>
