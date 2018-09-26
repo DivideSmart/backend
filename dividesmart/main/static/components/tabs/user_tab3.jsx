@@ -1,5 +1,6 @@
-import { Badge, Checkbox, List, WhiteSpace, WingBlank } from 'antd-mobile';
+import '../../style/user_tab.less'
 
+import { Badge, Checkbox, List, WhiteSpace, WingBlank } from 'antd-mobile';
 import Close from '@material-ui/icons/Close';
 import Done from '@material-ui/icons/Done';
 import IconButton from '@material-ui/core/IconButton';
@@ -95,14 +96,13 @@ class UserTab extends React.Component {
           <Item extra="extra content">
             <Badge>
               <span
+                id="photo"
                 style={{
-                  width: '60px',
-                  height: '60px',
-                  background: 'url(' + this.state.myAvatarUrl + ') center center /  60px 60px no-repeat',
-                  display: 'inline-block' }}
+                  background: 'url(' + this.state.myAvatarUrl + ') center center /  60px 60px no-repeat'
+                }}
               />
             </Badge>
-            <span style={{ marginLeft: 12 }}>{this.state.myName}</span>
+            <span className="text-margin">{this.state.myName}</span>
           </Item>
           {/* <Item
             thumb="https://zos.alipayobjects.com/rmsportal/faMhXAxhCzLvveJ.png"
@@ -119,7 +119,7 @@ class UserTab extends React.Component {
           </Item> */}
 
           <Item extra={this.state.myEmailAddress} className={'user-email'}>
-            <Badge text={0} style={{ marginLeft: 12 }}>Email address</Badge>
+            <Badge text={0}>Email address</Badge>
             {/* <Badge text={'new'} style={{ marginLeft: 12 }} /> */}
           </Item>
           {/* <Item>
