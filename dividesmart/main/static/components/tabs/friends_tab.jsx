@@ -59,13 +59,10 @@ class FriendsTab extends React.Component {
         {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         <FriendsList friends={this.state.users}/>
 
-
-        <WhiteSpace />
-        <WhiteSpace />
-
         <div style={{
             display: 'flex',
             justifyContent: 'center',
+            marginTop: 38,
           }}
         >
           <Link aria-label="add-friends" to='/addfriend' style={{ width: '80%' }}>

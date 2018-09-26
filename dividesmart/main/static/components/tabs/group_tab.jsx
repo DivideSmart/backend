@@ -11,6 +11,8 @@ import Close from '@material-ui/icons/Close';
 import Group from '@material-ui/icons/Group';
 import axios from 'axios'
 import store from '../../redux/store.js'
+import MButton from '@material-ui/core/Button'
+import PersonOutline from '../../../../../node_modules/@material-ui/icons/PersonOutline'
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -80,43 +82,61 @@ class GroupTab extends React.Component {
     <div>
       <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
       <List renderHeader={() => 'Groups'} className="my-list">
-      {
-        this.state.groups.map(group => {
-          return (
-            <Link key={group.id} to={"g/" + (group.id)} onClick={e => e.stopPropagation()}>
-              <Item
-                key={group.id}
-                arrow="horizontal"
-                thumb={
-                  <Badge>
-                    <Group
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        display: 'inline-block' }}
-                    />
-                  </Badge>
-                }
-                multipleLine
-                // onClick={() => { window.location.href = '/u/1'}}
-                extra={
-                  <div>
+        {
+          this.state.groups.map(group => {
+            return (
+              <Link key={group.id} to={"g/" + (group.id)} onClick={e => e.stopPropagation()}>
+                <Item
+                  key={group.id}
+                  arrow="horizontal"
+                  thumb={
+                    <Badge>
+                      <Group
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          display: 'inline-block' }}
+                      />
+                    </Badge>
+                  }
+                  multipleLine
+                  // onClick={() => { window.location.href = '/u/1'}}
+                  extra={
                     <div>
-                      <span style={{ color: '#dc143c', display:'inline-block', vertical_align:'middle' }}></span>
+                      <div>
+                        <span style={{ color: '#dc143c', display:'inline-block', vertical_align:'middle' }}></span>
+                      </div>
+                      <div>
+                        <span style={{ color: '#00b894', display:'inline-block', vertical_align:'middle' }}></span>
+                      </div>
                     </div>
-                    <div>
-                      <span style={{ color: '#00b894', display:'inline-block', vertical_align:'middle' }}></span>
-                    </div>
-                  </div>
-                }
->
-                {group.name} <Brief>{group.lastActivityDate}</Brief>
-              </Item>
-            </Link>
-          )
-        })
-      }
+                  }
+  >
+                  {group.name} <Brief>{group.lastActivityDate}</Brief>
+                </Item>
+              </Link>
+            )
+          })
+        }
       </List>
+
+      <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: 38,
+        }}
+      >
+        <Link aria-label="create-group" to='/g/create' style={{ width: '80%' }}>
+          <MButton
+            aria-label="add-friends"
+            variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
+            <PersonOutline style={{ marginRight: 18 }} />
+            <span style={{ marginTop: 3 }}>
+              Create Group
+            </span>
+          </MButton>
+        </Link>
+      </div>
     </div>)
   }
 }
