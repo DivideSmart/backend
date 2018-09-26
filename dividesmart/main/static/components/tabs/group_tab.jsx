@@ -12,7 +12,7 @@ import Group from '@material-ui/icons/Group';
 import axios from 'axios'
 import store from '../../redux/store.js'
 import MButton from '@material-ui/core/Button'
-import PersonOutline from '../../../../../node_modules/@material-ui/icons/PersonOutline'
+import PeopleOutline from '../../../../../node_modules/@material-ui/icons/PeopleOutline'
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -111,7 +111,7 @@ class GroupTab extends React.Component {
                       </div>
                     </div>
                   }
-  >
+                >
                   {group.name} <Brief>{group.lastActivityDate}</Brief>
                 </Item>
               </Link>
@@ -130,7 +130,7 @@ class GroupTab extends React.Component {
           <MButton
             aria-label="add-friends"
             variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
-            <PersonOutline style={{ marginRight: 18 }} />
+            <PeopleOutline style={{ marginRight: 18 }} />
             <span style={{ marginTop: 3 }}>
               Create Group
             </span>
