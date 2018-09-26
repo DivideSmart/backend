@@ -3,6 +3,7 @@ const cacheName = `weshare-${version}`;
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(cacheName).then(cache => {
+      console.log('install')
       return cache.addAll([
         `/`,
         `/login`,
@@ -14,6 +15,7 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', event => {
+  console.log('active')
   event.waitUntil(self.clients.claim());
 });
 
