@@ -13,6 +13,8 @@ import axios from 'axios'
 import store from '../../redux/store.js'
 import MButton from '@material-ui/core/Button'
 import PeopleOutline from '../../../../../node_modules/@material-ui/icons/PeopleOutline'
+import Avatar from '@material-ui/core/Avatar';
+import People from '@material-ui/icons/People';
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -91,12 +93,15 @@ class GroupTab extends React.Component {
                   arrow="horizontal"
                   thumb={
                     <Badge>
-                      <Group
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          display: 'inline-block' }}
-                      />
+                      {/*<Group*/}
+                        {/*style={{*/}
+                          {/*width: '48px',*/}
+                          {/*height: '48px',*/}
+                          {/*display: 'inline-block' }}*/}
+                      {/*/>*/}
+                      <Avatar style={{ color: '#1e88e5', backgroundColor: '#bbdefb' }}>
+                        <People />
+                      </Avatar>
                     </Badge>
                   }
                   multipleLine
