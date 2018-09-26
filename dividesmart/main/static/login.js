@@ -4,7 +4,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
 import './style/login.less'
 
-import { Button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
+import { -button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
 // import { CSSTransition, TransitionGroup } from "react-transition-group"
 // import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -50,7 +50,7 @@ import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import store from './redux/store';
 // import { getCookie } from 'util.js'
 import Snackbar from '@material-ui/core/Snackbar';
-import { MySnackbarContentWrapper } from './components/alert_message.jsx'
+import { MySnackbarContent-wrapper } from './components/alert_message.jsx'
 
 library.add(faFacebook, faGoogle, faUsers)
 
@@ -166,17 +166,17 @@ class LoginPage extends React.Component {
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <Card id="loginCard">
+        <Card id="login-card">
 
         <div className="social">
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" size="small"
-            id="googleButton"
-            className="socialButton"
+            id="google-button"
+            className="social-button"
           >
-            <FontAwesomeIcon icon={['fab', 'google']} className="socialIcon" />
-            <span className="socialText">Log in with Google</span>
+            <FontAwesomeIcon icon={['fab', 'google']} className="social-icon" />
+            <span className="social-text">Log in with Google</span>
           </MButton>
         </div>
 
@@ -188,12 +188,12 @@ class LoginPage extends React.Component {
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" color="primary" size="small"
-            id="facebookButton"
-            className="socialButton"
+            id="facebook-button"
+            className="social-button"
             onClick={this.facebookLogin}
           >
-            <FontAwesomeIcon icon={['fab', 'facebook']} className="socialIcon"/>
-            <span className="socialText">Log in with Facebook</span>
+            <FontAwesomeIcon icon={['fab', 'facebook']} className="social-icon"/>
+            <span className="social-text">Log in with Facebook</span>
           </MButton>
         </div>
 
@@ -205,7 +205,7 @@ class LoginPage extends React.Component {
 
         <div style={{ textAlign: 'center'}}>
           <TextField
-            className="inputWidth"
+            className="input-width"
             label="Username"
             value={this.state.username}
             onChange = {(event) => {
@@ -214,7 +214,7 @@ class LoginPage extends React.Component {
           />
           <WhiteSpace size="lg" />
           <TextField
-            className="inputWidth"
+            className="input-width"
             type="password"
             label="Password"
             value={this.state.password}
@@ -229,10 +229,10 @@ class LoginPage extends React.Component {
           <MButton
             onClick={(event) => this.clickLogin()}
             variant="outlined" color="primary" size="small"
-            className="socialButton"
+            className="social-button"
           >
-            <Icon type={'check-circle-o'} className="socialIcon" style={{ marginRight: 8 }}/>
-            <span className="socialText" style={{color: primary}}>Log in</span>
+            <Icon type={'check-circle-o'} className="social-icon" style={{ marginRight: 8 }}/>
+            <span className="social-text" style={{color: primary}}>Log in</span>
           </MButton>
         </div>
         </Card>
