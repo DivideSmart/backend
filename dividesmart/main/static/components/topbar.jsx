@@ -25,15 +25,15 @@ function PopOver(props) {
       overlayStyle={{ color: 'currentColor' }}
       visible={props.visible}
       overlay={[
-        (<Item key="scan" value="scan" icon={myImg('tOtXhkIWzwotgGSeptou')} data-seed="logId">
-          Scan
-        </Item>),
+        // (<Item key="scan" value="scan" icon={myImg('tOtXhkIWzwotgGSeptou')} data-seed="logId">
+        //   Scan
+        // </Item>),
+        //
+        // (<Item key="qr" value="special" icon={myImg('PKAgAqZWJVNwKsAJSmXd')} style={{ whiteSpace: 'nowrap' }}>
+        //   My Qrcode
+        // </Item>),
 
-        (<Item key="qr" value="special" icon={myImg('PKAgAqZWJVNwKsAJSmXd')} style={{ whiteSpace: 'nowrap' }}>
-          My Qrcode
-        </Item>),
-
-        (<Item key="help" value="button ct" icon={<PersonAdd id="icon-size" />}>
+        (<Item key="help" value="button ct" icon={<PersonAdd class="icon-size" />}>
           <Link to='/addfriend'>
             <span id="link-style">Add Friend</span>
           </Link>
@@ -45,9 +45,7 @@ function PopOver(props) {
           </Link>
         </Item>),
 
-        (<Item 
-          key="logout" value="button ct" 
-          icon={<FontAwesomeIcon icon='sign-out-alt' class="icon-size" />}
+        (<Item key="logout" value="button ct" icon={<FontAwesomeIcon icon='sign-out-alt' class="icon-size" />}
         > Logout
         </Item>),
       ]}
