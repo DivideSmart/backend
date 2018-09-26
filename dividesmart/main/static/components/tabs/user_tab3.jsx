@@ -171,12 +171,16 @@ class UserTab extends React.Component {
                   >
                     <Done />
                   </IconButton>
+
                   <IconButton
                     onClick={(e) => this.rejectRequest(request)}
                   >
                     <Close />
                   </IconButton>
-                  {request.username}
+
+                  <span style={{marginLeft: 18}}>
+                    {request.username}
+                  </span>
                 </Item>
               )
             })
