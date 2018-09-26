@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime'
 import '../style/index.less'
+import '../style/create_form.less'
 
 import {
   // Badge,
@@ -355,7 +356,7 @@ class H5NumberInputExample extends React.Component {
           <MList>
             <MListItem button style={{marginBottom: 6}}>
               <ListItemAvatar>
-                <AttachMoney style={{color: '#888', fill: '#1F90E6'}}/>
+                <AttachMoney className="avatar"/>
               </ListItemAvatar>
               <ListItemText primary="Total Amount" />
               <ListItemSecondaryAction>
@@ -364,7 +365,7 @@ class H5NumberInputExample extends React.Component {
                   type='number'
                   value={this.state.totalAmount}
                   onChange={this.handleAmountChange}
-                  style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
+                  id="amount-input"
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 />
               </ListItemSecondaryAction>
@@ -372,7 +373,7 @@ class H5NumberInputExample extends React.Component {
 
             <MListItem button >
               <ListItemAvatar>
-                <PersonOutline style={{color: '#888', fill: '#1F90E6'}}/>
+                <PersonOutline className="avatar"/>
               </ListItemAvatar>
               <ListItemText primary="Pay by" />
               <Avatar
