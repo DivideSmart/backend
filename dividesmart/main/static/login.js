@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'util.js'
+import './style/login.less'
 
 import { Button, Icon, LocaleProvider, NavBar, WhiteSpace } from 'antd-mobile';
 import { CSSTransition, TransitionGroup } from "react-transition-group"
@@ -165,23 +166,17 @@ class LoginPage extends React.Component {
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <Card style={{marginLeft: '8vw', marginRight: '8vw', paddingBottom: '8vh' }}>
-        <div style={{height: '12vh'}}>
+        <Card id="loginCard">
 
-        </div>
-
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+        <div className="social">
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" size="small"
-            style={{ width: '66%', height: '48px', backgroundColor:'#DD4B39', borderColor:'#DD4B39' }}
+            id="googleButton"
+            className="socialButton"
           >
-            <FontAwesomeIcon icon={['fab', 'google']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
-            <span style={{color: 'white', fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Google</span>
+            <FontAwesomeIcon icon={['fab', 'google']} className="socialIcon" />
+            <span className="socialText">Log in with Google</span>
           </MButton>
         </div>
 
@@ -189,19 +184,16 @@ class LoginPage extends React.Component {
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+        <div className="social">
           <MButton
             // onClick = {() => this.setState({ showSettleUpModal: true })}
             variant="contained" color="primary" size="small"
-            style={{ width: '66%', height: '48px', backgroundColor:'#3b5998', borderColor:'#3b5998' }}
+            id="facebookButton"
+            className="socialButton"
             onClick={this.facebookLogin}
           >
-            <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: 'white', height: 28, width: 28, marginRight: 28}}/>
-            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in with Facebook</span>
+            <FontAwesomeIcon icon={['fab', 'facebook']} className="socialIcon"/>
+            <span className="socialText">Log in with Facebook</span>
           </MButton>
         </div>
 
@@ -213,7 +205,7 @@ class LoginPage extends React.Component {
 
         <div style={{ textAlign: 'center'}}>
           <TextField
-            style={{width: '69%'}}
+            className="inputWidth"
             label="Username"
             value={this.state.username}
             onChange = {(event) => {
@@ -222,7 +214,7 @@ class LoginPage extends React.Component {
           />
           <WhiteSpace size="lg" />
           <TextField
-            style={{width: '69%'}}
+            className="inputWidth"
             type="password"
             label="Password"
             value={this.state.password}
@@ -233,18 +225,14 @@ class LoginPage extends React.Component {
         <WhiteSpace size="lg" />
         <WhiteSpace size="lg" />
 
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+        <div className="social">
           <MButton
             onClick={(event) => this.clickLogin()}
             variant="outlined" color="primary" size="small"
-            style={{ width: '66%', height: '48px' }}
+            className="socialButton"
           >
-            <Icon type={'check-circle-o'} style={{ height: 28, marginRight: 8}}/>
-            <span style={{fontSize: 13, fontWeight: 400, paddingTop: 2, textTransform: 'none'}}>Log in</span>
+            <Icon type={'check-circle-o'} className="socialIcon" style={{ marginRight: 8 }}/>
+            <span className="socialText" style={{color: primary}}>Log in</span>
           </MButton>
         </div>
         </Card>
