@@ -69,6 +69,7 @@ class AddFriendForm extends React.Component {
   };
 
   addFriends(event) {
+    console.log(this.state.entered)
     this.state.entered.forEach(email => {
       var payload={
         "friendEmail": email.email,
@@ -76,7 +77,7 @@ class AddFriendForm extends React.Component {
       axios.post('http://localhost:8000/api/user/friends/', payload)
       .then((res, err) => {
         if(err) {
-          console.log(err)
+          throw err
         } else {
           console.log(res)
         }
@@ -173,16 +174,18 @@ class AddFriendForm extends React.Component {
               marginTop: 38
             }}
           >
-            <Link to='/addfriend' style={{ width: '80%' }}>
-              <MButton
-                variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
-                
-                <MailOutline style={{ marginRight: 18 }} />
-                <span style={{ marginTop: 3 }}>
-                  Send Requests
-                </span>
-              </MButton>
-            </Link>
+            <MButton
+              variant="contained" 
+              color="secondary" 
+              size="large" 
+              style={{ width: '100%', height: 38 }}
+              onClick={this.addFriends}
+            >
+              <MailOutline style={{ marginRight: 18 }} />
+              <span style={{ marginTop: 3 }}>
+                Send Requests
+              </span>
+            </MButton>
           </div>
 
 
