@@ -1,6 +1,5 @@
 import 'regenerator-runtime/runtime'
 import '../style/index.less'
-import '../style/create_form.less'
 
 import {
   // Badge,
@@ -202,7 +201,7 @@ class H5NumberInputExample extends React.Component {
   //   console.log(e.target.name)
   //   var user_id = e.target.name;
   //   console.log(this.state.splitterToAmount)
-  //   var newSplitterToAmount = this.state.splitterToAmount.map(splitter => {
+  //   var newSplitterToAmount = this.xstate.splitterToAmount.map(splitter => {
   //                                 if(splitter.id == user_id) {
   //                                   splitter.amount = e.target.value;
   //                                 }
@@ -356,7 +355,7 @@ class H5NumberInputExample extends React.Component {
           <MList>
             <MListItem button style={{marginBottom: 6}}>
               <ListItemAvatar>
-                <AttachMoney className="avatar"/>
+                <AttachMoney style={{color: '#888', fill: '#1F90E6'}}/>
               </ListItemAvatar>
               <ListItemText primary="Total Amount" />
               <ListItemSecondaryAction>
@@ -365,7 +364,7 @@ class H5NumberInputExample extends React.Component {
                   type='number'
                   value={this.state.totalAmount}
                   onChange={this.handleAmountChange}
-                  id="amount-input"
+                  style={{width: '24vw', marginRight: '8vw', bottom: '3px'}}
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 />
               </ListItemSecondaryAction>
@@ -373,7 +372,7 @@ class H5NumberInputExample extends React.Component {
 
             <MListItem button >
               <ListItemAvatar>
-                <PersonOutline className="avatar"/>
+                <PersonOutline style={{color: '#888', fill: '#1F90E6'}}/>
               </ListItemAvatar>
               <ListItemText primary="Pay by" />
               <Avatar
