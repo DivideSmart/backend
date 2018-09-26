@@ -22,7 +22,8 @@ class UserTab extends React.Component {
       pendingRequests: [],
       sentRequests: [],
       open: false,
-      successMessage: ''
+      successMessage: '',
+      totalDebt: 0
     };
     this.acceptRequest = this.acceptRequest.bind(this)
     this.rejectRequest = this.rejectRequest.bind(this)
@@ -45,7 +46,8 @@ class UserTab extends React.Component {
       axios.get('/api/user/friends/').then(response => {
         this.setState({
           pendingRequests: response.data.invites.received,
-          sentRequests: response.data.invites.sent
+          sentRequests: response.data.invites.sent,
+          totalDebt: response.data.friends.map(f => parseFloat((Math.round(f.debt * 100) / 100).toFixed(2))).reduce((d1, d2) => d1  + d2, 0)
         })
       })
     })
@@ -93,7 +95,7 @@ class UserTab extends React.Component {
         <WhiteSpace />
 
         <List>
-          <Item extra="extra content">
+          <Item extra={<span className={this.state.totalDebt > 0 ? 'other-owe-amount' : 'owe-other-amount'}>{'${0}'.format(Math.abs(this.state.totalDebt))}</span>}>
             <Badge>
               <span
                 id="photo"

@@ -1,5 +1,6 @@
-import { ListView, TabBar } from 'antd-mobile';
+import '../style/tabs.less'
 
+import { ListView, TabBar } from 'antd-mobile';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FriendsTab } from './tabs/friends_tab.jsx'
 import { GroupTab } from './tabs/group_tab.jsx'
@@ -17,7 +18,7 @@ class Tabs extends React.Component {
 
   render() {
     return (
-      <div style={{ position: 'fixed', height: '94%', width: '100vw', top: '6%' }}>
+      <div id="tab-bar">
         <TabBar
           unselectedTintColor="#949494"
           tintColor="#0060c0"
@@ -30,10 +31,10 @@ class Tabs extends React.Component {
             title="Home"
             key="Home"
             icon={
-              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='home' className="icon" />
             }
             selectedIcon={
-              <FontAwesomeIcon icon='home' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='home' className="icon" />
             }
             selected={this.state.selectedTab === 'blueTab'}
             // badge={1}
@@ -49,10 +50,10 @@ class Tabs extends React.Component {
 
           <TabBar.Item
             icon={
-              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='users' className="icon" />
             }
             selectedIcon={
-              <FontAwesomeIcon icon='users' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='users' className="icon" />
             }
             title="Groups"
             key="Groups"
@@ -69,10 +70,10 @@ class Tabs extends React.Component {
 
           <TabBar.Item
             icon={
-              <FontAwesomeIcon icon='user-circle' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='user-circle' className="icon" />
             }
             selectedIcon={
-              <FontAwesomeIcon icon='user-circle' style={{ marginBottom: 3, marginTop: 3, width: 24, height: 24}} />
+              <FontAwesomeIcon icon='user-circle' className="icon" />
             }
             title="Me"
             key="Me"
