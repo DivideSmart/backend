@@ -27,7 +27,7 @@ def register(request):
 
 
 def service_worker(request):
-    content = requests.get(request.scheme + '://' + request.META['HTTP_HOST'] + '/static/sw.js').text
+    content = requests.get(request.scheme + '://' + request.META['HTTP_HOST'] + '/static/service-worker.js').text
     response = HttpResponse(content, content_type='application/javascript')
     return response
 
