@@ -168,8 +168,8 @@ class LoginPage extends React.Component {
 
         <Card id="login-card">
 
-        <div className="social" id="logo">
-
+        <div className="social" id="logo-div">
+          <img id='logo' src="/media/avatars/default_avatar.png" />
         </div>
 
         <div className="social">
