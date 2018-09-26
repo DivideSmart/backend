@@ -177,7 +177,7 @@ class AddFriendForm extends React.Component {
                 
                 <MailOutline style={{ marginRight: 18 }} />
                 <span style={{ marginTop: 3 }}>
-                  Add Friend
+                  Send Requests
                 </span>
               </MButton>
             </Link>
