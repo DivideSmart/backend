@@ -248,7 +248,7 @@ class App extends React.Component {
                   />
 
                   <Route
-                    path={'/addFriend'}
+                    path={'/addfriend'}
                     render={ ({match, location}) =>
                       <div style={{ top: '6vh', position: 'relative' }}>
                         <AddFriend
@@ -262,10 +262,8 @@ class App extends React.Component {
                   <Route
                     path={'/g/create'}
                     render={ ({match, location}) =>
-                      <div>
-                          <WhiteSpace />
-
-                        <GroupCreate users = {this.state.users} />
+                      <div style={{ top: '6vh', position: 'relative' }}>
+                          <GroupCreate users = {this.state.users} />
                       </div>
                     }
                   />

@@ -180,6 +180,7 @@ class UserTabWithoutStyle extends React.Component {
               return (
                 <Item
                   arrow="horizontal"
+                  key={entry.id}
                   thumb={
                     <FontAwesomeIcon icon={entry.type == 'bill' ? 'receipt' : 'dollar-sign'} style={{ color: '#38b8f2', width: 24, height: 24}} />
                   }

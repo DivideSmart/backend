@@ -170,7 +170,7 @@ class AddFriendForm extends React.Component {
               marginTop: 38
             }}
           >
-            <Link to='/addFriend' style={{ width: '80%' }}>
+            <Link to='/addfriend' style={{ width: '80%' }}>
               <MButton
                 variant="contained" color="secondary" size="large" style={{ width: '100%', height: 38 }}>
                 <Icon type={'check-circle-o'} style={{marginRight: 18}}/> Add Friend

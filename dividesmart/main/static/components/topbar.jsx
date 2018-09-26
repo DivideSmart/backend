@@ -32,7 +32,7 @@ function PopOver(props) {
         </Item>),
 
         (<Item key="help" value="button ct" icon={<PersonAdd style={{ width: 18, height: 18 }} />}>
-          <Link to='/addFriend'>
+          <Link to='/addfriend'>
             <span style={{ marginRight: 5, color: 'black'}}>Add Friend</span>
           </Link>
         </Item>),
