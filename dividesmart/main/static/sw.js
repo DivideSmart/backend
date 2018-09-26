@@ -4,6 +4,7 @@ const version = "0.0.1"
 const cacheName = `weshare-${version}`
 
 self.addEventListener('install', e => {
+  caches.delete(cacheName);
   e.waitUntil(
     caches.open(cacheName).then(cache => {
       console.log('install service worker and cache data')
