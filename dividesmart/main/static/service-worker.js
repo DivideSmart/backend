@@ -2,42 +2,82 @@
 
 const version = "0.0.1"
 const cacheName = `weshare-${version}`
+const cacheAssets = [
+  `/`,
+  `/static/bundle/main/index.js`,
 
-self.addEventListener('install', e => {
-  caches.delete(cacheName);
-  e.waitUntil(
+  // `/login/`,
+  // `/static/bundle/main/login.js`,
+]
+
+
+self.addEventListener('install', event => {
+  event.waitUntil(
     caches.open(cacheName).then(cache => {
-      console.log('install service worker and cache data')
-      return cache.addAll([
-        `/`,
-        // `/login/`,
-        `/static/bundle/main/index.js`,
-        // `/static/bundle/main/login.js`,
-      ]).then(() => self.skipWaiting())
+      console.log('SW: installed and cache data')
+      return cache.addAll(cacheAssets).then(() => self.skipWaiting())  // cache display content by default
     })
   )
 })
 
+
 self.addEventListener('activate', event => {
-  console.log('active and control this domain')
-  event.waitUntil(self.clients.claim());
-});
+  console.log('SW: active and control this domain')
+  event.waitUntil(
+    self.clients.claim().then(() => {
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cache => {
+            if (cache !== cacheName) {
+              console.log('SW: clearing old cache')
+              return caches.delete(cache)
+            }
+          })
+        )
+      })
+    })
+  );
+})
+
 
 self.addEventListener('fetch', event => {
-  console.log(event.request.url)
-  if (!event.request.url.includes('login')) {
-    event.respondWith(
-      caches.open(cacheName).then(cache => cache.match(event.request))
+  if (event.request.url.includes('login') || event.request.method != 'GET')
+    return
+
+  event.respondWith(
+    fetch(event.request)
       .then(response => {
-        if (response) {
-          console.log('hit')
-          return response
-        }
-        else {
-          console.log('not hit')
-          return fetch(event.request);
-        }
+        const responseClone = response.clone()
+        caches
+          .open(cacheName)
+          .then(cache => {
+            cache.put(event.request.url, responseClone)  // online, so update cache on every call
+          })
+        return response
       })
-    )
-  }
+      .catch(() => {  // cache will be called if offline
+        return caches
+                .open(cacheName).then(cache => cache.match(event.request.url))
+                .then(response => {
+                  if (response) {
+                    console.log('SW offline: hit  -  ' + event.request.url)
+                    return response
+                  }
+                })
+      })
+  )
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+

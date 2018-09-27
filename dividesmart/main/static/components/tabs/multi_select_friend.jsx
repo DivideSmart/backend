@@ -1,10 +1,10 @@
-import {Badge, Button, Checkbox, List, Icon, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Checkbox, Icon, List, WhiteSpace, WingBlank} from 'antd-mobile';
 
+import { FriendList } from './friend_list.jsx';
+import { Link } from 'react-router-dom'
+import MButton from '@material-ui/core/Button'
 import React from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import { FriendList } from './friend_list.jsx';
-import MButton from '@material-ui/core/Button'
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -67,7 +67,6 @@ class MultiSelectFriend extends React.Component {
       var friends = responseB.data.friends;
       friends = friends.map(friend => {
         friend.pk = friend.id;
-        friend.avatarUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
         return friend;
       })
       this.setState({

@@ -4,7 +4,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from './types';
 
 // Set logged in user
 const setCurrentUser = (decoded) => dispatch => {
-  console.log("DISPATCH ACTION");
+  console.log("DISPATCH ACTION: " + SET_CURRENT_USER);
   dispatch({
     type: SET_CURRENT_USER,
     payload: decoded

@@ -7,6 +7,7 @@ import Close from '@material-ui/icons/Close';
 import {FriendsList} from './shared_components/friends_list.jsx'
 import axios from 'axios'
 import store from '../../redux/store.js'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Link,
 } from 'react-router-dom'
@@ -117,20 +118,12 @@ class GroupHistoryTab extends React.Component {
                     <Item
                       key={index}
                       thumb={
-                        <Badge>
-                          <span
-                            style={{
-                              width: '44px',
-                              height: '84px',
-                              background: 'url(' + 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg' + ') center center /  44px 44px no-repeat',
-                              display: 'inline-block' }}
-                          />
-                        </Badge>
+                        <FontAwesomeIcon icon='receipt' style={{ color: '#38b8f2', width: 24, height: 24}} />
                       }
                       multipleLine={true}
-                      extra={<span className={'other-owe-amount'}>${ entry.amount }</span>}
+                      extra={<span className={entry.initiator == currentUser ? 'other-owe-amount' : 'owe-other-amount'}>${entry.amount}</span>}
                     >
-                      {this.formatLink(entry, currentUser)}
+                      {this.formatLink(entry, currentUser) }
                     </Item>
                     )
                   }

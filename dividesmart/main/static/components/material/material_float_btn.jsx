@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime'
+import '../../style/index.less'
 
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -11,7 +12,6 @@ import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
 import { withStyles } from '@material-ui/core/styles';
-import '../../style/index.less'
 
 const styles = theme => ({
   root: {

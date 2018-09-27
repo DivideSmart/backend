@@ -152,12 +152,13 @@ class FriendsList extends React.Component {
                           width: '44px',
                           height: '44px',
                           background: 'url(' + friend.avatarUrl + ') center center /  44px 44px no-repeat',
-                          display: 'inline-block' }}
+                          display: 'inline-block'
+                        }}
                       />
                     </Badge>
                   }
                   multipleLine
-                  extra={<Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}><span className={'owe-other-amount'}>${ friend.acc }</span></Link>}
+                  extra={<Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}><span className={'other-owe-amount'}>${ friend.acc }</span></Link>}
                 >
                   <Link key={friend.key} to={"/u/"+friend.id} style={{ color: 'black' }}>
                     {friend.name} <Brief>8/31/18</Brief>

@@ -1,4 +1,4 @@
-import {Badge, Result, Button, Icon, List, Modal, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Icon, List, Modal, Result, WhiteSpace, WingBlank} from 'antd-mobile';
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar';
@@ -168,7 +168,7 @@ class UserTabWithoutStyle extends React.Component {
         </List>
 
         <WhiteSpace />
-        <List renderHeader={() => 'History with Tom'} className="my-list">
+        <List renderHeader={() => 'History with ' + this.state.userInfo.username} className="my-list">
           {/*<Item extra={'Debt'}>Date</Item>*/}
         </List>
 

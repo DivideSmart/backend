@@ -1,7 +1,7 @@
 import 'regenerator-runtime/runtime'
 import '../style/add_friend.less'
 
-import { Button, List, WhiteSpace, Icon } from 'antd-mobile'
+import { Button, Icon, List, WhiteSpace } from 'antd-mobile'
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Close from '@material-ui/icons/Close';
@@ -17,12 +17,12 @@ import {
 } from 'react-router-dom';
 import ListItem from 'antd-mobile/lib/list/ListItem';
 import MButton from '@material-ui/core/Button'
+import MailOutline from '@material-ui/icons/MailOutline';
 import { MySnackbarContentWrapper } from './alert_message.jsx'
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import React from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
-import MailOutline from '@material-ui/icons/MailOutline';
 import axios from 'axios'
 import { createForm } from 'rc-form';
 

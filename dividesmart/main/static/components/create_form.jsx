@@ -3,27 +3,24 @@ import '../style/index.less'
 import '../style/create_form.less'
 
 import {
-  // Badge,
-  // Button,
-  // Card,
   Checkbox,
   Flex,
   Icon,
-  // InputItem,
+  ImagePicker,
   List,
   Modal,
   Radio,
-  // Result,
   Tabs,
   TextareaItem,
   WhiteSpace,
-  ImagePicker,
   WingBlank,
 } from 'antd-mobile'
 
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Avatar from '@material-ui/core/Avatar';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FriendList } from './tabs/friend_list.jsx'
 // import CommentIcon from '@material-ui/icons/Comment';
 // import Divider from '@material-ui/core/Divider';
 // import FormControl from '@material-ui/core/FormControl';
@@ -57,13 +54,12 @@ import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
 // import ToggleButton from '@material-ui/lab/ToggleButton';
 // import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
 // import Visibility from '@material-ui/icons/Visibility';
 // import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { createForm } from 'rc-form';
 import { withStyles } from '@material-ui/core/styles';
-import { FriendList } from './tabs/friend_list.jsx'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import axios from 'axios';
+
 // const RadioItem = Radio.RadioItem;
 // const CheckboxItem = Checkbox.CheckboxItem
 
