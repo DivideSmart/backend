@@ -17,9 +17,9 @@ import {
   faMoneyBillAlt,
   faPenNib,
   faReceipt,
+  faSignOutAlt,
   faUserCircle,
   faUsers,
-  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
 

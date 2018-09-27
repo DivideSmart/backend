@@ -4,9 +4,8 @@ import '../style/topbar.less'
 
 import { Icon, NavBar, Popover } from 'antd-mobile'
 
-import Home from '@material-ui/icons/Home'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Home from '@material-ui/icons/Home'
 import {
   Link,
 } from 'react-router-dom'
@@ -33,20 +32,20 @@ function PopOver(props) {
         //   My Qrcode
         // </Item>),
 
-        (<Item key="help" value="button ct" icon={<PersonAdd class="icon-size" />}>
+        (<Item key="help" value="button ct" icon={<PersonAdd style={{width: 18, height: 18 }} />}>
           <Link to='/addfriend'>
             <span id="link-style">Add Friend</span>
           </Link>
         </Item>),
 
-        (<Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' class="icon-size" />}>
+        (<Item key="add_group" value="button ct" icon={<FontAwesomeIcon icon='users' className={"icon-size"} />}>
           <Link to='/g/create'>
             <span id="link-style">Create Group</span>
           </Link>
         </Item>),
 
-        (<Item key="logout" value="button ct" icon={<FontAwesomeIcon icon='sign-out-alt' class="icon-size" />}
-        > Logout
+        (<Item key="logout" value="button ct" icon={<FontAwesomeIcon icon='sign-out-alt' className={"icon-size"} />}>
+          Logout
         </Item>),
       ]}
       align={{

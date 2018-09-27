@@ -1,10 +1,10 @@
-import {Badge, Button, Checkbox, List, Icon, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Checkbox, Icon, List, WhiteSpace, WingBlank} from 'antd-mobile';
 
+import { FriendList } from './friend_list.jsx';
+import { Link } from 'react-router-dom'
+import MButton from '@material-ui/core/Button'
 import React from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import { FriendList } from './friend_list.jsx';
-import MButton from '@material-ui/core/Button'
 
 const Item = List.Item;
 const Brief = Item.Brief;

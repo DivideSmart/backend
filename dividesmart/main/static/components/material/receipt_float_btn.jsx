@@ -1,6 +1,7 @@
 import 'regenerator-runtime/runtime'
+import '../../style/index.less'
 
-import {ActionSheet, Button, Toast, WhiteSpace, WingBlank } from 'antd-mobile'
+import {ActionSheet, Button, Toast, WhiteSpace, WingBlank} from 'antd-mobile'
 
 import CameraAlt from '@material-ui/icons/CameraAlt';
 import MButton from '@material-ui/core/Button';
@@ -8,7 +9,6 @@ import React from 'react'
 // import axios from 'axios'
 // import { getCookie } from 'util.js'
 import { withStyles } from '@material-ui/core/styles';
-import '../../style/index.less'
 
 let wrapProps;
 const styles = theme => ({

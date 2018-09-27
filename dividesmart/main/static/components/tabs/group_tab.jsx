@@ -2,19 +2,18 @@ import 'regenerator-runtime/runtime'
 
 import { Badge, List, SearchBar } from 'antd-mobile';
 
+import Avatar from '@material-ui/core/Avatar';
+import Close from '@material-ui/icons/Close';
+import Group from '@material-ui/icons/Group';
 import {
   Link,
 } from 'react-router-dom'
-
+import MButton from '@material-ui/core/Button'
+import People from '@material-ui/icons/People';
+import PeopleOutline from '../../../../../node_modules/@material-ui/icons/PeopleOutline'
 import React from 'react'
-import Close from '@material-ui/icons/Close';
-import Group from '@material-ui/icons/Group';
 import axios from 'axios'
 import store from '../../redux/store.js'
-import MButton from '@material-ui/core/Button'
-import PeopleOutline from '../../../../../node_modules/@material-ui/icons/PeopleOutline'
-import Avatar from '@material-ui/core/Avatar';
-import People from '@material-ui/icons/People';
 
 const Item = List.Item;
 const Brief = Item.Brief;
