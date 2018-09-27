@@ -15,7 +15,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheName).then(cache => {
       console.log('SW: installed and cache data')
-      return cache.addAll(cacheAssets).then(() => self.skipWaiting())
+      return cache.addAll(cacheAssets).then(() => self.skipWaiting())  // cache display content by default
     })
   )
 })
@@ -51,17 +51,16 @@ self.addEventListener('fetch', event => {
         caches
           .open(cacheName)
           .then(cache => {
-            cache.put(event.request.url, responseClone)
+            cache.put(event.request.url, responseClone)  // online, so update cache on every call
           })
         return response
       })
-      .catch(() => {
+      .catch(() => {  // cache will be called if offline
         return caches
                 .open(cacheName).then(cache => cache.match(event.request.url))
                 .then(response => {
                   if (response) {
-                    console.log('SW offline: hit')
-                    console.log(event.request.url)
+                    console.log('SW offline: hit  -  ' + event.request.url)
                     return response
                   }
                 })
