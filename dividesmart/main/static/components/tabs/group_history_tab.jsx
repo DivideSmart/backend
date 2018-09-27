@@ -70,7 +70,6 @@ class GroupHistoryTab extends React.Component {
 
   giveDescription(entry, currentUser) {
     var result = "";
-    console.log(entry)
     if(entry.initiator == currentUser) {
       result = "You -> " + entry.receiverName;
     } else {
