@@ -48,11 +48,14 @@ self.addEventListener('fetch', event => {
     fetch(event.request)
       .then(response => {
         const responseClone = response.clone()
-        caches
-          .open(cacheName)
-          .then(cache => {
-            cache.put(event.request.url, responseClone)  // online, so update cache on every call
-          })
+
+        if (event.request.url.includes('/static/') || event.request.url.includes('/api/'))
+          caches
+            .open(cacheName)
+            .then(cache => {
+              cache.put(event.request.url, responseClone)  // online, so update cache on every call
+            })
+
         return response
       })
       .catch(() => {  // cache will be called if offline
