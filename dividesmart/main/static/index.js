@@ -22,7 +22,7 @@ import {
   faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import { logoutUser, setCurrentUser } from './redux/actions/authActions.js';
-
+import { Icon, NavBar } from 'antd-mobile'
 import {AddFriend} from './components/add_friend.jsx'
 import {CreateForm} from './components/create_form.jsx'
 import FloatingButton from './components/material/material_float_btn.jsx'
@@ -43,6 +43,8 @@ import axios from 'axios'
 import enUS from 'antd-mobile/lib/locale-provider/en_US'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './redux/store';
+import Snackbar from '@material-ui/core/Snackbar';
+import { MySnackbarContentWrapper } from './components/alert_message.jsx'
 
 library.add(
   faPenNib,
@@ -66,7 +68,10 @@ class App extends React.Component {
       name: '',
       friends: [],
       splitters: [],
-      groupMembers: []
+      groupMembers: [],
+      open: false,
+      message: '',
+      variant: ''
     }
     this.updateUsers = this.updateUsers.bind(this);
     this.updateGroupInfo = this.updateGroupInfo.bind(this);
@@ -75,7 +80,15 @@ class App extends React.Component {
     this.findGroupMembers = this.findGroupMembers.bind(this);
   }
 
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({ open: false });
+  };
+
   componentWillMount() {
+    const self = this
     axios.get('/api/user').then(response => {
       this.props.setCurrentUser(response.data)
       this.setState({
@@ -87,6 +100,15 @@ class App extends React.Component {
         })
       })
     })
+    window.addEventListener('online', function (event) {
+      alert('online')
+      self.setState({ open: true, message: 'Back Online', variant: 'success'})
+    }, false);
+
+    window.addEventListener('offline', function (event) {
+      alert('offline')
+      self.setState({ open: true, message: 'Offline mode', variant: 'warning'})
+    }, false);
   }
 
   updateUsers(added_users) {
@@ -286,6 +308,20 @@ class App extends React.Component {
                 </Switch>
               </CSSTransition>
             </TransitionGroup>
+            <Snackbar anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+              open={this.state.open}
+              autoHideDuration={3000}
+              onClose={this.handleClose}
+            >
+              <MySnackbarContentWrapper
+                onClose={this.handleClose}
+                variant={this.state.variant}
+                message={this.state.message}
+              />
+            </Snackbar>
           </div>
         )} />
       </Router>
@@ -322,4 +358,9 @@ ReactDOM.render(
     </LocaleProvider>
   </Provider>,
   document.getElementById('main')
+)
+
+ReactDOM.render(
+  this.offlineNavbar(),
+  document.getElementById('offline-navbar')
 )
