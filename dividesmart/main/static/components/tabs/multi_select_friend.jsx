@@ -14,7 +14,7 @@ class MultiSelectFriend extends React.Component {
     super()
     this.state = {
       type: 'group',
-      addFriendAlready: true,
+      addFriendAlready: false,
       users: [],
       friends: []
     }
@@ -23,10 +23,17 @@ class MultiSelectFriend extends React.Component {
   }
 
   handleChooseFriends() {
-    const newState = this.state.addFriendAlready ? false : true;
-    this.setState({
-      addFriendAlready: newState
-    });
+    console.log(this.state.addFriendAlready)
+    if(this.state.addFriendAlready) {
+      this.setState({
+        addFriendAlready: false
+      });
+      window.location.href = '/g/' + this.props.group_id
+    } else {
+      this.setState({
+        addFriendAlready: true
+      });
+    }
   }
 
   async updateFriends(added_users) {

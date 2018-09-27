@@ -22,8 +22,8 @@ def register(request):
             )
             return HttpResponse('user created')
     else:
-        form = RegistrationForm()
-    return render(request, 'main/register.html', {'form': form})
+        # form = RegistrationForm()
+        return render(request, 'main/register.html')
 
 
 def service_worker(request):
