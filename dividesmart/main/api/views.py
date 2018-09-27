@@ -102,13 +102,15 @@ def handle_login(request):
 def handle_register(request):
     # TODO: Add email confirmation later
     req_json = json.loads(request.body)
+    req_json['email_address'] = req_json['emailAddress']
     form = RegistrationForm(req_json)
+    print(form)
     is_successful = False
     if form.is_valid():
         is_successful = True
         User.objects.create_user(
             username=form.cleaned_data['username'],
-            email_address=form.cleaned_data['emailAddress'],
+            email_address=form.cleaned_data['email_address'],
             password=form.cleaned_data['password']
         )
     return JsonResponse({
