@@ -6,14 +6,16 @@ import {
   Link,
 } from 'react-router-dom';
 import ListItem from 'antd-mobile/lib/list/ListItem';
+import People from '@material-ui/icons/People';
+import MButton from '@material-ui/core/Button'
+import { MultiSelectFriend } from './tabs/multi_select_friend.jsx';
+import { MySnackbarContentWrapper } from './alert_message.jsx'
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
-import { createForm } from 'rc-form';
-import TextField from '@material-ui/core/TextField';
-import { MultiSelectFriend } from './tabs/multi_select_friend.jsx';
-import axios from 'axios'
 import Snackbar from '@material-ui/core/Snackbar';
-import { MySnackbarContentWrapper } from './alert_message.jsx'
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios'
+import { createForm } from 'rc-form';
 
 const RadioItem = Radio.RadioItem;
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -110,7 +112,7 @@ class GroupCreateForm extends React.Component {
             onChange={this.handleChange('name')}
             placeholder="Enter group names"
           >
-            <div style={{ backgroundImage: 'url(http://i64.tinypic.com/314wh1l.jpg)', backgroundSize: 'cover', height: '22px', width: '22px' }} />
+            <People style={{color: '#888', fill: '#1F90E6'}}/>
           </InputItem>
 
           <WhiteSpace />
@@ -125,9 +127,20 @@ class GroupCreateForm extends React.Component {
           <WhiteSpace />
           <WhiteSpace />
           <WhiteSpace />
-          <WingBlank>
-            <Button type="primary" onClick={this.createGroup}>SAVE</Button>
-          </WingBlank>
+          
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            {/* <Button type="primary" onClick={this.createGroup}>SAVE</Button> */}
+            <MButton
+              onClick={this.createGroup}
+              variant="contained" color="secondary" size="large" style={{ width: '88%', height: 48 }}>
+              <Icon type={'check-circle-o'} style={{marginRight: 18}}/>Save
+            </MButton>
+          </div>
+
           <Snackbar anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',

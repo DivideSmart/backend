@@ -48,20 +48,25 @@ self.addEventListener('fetch', event => {
     fetch(event.request)
       .then(response => {
         const responseClone = response.clone()
-        caches
-          .open(cacheName)
-          .then(cache => {
-            cache.put(event.request.url, responseClone)  // online, so update cache on every call
-          })
+
+        if (event.request.url.includes('/static/') || event.request.url.includes('/api/'))
+          caches
+            .open(cacheName)
+            .then(cache => {
+              cache.put(event.request.url, responseClone)  // online, so update cache on every call
+            })
+
         return response
       })
-      .catch(() => {  // cache will be called if offline
+      .catch((res) => {  // cache will be called if offline
         return caches
                 .open(cacheName).then(cache => cache.match(event.request.url))
                 .then(response => {
                   if (response) {
                     console.log('SW offline: hit  -  ' + event.request.url)
                     return response
+                  } else {
+                    return res
                   }
                 })
       })

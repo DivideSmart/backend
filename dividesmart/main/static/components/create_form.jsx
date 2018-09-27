@@ -21,11 +21,6 @@ import AttachMoney from '@material-ui/icons/AttachMoney';
 import Avatar from '@material-ui/core/Avatar';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { FriendList } from './tabs/friend_list.jsx'
-// import CommentIcon from '@material-ui/icons/Comment';
-// import Divider from '@material-ui/core/Divider';
-// import FormControl from '@material-ui/core/FormControl';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormGroup from '@material-ui/core/FormGroup';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -40,19 +35,12 @@ import MButton from '@material-ui/core/Button';
 import MCheckbox from '@material-ui/core/Checkbox';
 import MList from '@material-ui/core/List';
 import MListItem from '@material-ui/core/ListItem';
-// import MListItemIcon from '@material-ui/core/ListItemIcon';
-// import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonOutline from '@material-ui/icons/PersonOutline';
 import React from 'react'
 import ReceiptButton from './material/receipt_float_btn.jsx'
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
-// import Select from '@material-ui/core/Select';
-// import Switch from '@material-ui/core/Switch';
-// import TextField from '@material-ui/core/TextField';
-// import ToggleButton from '@material-ui/lab/ToggleButton';
-// import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 // import Visibility from '@material-ui/icons/Visibility';
@@ -177,7 +165,6 @@ class H5NumberInputExample extends React.Component {
 
     this.updateIndividualAmount = (e) => {
       var user_id = e.target.name;
-      console.log(this.state.splitterToAmount)
       // var newSplitterToAmount = this.state.splitterToAmount.map(splitter => {
       //                               if(splitter.id == user_id) {
       //                                 splitter.amount = e.target.value;
@@ -246,8 +233,6 @@ class H5NumberInputExample extends React.Component {
 
     axios.post('/api/bills/', payload)
     .then(response => {
-      console.log("RESPONSE")
-      console.log(response)
       if(response.status == 200) {
         // TODO: some message to users
         window.location.href = "/";
@@ -455,6 +440,7 @@ class H5NumberInputExample extends React.Component {
                       <Input
                         id="adornment-amount"
                         name={splitter.uuid}
+                        type='number'
                         // onChange={this.handleChange('amount')}
                         style={{width: '16vw', marginRight: '6vw', bottom: '3px'}}
                         onChange={this.updateIndividualAmount}

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user
 from functools import wraps
 from django.http import (
-    HttpResponseForbidden
+    HttpResponseRedirect
 )
 
 
@@ -11,6 +11,6 @@ def ensure_authenticated(f):
         request = args[0]
         current_user = get_user(request)
         if not current_user.is_authenticated:
-            return HttpResponseForbidden('Not logged in')
+            return HttpResponseRedirect('/login')
         return f(*args, **kwargs)
     return wrapper

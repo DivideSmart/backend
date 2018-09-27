@@ -121,8 +121,8 @@ class MultiSelectFriend extends React.Component {
           >
             <MButton
               onClick={this.handleChooseFriends}
-              variant="contained" color="secondary" size="large" style={{ width: '100%', height: 48 }}>
-              <Icon type={'check-circle-o'} style={{marginRight: 18}}/>Add Friends
+              variant="outlined" color="secondary" size="large" style={{ width: '88%', height: 48 }}>
+              Add Friends
             </MButton>
           </div>
         </div>

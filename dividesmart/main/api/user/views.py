@@ -61,7 +61,8 @@ def friends(request):
         req_json = json.loads(request.body)
         friend_email = req_json.get('friendEmail', None)
         other_user = User.objects.filter(email_address=friend_email).first()
-
+        if current_user.has_friend(other_user.id):
+            return HttpResponseBadRequest('Already friends!')
         if not other_user:
             return HttpResponseNotFound('No such user')
         received_fr = current_user.has_friend_request(from_user_id=other_user.id)

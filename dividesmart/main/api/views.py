@@ -51,7 +51,7 @@ def handle_google_login(request):
 
         # TODO: do not hardcode client ID, put it into private_settings.py and import from settings
         userinfo = id_token.verify_oauth2_token(
-            input_token, gauth_requests.Request(), 
+            input_token, gauth_requests.Request(),
             "656759793501-95m29dhgik9us1k2hk9ucfqnm5b96rmh.apps.googleusercontent.com"
         )
         if userinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
@@ -87,7 +87,7 @@ def handle_login(request):
 
     req_json = json.loads(request.body)
     user = authenticate(
-        email_address=req_json['email_address'],
+        email_address=req_json['emailAddress'],
         password=req_json['password']
     )
 
@@ -108,7 +108,7 @@ def handle_register(request):
         is_successful = True
         User.objects.create_user(
             username=form.cleaned_data['username'],
-            email_address=form.cleaned_data['email_address'],
+            email_address=form.cleaned_data['emailAddress'],
             password=form.cleaned_data['password']
         )
     return JsonResponse({
