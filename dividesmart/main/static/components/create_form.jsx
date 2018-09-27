@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime'
 import '../style/index.less'
+import '../style/create_form.less'
 
 import {
   // Badge,
@@ -201,7 +202,7 @@ class H5NumberInputExample extends React.Component {
   //   console.log(e.target.name)
   //   var user_id = e.target.name;
   //   console.log(this.state.splitterToAmount)
-  //   var newSplitterToAmount = this.xstate.splitterToAmount.map(splitter => {
+  //   var newSplitterToAmount = this.state.splitterToAmount.map(splitter => {
   //                                 if(splitter.id == user_id) {
   //                                   splitter.amount = e.target.value;
   //                                 }
@@ -355,7 +356,7 @@ class H5NumberInputExample extends React.Component {
           <MList>
             <MListItem button style={{marginBottom: 6}}>
               <ListItemAvatar>
-                <AttachMoney style={{color: '#888', fill: '#1F90E6'}}/>
+                <AttachMoney className="avatar"/>
               </ListItemAvatar>
               <ListItemText primary="Total Amount" />
               <ListItemSecondaryAction>
@@ -372,16 +373,16 @@ class H5NumberInputExample extends React.Component {
 
             <MListItem button >
               <ListItemAvatar>
-                <PersonOutline style={{color: '#888', fill: '#1F90E6'}}/>
+                <PersonOutline className="avatar"/>
               </ListItemAvatar>
               <ListItemText primary="Pay by" />
               <Avatar
                 alt="Remy Sharp"
-                style={{height: 28, width: 28}}
+                id="avatar-size"
                 src={this.state.current_user.avatarUrl}
               />
               <span
-                style={{marginRight: '8vw', marginLeft: '2vw'}}
+                id="span-margin"
               >
                 <Typography variant="caption">
                   {this.state.current_user.username}
@@ -411,11 +412,11 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {this.state.splitters.map(splitter => (
-                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
+                  <MListItem button key={splitter.uuid} className="m-list-item">
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}} primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
+                    <ListItemText class="list-item-text" primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <span style={{ marginRight: '6vw'}}
                         // className={'other-owe-amount'}
@@ -424,7 +425,7 @@ class H5NumberInputExample extends React.Component {
                       </span>
                       <IconButton aria-label="Comments">
                         <RemoveCircleOutline
-                          style={{ color: '#d35400', width: 18, height: 18}}
+                          className="remove-circle-outline"
                           onClick={() => this.removeSplitter(splitter)}
                         />
                       </IconButton>
@@ -449,11 +450,11 @@ class H5NumberInputExample extends React.Component {
             <Paper elevation={0}>
               <MList>
                 {this.state.splitters.map(splitter => (
-                  <MListItem button key={splitter.uuid} style={{marginBottom: 8}}>
+                  <MListItem button key={splitter.uuid} className="m-list-item">
                   <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText style={{float: 'right'}}  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
+                    <ListItemText class="list-item-text"  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <Input
                         id="adornment-amount"
@@ -466,7 +467,7 @@ class H5NumberInputExample extends React.Component {
                       />
                       <IconButton aria-label="Comments">
                         <RemoveCircleOutline
-                          style={{ color: '#d35400', width: 18, height: 18}}
+                          className="remove-circle-outline"
                           onClick={() => this.removeSplitter(splitter)}
                         />
                       </IconButton>

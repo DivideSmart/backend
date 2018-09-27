@@ -142,7 +142,7 @@ class AddFriendForm extends React.Component {
           </FormControl>
           <WhiteSpace />
           <WhiteSpace />
-          <List renderHeader={() => this.state.entered.length > 0 ? 'Selected emails' : ''} className="email-list">
+          <List renderHeader={() => 'Selected emails'} className="email-list">
             {
               this.state.entered.map(email => {
                 return (

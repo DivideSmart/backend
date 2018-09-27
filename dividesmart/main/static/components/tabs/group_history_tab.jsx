@@ -109,12 +109,13 @@ class GroupHistoryTab extends React.Component {
         <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
         <List renderHeader={() => 'History'} className="my-list">
             {
-              this.state.entries.map(entry => {
+              this.state.entries.map((entry, index) => {
                 console.log(entry.dateCreated);
                 var currentUser = store.getState().auth.user.id;
                 if(entry.initiator == currentUser || entry.receiver == currentUser) {
                   return (
                     <Item
+                      key={index}
                       thumb={
                         <Badge>
                           <span

@@ -50,7 +50,7 @@ library.add(
   faHandHoldingUsd,
   faDollarSign,
   faReceipt, faHome, faChevronLeft,
-  faUsers, faUserCircle, faLandmark, faSignOutAlt
+  faUsers, faUserCircle, faLandmark,  faSignOutAlt
 )
 
 class App extends React.Component {

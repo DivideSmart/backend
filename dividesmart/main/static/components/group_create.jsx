@@ -103,7 +103,7 @@ class GroupCreateForm extends React.Component {
       <div>
         <div ref={this.mainRef}>
 
-          <WhiteSpace siz='xg' />
+          <WhiteSpace size='lg' />
 
           <InputItem
             value={this.state.name}

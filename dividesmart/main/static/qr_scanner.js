@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime'
 import './style/index.less'
+import './style/topbar.less'
 import 'typeface-roboto'
 import 'antd-mobile/dist/antd-mobile.css'
 import Typography from '@material-ui/core/Typography';
@@ -102,13 +103,13 @@ ReactDOM.render(
   <Provider store={store}>
     <Router basename={''}>
       <Route render={({ location }) => (
-        <div style={{ height: '6vh', position: 'fixed', width: '100%', zIndex: 1000 }}>
+        <div id="navbar-style">
           <NavBar
             style={{height: '100%'}}
             icon={
               <Link className='topbar-btn' onClick={() => {window.location.href='/';}} to='/'>
                 <Home
-                  style={{width: '28px', height: '28px',}}
+                  id="home-icon"
                 />
               </Link>
             }
