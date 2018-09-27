@@ -359,8 +359,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('main')
 )
-
-ReactDOM.render(
-  this.offlineNavbar(),
-  document.getElementById('offline-navbar')
-)
