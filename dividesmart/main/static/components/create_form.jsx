@@ -397,7 +397,7 @@ class H5NumberInputExample extends React.Component {
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText class="list-item-text" primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
+                    <ListItemText className="list-item-text" primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <span style={{ marginRight: '6vw'}}
                         // className={'other-owe-amount'}
@@ -435,7 +435,7 @@ class H5NumberInputExample extends React.Component {
                   <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={splitter.avatarUrl} />
                     </ListItemAvatar>
-                    <ListItemText class="list-item-text"  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
+                    <ListItemText className="list-item-text"  primary={splitter.uuid == this.state.current_user.id ? 'You' : splitter.username} />
                     <ListItemSecondaryAction>
                       <Input
                         id="adornment-amount"
