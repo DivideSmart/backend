@@ -73,7 +73,7 @@ class LoginPage extends React.Component {
     this.clickLogin = function() {
       const apiBaseUrl = "/api";
       const payload={
-        "email_address": this.state.username,
+        "emailAddress": this.state.username,
         "password": this.state.password,
       }
 
@@ -136,7 +136,7 @@ class LoginPage extends React.Component {
       auth2.attachClickHandler(element, {},
         function(googleUser) {
           axios.post('/api/login/google/', {
-            id_token: googleUser.getAuthResponse().id_token 
+            id_token: googleUser.getAuthResponse().id_token
           }).then((response) => {
             window.location.href = '/'
           }).catch(e => {
