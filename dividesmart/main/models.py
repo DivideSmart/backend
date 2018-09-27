@@ -132,9 +132,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_friend_request(self, from_user_id):
         return self.received_friend_requests.filter(id=from_user_id).exists()
 
-    def has_sent_friend_reuqest(self, to_user_id):
-        return self.requested_friends.filter(id=to_user_id).exists()
-
     def has_friend(self, user_id):
         return self.friends.filter(id=user_id).exists()
 
