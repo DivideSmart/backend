@@ -2,14 +2,29 @@
   "short_name": "WeShare",
   "name": "WeShare",
   "icons": [
+
     {
       "src": "/static/img/logo-o.png",
-      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/static/img/logo-o.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/static/img/logo-o.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/static/img/logo-o.png",
       "sizes": "192x192"
     },
     {
       "src": "/static/img/logo-o.png",
-      "type": "image/png",
+      "sizes": "240x240"
+    },
+    {
+      "src": "/static/img/logo-o.png",
       "sizes": "512x512"
     }
   ],
