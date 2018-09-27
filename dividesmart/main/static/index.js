@@ -101,12 +101,10 @@ class App extends React.Component {
       })
     })
     window.addEventListener('online', function (event) {
-      alert('online')
       self.setState({ open: true, message: 'Back Online', variant: 'success'})
     }, false);
 
     window.addEventListener('offline', function (event) {
-      alert('offline')
       self.setState({ open: true, message: 'Offline mode', variant: 'warning'})
     }, false);
   }
