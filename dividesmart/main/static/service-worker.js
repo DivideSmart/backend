@@ -58,13 +58,15 @@ self.addEventListener('fetch', event => {
 
         return response
       })
-      .catch(() => {  // cache will be called if offline
+      .catch((res) => {  // cache will be called if offline
         return caches
                 .open(cacheName).then(cache => cache.match(event.request.url))
                 .then(response => {
                   if (response) {
                     console.log('SW offline: hit  -  ' + event.request.url)
                     return response
+                  } else {
+                    return res
                   }
                 })
       })
