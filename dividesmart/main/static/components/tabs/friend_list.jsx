@@ -191,7 +191,7 @@ class FriendList extends React.Component {
                       <span
                         style={{
                           width: '48px', height: '48px', display: 'inline-block',
-                          background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
+                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
                         }}
                       />
                     </Badge>
@@ -205,14 +205,14 @@ class FriendList extends React.Component {
               )
             } else if(this.props.mode == 'display') {
               return (
-                  <Link to='u/1'>
+                  // <Link to='u/1'>
                     <Item
                       thumb={
                         <Badge>
                           <span
                             style={{
                               width: '48px', height: '48px', display: 'inline-block',
-                              background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
+                              background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
                           }}
                           />
                         </Badge>
@@ -222,7 +222,7 @@ class FriendList extends React.Component {
                     >
                       {friend.username} <Brief>{friend.emailAddress}</Brief>
                     </Item>
-                  </Link>
+                  // </Link>
               )
             } else if(this.props.mode == 'single-select') {
               return (
@@ -233,7 +233,7 @@ class FriendList extends React.Component {
                       <span
                         style={{
                           width: '48px', height: '48px', display: 'inline-block',
-                          background: 'url(' + (friend.avatarUrl ? friend.avatarUrl : this.defaultUrl) + ') center center /  48px 48px no-repeat',
+                          background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
                         }}
                       />
                     </Badge>

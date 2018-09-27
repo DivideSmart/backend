@@ -168,7 +168,7 @@ class UserTabWithoutStyle extends React.Component {
         </List>
 
         <WhiteSpace />
-        <List renderHeader={() => 'History with Tom'} className="my-list">
+        <List renderHeader={() => 'History with ' + this.state.userInfo.username} className="my-list">
           {/*<Item extra={'Debt'}>Date</Item>*/}
         </List>
 

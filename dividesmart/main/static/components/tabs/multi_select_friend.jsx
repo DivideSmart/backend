@@ -67,7 +67,6 @@ class MultiSelectFriend extends React.Component {
       var friends = responseB.data.friends;
       friends = friends.map(friend => {
         friend.pk = friend.id;
-        friend.avatarUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
         return friend;
       })
       this.setState({
