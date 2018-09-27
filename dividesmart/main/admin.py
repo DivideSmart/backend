@@ -31,6 +31,10 @@ class LoanModelAdmin(admin.ModelAdmin):
     list_display = ['pk', 'bill', 'receiver', 'amount']
 
 
+class PaymentModelAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'creator', 'initiator', 'receiver', 'date_created']
+
+
 class GroupModelAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'creator', 'date_created']
 
@@ -41,3 +45,4 @@ admin.site.register(models.Debt, DebtModelAdmin)
 admin.site.register(models.Group, GroupModelAdmin)
 admin.site.register(models.Bill, BillModelAdmin)
 admin.site.register(models.Loan, LoanModelAdmin)
+admin.site.register(models.Payment, PaymentModelAdmin)

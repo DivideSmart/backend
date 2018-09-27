@@ -4,27 +4,23 @@
   "icons": [
 
     {
-      "src": "/static/img/logo-o.png",
+      "src": "/static/img/logo-b.png",
       "sizes": "48x48"
     },
     {
-      "src": "/static/img/logo-o.png",
+      "src": "/static/img/logo-b.png",
       "sizes": "96x96"
     },
     {
-      "src": "/static/img/logo-o.png",
-      "sizes": "144x144"
-    },
-    {
-      "src": "/static/img/logo-o.png",
+      "src": "/static/img/logo-b.png",
       "sizes": "192x192"
     },
     {
-      "src": "/static/img/logo-o.png",
+      "src": "/static/img/logo-b.png",
       "sizes": "240x240"
     },
     {
-      "src": "/static/img/logo-o.png",
+      "src": "/static/img/logo-b.png",
       "sizes": "512x512"
     }
   ],

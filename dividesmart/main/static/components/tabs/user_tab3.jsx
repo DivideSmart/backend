@@ -36,7 +36,7 @@ class UserTab extends React.Component {
     this.setState({ open: false });
   };
 
-  componentWillMount() {
+  componentDidMount() {
     axios.get('/api/user/').then(response => {
       this.setState({
         myName: response.data.username,
