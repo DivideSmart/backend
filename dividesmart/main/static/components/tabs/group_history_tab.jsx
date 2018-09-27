@@ -35,7 +35,7 @@ class GroupHistoryTab extends React.Component {
     this.giveDescription = this.giveDescription.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       entries: []
     })
