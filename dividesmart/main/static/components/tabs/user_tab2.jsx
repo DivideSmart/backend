@@ -1,4 +1,4 @@
-import {Badge, Button, Icon, List, Modal, Result, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Badge, Button, Icon, List, Modal, Result, WhiteSpace, SwipeAction} from 'antd-mobile';
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar';
@@ -20,7 +20,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const Item = List.Item
 const Brief = Item.Brief
-
+const alert = Modal.alert;
 const prompt = Modal.prompt
 
 
@@ -49,6 +49,7 @@ class UserTabWithoutStyle extends React.Component {
     axios.get('/api/user/friends/' + friendId + "/")
     .then(response => {
       var userInfo = {}
+      userInfo.id = response.data.id;
       userInfo.emailAddress = response.data.emailAddress;
       userInfo.username = response.data.username;
 
@@ -97,7 +98,7 @@ class UserTabWithoutStyle extends React.Component {
   }
 
   postPayment(amount) {
-    var payload = {amount: amount}
+    const payload = {amount: amount}
     axios.post('/api/user/friends/' + this.props.match.params.userPk + "/payments/", payload)
          .then(response => {
             console.log(response);
@@ -165,19 +166,51 @@ class UserTabWithoutStyle extends React.Component {
           {
             this.state.entries.map(entry => {
               return (
-                <Item
-                  arrow="horizontal"
-                  key={entry.id}
-                  thumb={
-                    <FontAwesomeIcon icon={entry.type == 'bill' ? 'receipt' : 'dollar-sign'} style={{ color: '#38b8f2', width: 24, height: 24}} />
-                  }
-                  multipleLine
-                  onClick={() => {}}
-                  extra={<span className={entry.color}>${entry.amount}</span>}
-                  >
-                    {entry.name} <Brief>{entry.dateFormat}</Brief>
+                <SwipeAction
+                  style={{ backgroundColor: 'gray' }}
+                  autoClose
+                  right={[
+                    {
+                      text: 'Delete',
+                      onPress: () => {
+                        alert('Delete', 'Are you sure???', [
+                          { text: 'Cancel'},
+                          { text: 'Ok', onPress: () => {
+                            axios.delete(entry.type == 'bill' ? '/api/bills/' + entry.id : '/api/user/friends/' + this.state.userInfo.id + '/payments/' + entry.id)
+                              .then(() => {
+                                const newEntries = this.state.entries.filter(e => e.id != entry.id)
+                                this.setState({entries: newEntries})
+                                axios.get('/api/user/friends/' + this.state.userInfo.id + "/")
+                                  .then(response => {
+                                    this.setState({
+                                      userInfo: {
+                                        ...this.state.userInfo,
+                                        debt: parseFloat(response.data.debt) > 0 ? response.data.debt : response.data.debt.slice(1)
+                                      }
+                                    })
+                                  })
+                              })
+                          }},
+                        ])
+                      },
+                      style: { backgroundColor: '#f39c12', color: 'white' },
+                    },
+                  ]}
+                >
+                  <Item
+                    arrow="horizontal"
+                    key={entry.id}
+                    thumb={
+                      <FontAwesomeIcon icon={entry.type == 'bill' ? 'receipt' : 'dollar-sign'} style={{ color: '#38b8f2', width: 24, height: 24}} />
+                    }
+                    multipleLine
+                    onClick={() => {}}
+                    extra={<span className={entry.color}>${entry.amount}</span>}
+                    >
+                      {entry.name} <Brief>{entry.dateFormat}</Brief>
                   </Item>
-                )
+                </SwipeAction>
+              )
             })
           }
         </List>

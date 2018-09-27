@@ -240,11 +240,11 @@ class LoginPage extends React.Component {
         <div className="social">
           <MButton
             onClick={(event) => window.location.href='/register'}
-            variant="outlined" color="primary" size="small"
-            className="social-button"
+            color="primary" size="small"
+            className='social-button'
           >
-            <FontAwesomeIcon icon='user-plus' id="submit-icon" style={{ color: '0060c0', marginRight: 8 }} />
-            <span className="social-text" style={{color: '#0060c0'}}>New User? Register </span>
+            {/*<FontAwesomeIcon icon='user-plus' id="submit-icon" style={{ color: '0060c0', marginRight: 8 }} />*/}
+            <span className="social-text" style={{color: '#0060c0'}}>Create an Account</span>
           </MButton>
         </div>
         </Card>

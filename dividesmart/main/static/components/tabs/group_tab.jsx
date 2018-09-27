@@ -38,7 +38,7 @@ class GroupTab extends React.Component {
   }
 
   // Need to discuss about definition of owe, owed and settled up.
-  componentWillMount() {
+  componentDidMount() {
       this.setState({
         groups: []
       });

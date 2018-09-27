@@ -20,7 +20,7 @@ class Tabs2 extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     axios.get('/api/groups/' + this.props.group_id.toString() + "/members").then(responseA => {
 
       var details = { friendsOweYou: [], friendsYouOwe: [], friendsSettledUp: [] };
