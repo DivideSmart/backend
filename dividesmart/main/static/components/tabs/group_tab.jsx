@@ -81,7 +81,7 @@ class GroupTab extends React.Component {
   render() {
     return (
     <div>
-      <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+      {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
       <List renderHeader={() => 'Groups'} className="my-list">
         {
           this.state.groups.map(group => {

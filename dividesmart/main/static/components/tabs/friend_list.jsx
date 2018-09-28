@@ -174,7 +174,7 @@ class FriendList extends React.Component {
     return (
       <div>
         <div style={{display: this.props.hideSearch ? 'none' : 'block'}}>
-          <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+          {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         </div>
         <List renderHeader={() => 'Friends'} className="my-list">
         {

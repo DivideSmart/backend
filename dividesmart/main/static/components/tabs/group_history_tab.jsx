@@ -131,7 +131,7 @@ class GroupHistoryTab extends React.Component {
   render() {
     return (
       <div>
-        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         <List renderHeader={() => 'History'} className="my-list">
             {
               this.state.entries.map((entry, index) => {

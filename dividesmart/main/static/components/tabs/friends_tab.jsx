@@ -57,7 +57,7 @@ class FriendsTab extends React.Component {
     return (
       <div>
         {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
-        <WhiteSpace size={'lg'} />
+        {/* <WhiteSpace size={'lg'} /> */}
         <FriendsList friends={this.state.users}/>
 
         <div style={{
