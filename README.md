@@ -32,7 +32,7 @@ Accessible at [https://weshare.gq](https://weshare.gq)
 
    *Matriculation number:* A0177059U
 
-   Worked mainly on the front-end, CSS styling and features such as friend requests, alert messages, and connected other features with the backend. I also made periodic fixes and enhancements to the backend.
+   Worked mainly on the front-end, login and register functionality, CSS styling and features such as friend requests, alert messages, react components and connected other features with the backend. I also made periodic fixes and enhancements to the backend.
 
 * **Yuyang Luo:**
 
