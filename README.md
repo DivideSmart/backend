@@ -35,3 +35,19 @@ Accessible at [https://weshare.gq](https://weshare.gq)
    Worked mainly on the front-end, CSS styling and features such as friend requests, alert messages, and connected other features with the backend. I also made periodic fixes and enhancements to the backend.
 
 * Yuyang Luo
+
+   *Matriculation number:* A0147980U
+
+   * set up the whole project structure (including but not limited to writing webpack configuration files, deployment scripts, and project settings file).
+   * Draw the App icon
+   * implment the service worker
+   * implement the following views:
+     * login view (including login with Facebook and Google)
+     * home view (friends list with debt summary)
+     * friend detail view (including the settle up modal)
+     * creating a new bill view
+   * implement several components, including but not limited to the following:  
+     * topbar with dropdown
+     * tabbar with 3 tabs
+     * fixed float button (creating-a-new-bill button and attach-img button)
+    * periodic fixes and enhancements to the backend, including writing the User model and implement the Google and Facebook login backend logic.
