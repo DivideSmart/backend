@@ -65,7 +65,32 @@ class GroupHistoryTab extends React.Component {
         entries: entries
       });
     })
+  }
 
+  componentWillReceiveProps(nextProps, nextState) {
+    // var entries = []
+    var entries = copy(this.state.entries);
+    entries.forEach(entry => {
+
+      if(entry.type == 'payment') {
+        entry.receiverName = nextProps.users[entry.receiver];
+        entry.initiatorName = nextProps.users[entry.initiator];
+        // entries.push(entry);
+      } else if(entry.type == 'bill') {
+        
+        Object.keys(entry.loans).forEach(receiver => {
+          entry.receiverName = nextProps.users[receiver];
+          // entry.receiver = receiver;
+          // entry.amount = entry.loans[receiver];
+          entry.initiatorName = nextProps.users[entry.initiator];
+          // entries.push(copy(entry));   
+        })
+      }
+
+    });
+    this.setState({
+      entries: entries
+    });
   }
 
   giveDescription(entry, currentUser) {
