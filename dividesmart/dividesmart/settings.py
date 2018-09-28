@@ -101,6 +101,20 @@ USE_L10N = True
 USE_TZ = True
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'OPTIONS': {
+            'server_max_value_length': 1024 * 1024 * 5,
+        }
+    },
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_CACHE_ALIAS = 'default'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

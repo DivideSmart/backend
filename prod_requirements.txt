@@ -11,3 +11,4 @@ facebook-sdk
 validate_email
 google-auth
 psycopg2-binary
+python-memcached

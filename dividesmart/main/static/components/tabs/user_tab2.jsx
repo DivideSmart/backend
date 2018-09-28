@@ -194,7 +194,7 @@ class UserTabWithoutStyle extends React.Component {
                         ])
                       },
                       style: { backgroundColor: '#f39c12', color: 'white' },
-                    },
+                    }
                   ]}
                 >
                   <Item
