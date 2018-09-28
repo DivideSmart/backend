@@ -14,7 +14,7 @@ class MultiSelectFriend extends React.Component {
     super()
     this.state = {
       type: 'group',
-      addFriendAlready: false,
+      addFriendAlready: true,
       users: [],
       friends: []
     }
@@ -28,7 +28,7 @@ class MultiSelectFriend extends React.Component {
       this.setState({
         addFriendAlready: false
       });
-      window.location.href = '/g/' + this.props.group_id
+      //window.location.href = '/g/' + this.props.group_id
     } else {
       this.setState({
         addFriendAlready: true
@@ -41,10 +41,14 @@ class MultiSelectFriend extends React.Component {
     this.setState({
       addFriendAlready: true
     });
-
-    if(this.props.isAddGroup) {
+    var ids = {}
+    added_users = added_users.filter(user => {if(ids[user.id]) {return false;} else { ids[user.id] = true; return true;}})
+    if (this.props.isAddGroup) {
+      var final_users = this.state.users.concat(added_users)
+      var ids = {}
+      final_users = final_users.filter(user => {if(ids[user.id]) {return false;} else { ids[user.id] = true; return true;}})
       await this.setState({
-        users: this.state.users.concat(added_users)
+        users: final_users//this.state.users.concat(added_users)
       })
     } else {
       await this.setState({
