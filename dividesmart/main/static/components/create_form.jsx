@@ -517,7 +517,9 @@ class H5NumberInputExample extends React.Component {
           // footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
           wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
-          <div>
+          <div
+            style={{maxHeight: '66vh', overflow: 'scroll'}}
+          >
             <FriendList
               mode='multi-select'
               users={this.getUpdatedFriendsBySplitters()}
