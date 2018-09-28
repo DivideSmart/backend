@@ -65,7 +65,32 @@ class GroupHistoryTab extends React.Component {
         entries: entries
       });
     })
+  }
 
+  componentWillReceiveProps(nextProps, nextState) {
+    // var entries = []
+    var entries = copy(this.state.entries);
+    entries.forEach(entry => {
+
+      if(entry.type == 'payment') {
+        entry.receiverName = nextProps.users[entry.receiver];
+        entry.initiatorName = nextProps.users[entry.initiator];
+        // entries.push(entry);
+      } else if(entry.type == 'bill') {
+        
+        Object.keys(entry.loans).forEach(receiver => {
+          entry.receiverName = nextProps.users[receiver];
+          // entry.receiver = receiver;
+          // entry.amount = entry.loans[receiver];
+          entry.initiatorName = nextProps.users[entry.initiator];
+          // entries.push(copy(entry));   
+        })
+      }
+
+    });
+    this.setState({
+      entries: entries
+    });
   }
 
   giveDescription(entry, currentUser) {
@@ -88,7 +113,6 @@ class GroupHistoryTab extends React.Component {
 
   formatLink(entry, currentUser) {
     if(entry.type == 'bill') {
-      console.log("HEEEE");
       return (
         <Link to={"/bill/" + entry.id} style={{ color: 'black' }}>
           {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
@@ -106,11 +130,11 @@ class GroupHistoryTab extends React.Component {
   render() {
     return (
       <div>
-        <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+        {/* <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} /> */}
         <List renderHeader={() => 'History'} className="my-list">
             {
               this.state.entries.map((entry, index) => {
-                console.log(entry.dateCreated);
+                // console.log(entry.dateCreated);
                 var currentUser = store.getState().auth.user.id;
                 if(entry.initiator == currentUser || entry.receiver == currentUser) {
                   return (

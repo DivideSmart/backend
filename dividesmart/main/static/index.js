@@ -281,7 +281,7 @@ class App extends React.Component {
                     render={ ({match, location}) => {
                         this.updateGroupInfo(match.params.gPk);
                         return (
-                          <div style={{ top: '6vh', position: 'relative'}}>
+                          <div className="top-position">
                             <GroupInfoTab groupID={match.params.gPk} name={this.state.name} count_user={this.state.count_user}/>
                             <WhiteSpace size="xl"/>
 
@@ -297,7 +297,7 @@ class App extends React.Component {
                   <Route
                     path={'/'}
                     render={ ({match, location}) =>
-                      <div style={{ top: '6vh', position: 'relative', height: '100%'}}>
+                      <div className="top-position">
                         <Tabs />
                         <FloatingButton />
                       </div>

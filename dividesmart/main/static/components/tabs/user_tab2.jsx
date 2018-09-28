@@ -194,7 +194,7 @@ class UserTabWithoutStyle extends React.Component {
                         ])
                       },
                       style: { backgroundColor: '#f39c12', color: 'white' },
-                    },
+                    }
                   ]}
                 >
                   <Item
@@ -303,9 +303,9 @@ class UserTabWithoutStyle extends React.Component {
             <MButton variant="contained" color="primary" size="medium" style={{ width: '80%', marginBottom: 16}}    onClick = {() => this.postPayment(this.state.payAmount)}>
               Record Payment
             </MButton>
-            <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
+            {/* <MButton variant="outlined" color="secondary" size="medium" style={{ width: '80%', marginBottom: 16 }}>
               Pay With PayPal
-            </MButton>
+            </MButton> */}
 
             <WhiteSpace />
           </div>

@@ -1,15 +1,15 @@
 import 'regenerator-runtime/runtime'
 
-import { Badge, List, SearchBar, WhiteSpace, Button } from 'antd-mobile'
+import { Badge, Button, List, SearchBar, WhiteSpace } from 'antd-mobile'
 
+import Checkbox from '@material-ui/core/Checkbox';
+import Close from '@material-ui/icons/Close';
 import {
   Link,
 } from 'react-router-dom'
-
-import React from 'react'
-import Close from '@material-ui/icons/Close';
-import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
+import React from 'react'
+
 const Item = List.Item
 const Brief = Item.Brief
 
@@ -17,8 +17,8 @@ function copy(o) {
   var output, v, key;
   output = Array.isArray(o) ? [] : {};
   for (key in o) {
-      v = o[key];
-      output[key] = (typeof v === "object") ? copy(v) : v;
+    v = o[key];
+    output[key] = (typeof v === "object") ? copy(v) : v;
   }
   return output;
 }
@@ -30,7 +30,8 @@ class FriendList extends React.Component {
       disabled: false,
       added_users: [],
       remove_ids: [],
-      users: []
+      users: [],
+      display_users: undefined,
     }
     this.added_keys = [];
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
@@ -38,6 +39,14 @@ class FriendList extends React.Component {
     this.defaultUrl = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
     // this.fetch = this.fetch.bind(this);
     this.addDefaultCheck = this.addDefaultCheck.bind(this);
+    
+    this.onSearchChange = (value) => {
+      const display_users = this.state.users.filter(user => user.username.includes(value))
+      if (value == '')
+        this.setState({display_users: undefined})
+      else
+        this.setState({display_users: display_users})
+    }
   }
 
   shouldComponentUpdate(nextProp, nextState) {
@@ -47,25 +56,7 @@ class FriendList extends React.Component {
       return true;
     }
   }
-
-  // shouldComponentUpdate() {
-  //   if(this.props.isClickable == false) {
-  //     console.log("AO");
-  //     console.log(this.props.users);
-  //     this.setState({
-  //       users: this.props.users
-  //     })
-  //   }
-  // }
-
-  // renderButton(mode, updateUsers) {
-  //   if (mode == 'multi-select' || mode == 'single-select') {
-  //     return (
-  //       <Button onClick={ () => updateUsers(copy(this.state.added_users)) }> ADD </Button>
-  //     )
-  //   }
-  // }
-
+  
   onChangeCheckBox(e, checked) {
     // console.log("CHECKBOX update")
     // console.log(copy(this.state.added_users));
@@ -76,8 +67,6 @@ class FriendList extends React.Component {
       const new_user = this.props.users.filter(user => user.pk == e.target.name)[0];
       const newArray = copy(this.state.added_users);
       newArray.push(new_user);
-      // console.log("CHECKED")
-      // console.log(copy(newArray))
       this.setState({
         added_users: copy(newArray)
       });
@@ -89,11 +78,8 @@ class FriendList extends React.Component {
       this.setState({
         added_users: copy(newArrayB)
       })
-      // console.log('test')
       // console.log(copy(this.state.added_users))
     }
-
-    // console.log("END1")
   }
 
   async addDefaultCheck(friend) {
@@ -115,18 +101,6 @@ class FriendList extends React.Component {
     }
   }
 
-  // shouldComponentUpdate(nextProp, nextState) {
-  //   // if(JSON.stringify(this.props.alreadyAddedUsers) != JSON.stringify(nextProp.alreadyAddedUsers) ) {
-  //   //   console.log("AHA HERE");
-  //   // }
-  //   // return true;
-  //   if(JSON.stringify(this.props) == JSON.stringify(nextProp) && JSON.stringify(this.state) == nextState) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
-
   componentWillReceiveProps(nextProp) {
     if (nextProp.alreadyAddedUsers && nextProp.isAddGroup) {
       var IDs = [];
@@ -138,22 +112,24 @@ class FriendList extends React.Component {
       })
     }
     this.setState({
-      users: nextProp.users
+      users: nextProp.users,
+      display_users: undefined,
     })
   }
 
   componentDidMount() {
     this.setState({
-      users: this.props.users
+      users: this.props.users,
+      display_users: undefined,
     })
     var newArray = this.state.added_users;
 
     this.props.users.forEach(friend => {
-            if(friend.selected) {
-              this.added_keys.push(friend.pk);
-              newArray.push(friend);
-            }
-          })
+      if(friend.selected) {
+        this.added_keys.push(friend.pk);
+        newArray.push(friend);
+      }
+    })
     this.setState({
         added_users: copy(newArray)
     })
@@ -162,23 +138,24 @@ class FriendList extends React.Component {
   filterOut(users) {
     return users.filter(user => !user.id in this.state.remove_ids);
   }
-
-  // fetch(users) {
-  //   console.log("COME HERE")
-  //   console.log(users)
-  //   return (
-  //   )
-  // }
-
+  
   render() {
     return (
       <div>
         <div style={{display: this.props.hideSearch ? 'none' : 'block'}}>
-          <SearchBar placeholder="Search" maxLength={8} cancelText={<Close style={{minHeight: 44}} />} />
+          <SearchBar 
+            placeholder="Search" 
+            maxLength={8} 
+            cancelText={<Close style={{minHeight: 44}} />} 
+            onSubmit={() => this.setState({display_users: undefined})}
+            onClear={() => this.setState({display_users: undefined})}
+            onCancel={() => this.setState({display_users: undefined})}
+            onChange={this.onSearchChange}
+          />
         </div>
         <List renderHeader={() => 'Friends'} className="my-list">
         {
-          this.state.users.map(friend => {
+          (this.state.display_users == undefined ? this.state.users : this.state.display_users).map(friend => {
 
             if (this.props.mode == 'multi-select' && !(this.state.remove_ids.includes(friend.id))) {
               // {this.addDefaultC  heck(friend)}
@@ -198,31 +175,38 @@ class FriendList extends React.Component {
                   }
                   multipleLine
                   // onClick={() => { window.location.href = '/u/1'}}
-                  extra={<span style={{ color: '#00b894' }}> <Checkbox defaultChecked={friend.selected == true ? true : false} name={friend.pk} onChange={ this.onChangeCheckBox} /> </span>}
+                  extra={<span style={{ color: '#00b894' }}> 
+                  <Checkbox 
+                    defaultChecked={friend.selected} 
+                    name={friend.pk} 
+                    checked={this.state.added_users.map(user => user.id).includes(friend.id)} 
+                    onChange={ this.onChangeCheckBox} /> 
+                  </span>}
                 >
                   {friend.username} <Brief>{friend.emailAddress}</Brief>
                 </Item>
               )
             } else if(this.props.mode == 'display') {
               return (
-                  // <Link to='u/1'>
-                    <Item
-                      thumb={
-                        <Badge>
-                          <span
-                            style={{
-                              width: '48px', height: '48px', display: 'inline-block',
-                              background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
-                          }}
-                          />
-                        </Badge>
-                      }
-                      multipleLine
-                      // onClick={() => { window.location.href = '/u/1'}}
-                    >
-                      {friend.username} <Brief>{friend.emailAddress}</Brief>
-                    </Item>
-                  // </Link>
+                // <Link to='u/1'>
+                  <Item
+                    key={friend.pk}
+                    thumb={
+                      <Badge>
+                        <span
+                          style={{
+                            width: '48px', height: '48px', display: 'inline-block',
+                            background: 'url(' + friend.avatarUrl + ') center center /  48px 48px no-repeat',
+                        }}
+                        />
+                      </Badge>
+                    }
+                    multipleLine
+                    // onClick={() => { window.location.href = '/u/1'}}
+                  >
+                    {friend.username} <Brief>{friend.emailAddress}</Brief>
+                  </Item>
+                // </Link>
               )
             } else if(this.props.mode == 'single-select') {
               return (

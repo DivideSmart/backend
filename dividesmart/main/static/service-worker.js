@@ -1,6 +1,6 @@
 
 
-const version = "0.0.1"
+const version = "0.0.2"
 const cacheName = `weshare-${version}`
 const cacheAssets = [
   `/`,

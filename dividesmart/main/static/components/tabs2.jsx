@@ -49,9 +49,7 @@ class Tabs2 extends React.Component {
         members: details,
         users: users
       })
-      console.log(this.state.users);
-
-
+      // console.log(this.state.users);
     })
   }
 
