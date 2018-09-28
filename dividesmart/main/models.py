@@ -489,13 +489,15 @@ class Bill(Entry):
         return bill_json
 
     def to_dict_for_user(self, user, friend=None, is_group=False):
-        assert self.participants.filter(id=user.id).exists()
         bill_json = self.to_dict()
         if is_group:
-            bill_json['userAmount'] = EntryParticipation.objects.get(
-                participant=user, entry=self
-            ).amount
+            if self.participants.filter(id=user.id).exists():
+                bill_json['userAmount'] = EntryParticipation.objects.get(
+                    participant=user, entry=self
+                ).amount
         else:
+            # display bill for a friend must be involved
+            assert self.participants.filter(id=user.id).exists()
             loaner = friend if self.initiator.id == user.id else user
             bill_json['userAmount'] = self.loans.get(receiver__id=loaner.id).amount
             if user.id == loaner.id:
