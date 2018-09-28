@@ -50,4 +50,5 @@ Accessible at [https://weshare.gq](https://weshare.gq)
      * topbar with dropdown
      * tabbar with 3 tabs
      * fixed float button (creating-a-new-bill button and attach-img button)
+     * search bar in users multiselect list
     * periodic fixes and enhancements to the backend, including writing the User model and implement the Google and Facebook login backend logic.
