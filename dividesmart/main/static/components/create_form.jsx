@@ -512,6 +512,7 @@ class H5NumberInputExample extends React.Component {
           transparent
           maskClosable={true}
           ref="modal_ref"
+          style={{width: '80vw'}}
           onClose={() => this.setState({ showAddSplittersModal: false })}
           // title=""
           // footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
