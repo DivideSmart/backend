@@ -402,7 +402,7 @@ class H5NumberInputExample extends React.Component {
                       <span style={{ marginRight: '6vw'}}
                         // className={'other-owe-amount'}
                       >
-                        { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(3) }
+                        { parseFloat(this.state.totalAmount / this.state.splitters.length).toFixed(2) }
                       </span>
                       <IconButton aria-label="Comments">
                         <RemoveCircleOutline
