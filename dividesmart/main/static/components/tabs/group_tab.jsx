@@ -46,7 +46,6 @@ class GroupTab extends React.Component {
 
         response.data.groups.map(group_entry => {
           var group_id = group_entry.id;
-          console.log(group_id);
           axios.get('/api/groups/' + group_id.toString() + "/members").then(responseA => {
 
             var positiveDebt = responseA.data.members.reduce((x, y) => {
@@ -72,7 +71,7 @@ class GroupTab extends React.Component {
             this.setState({
               groups: newArray
             }) 
-            console.log(this.state.groups);
+            // console.log(this.state.groups);
           })
         } );
       })

@@ -69,7 +69,7 @@ class AddFriendForm extends React.Component {
   };
 
   addFriends(event) {
-    console.log(this.state.entered)
+    // console.log(this.state.entered)
     this.state.entered.forEach(email => {
       const payload={
         "friendEmail": email.email,
@@ -79,7 +79,6 @@ class AddFriendForm extends React.Component {
         if (err) {
           throw err
         } else {
-          console.log(res)
           this.setState({
             requestsSent: true,
             open: true

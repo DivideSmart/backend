@@ -113,7 +113,6 @@ class GroupHistoryTab extends React.Component {
 
   formatLink(entry, currentUser) {
     if(entry.type == 'bill') {
-      console.log("HEEEE");
       return (
         <Link to={"/bill/" + entry.id} style={{ color: 'black' }}>
           {this.giveDescription(entry, currentUser)} <Brief> {this.formatDate(entry)} </Brief>
@@ -135,7 +134,7 @@ class GroupHistoryTab extends React.Component {
         <List renderHeader={() => 'History'} className="my-list">
             {
               this.state.entries.map((entry, index) => {
-                console.log(entry.dateCreated);
+                // console.log(entry.dateCreated);
                 var currentUser = store.getState().auth.user.id;
                 if(entry.initiator == currentUser || entry.receiver == currentUser) {
                   return (
