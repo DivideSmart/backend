@@ -8,7 +8,19 @@ Accessible at [https://weshare.gq](https://weshare.gq)
 
 ## Made by:
 
-* Edmund Mok
+* **Edmund Mok**
+
+  *Matriculation number:* A0093960X
+  
+  * Designed database schema and models
+  * Designed and wrote API routes supporting all the features available in the app
+    * Register, Login, Logout
+    * Send, Accept, Delete friend requests
+    * Create, Get group, Add group members
+    * Add, Get, Edit, Delete bill
+    * Add, Get, Edit, Delete payment
+    * Get friend and aggregated debt with friend
+  * Wrote API documentation (https://weshare2.docs.apiary.io/)
 
 * **Le Trung Hieu:**
    
